@@ -13,6 +13,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -31,6 +33,9 @@ function NewLeaseForm() {
   });
   const [properties, setProperties] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [reloadProperties, setReloadProperties] = useState(0);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/properties`)
@@ -39,7 +44,7 @@ function NewLeaseForm() {
       .catch((error) => {
         console.error("Error fetching properties:", error);
       });
-  }, []);
+  }, [reloadProperties]);
 
   const handleRentChange = (event) => {
     const rawValue = event.target.value.replace(/\D/g, "");
@@ -136,12 +141,34 @@ function NewLeaseForm() {
       },
       body: JSON.stringify(dataToSend),
     })
-      .then((response) => response.json())
+      .then(async (response) => {
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(
+            err.error || `Server responded with status: ${response.status}`
+          );
+        }
+        return response.json();
+      })
       .then((data) => {
         console.log("Lease created successfully:", data);
+
+        setFormData({
+          property_id: "",
+          start_date: "",
+          end_date: "",
+          price_per_month: "",
+          is_renewal: false,
+          note: "",
+          tenants: [{ name: "", email: "" }],
+        });
+        setDisplayedRent("");
+        setReloadProperties((prev) => prev + 1);
       })
       .catch((error) => {
         console.error("Error creating lease:", error);
+        setSnackbarMessage(`Error creating lease: ${error.message}`);
+        setSnackbarOpen(true);
       });
   };
 
@@ -176,12 +203,7 @@ function NewLeaseForm() {
                 control={
                   <Switch
                     checked={formData.is_renewal}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        is_renewal: e.target.checked,
-                      }))
-                    }
+                    onChange={handleChange}
                     name="is_renewal"
                     color="primary"
                   />
@@ -295,6 +317,16 @@ function NewLeaseForm() {
           </Button>
         </form>
       </Paper>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
