@@ -1,15 +1,16 @@
 import React from "react";
-import "./App.css";
 import AddPropertyForm from "./AddPropertyForm";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
+
+const theme = createTheme();
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Add a New Property</h1>
-        <AddPropertyForm />
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AddPropertyForm />
+    </ThemeProvider>
   );
 }
 
