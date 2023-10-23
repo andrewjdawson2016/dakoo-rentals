@@ -7,7 +7,7 @@ const AddPropertyForm = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "https://dakoo-rentals-server-a20f6c2bf881.herokuapp.com/properties",
+        `${process.env.REACT_APP_SERVER_URL}/properties`,
         {
           method: "POST",
           headers: {
