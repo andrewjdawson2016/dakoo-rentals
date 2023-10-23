@@ -16,9 +16,30 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { DateTime } from "luxon";
 
 function NewLeaseForm() {
   const [displayedRent, setDisplayedRent] = useState("");
+  const [formData, setFormData] = useState({
+    property_id: "",
+    start_date: "",
+    end_date: "",
+    price_per_month: "",
+    is_renewal: false,
+    note: "",
+    tenants: [{ name: "", email: "" }],
+  });
+  const [properties, setProperties] = useState([]);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/properties`)
+      .then((response) => response.json())
+      .then((data) => setProperties(data))
+      .catch((error) => {
+        console.error("Error fetching properties:", error);
+      });
+  }, []);
 
   const handleRentChange = (event) => {
     const rawValue = event.target.value.replace(/\D/g, "");
@@ -39,29 +60,39 @@ function NewLeaseForm() {
     setDisplayedRent(formattedValue);
   };
 
-  const [formData, setFormData] = useState({
-    property_id: "",
-    start_date: "",
-    end_date: "",
-    price_per_month: "",
-    is_renewal: false,
-    note: "",
-    tenants: [{ name: "", email: "" }],
-  });
-
-  const [properties, setProperties] = useState([]);
-
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/properties`)
-      .then((response) => response.json())
-      .then((data) => setProperties(data))
-      .catch((error) => {
-        console.error("Error fetching properties:", error);
-      });
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "property_id") {
+      const property = properties.find((p) => p.id === value);
+      setSelectedProperty(property);
+    }
+    if (name === "is_renewal") {
+      if (
+        e.target.checked &&
+        selectedProperty &&
+        selectedProperty.leases &&
+        selectedProperty.leases.length > 0
+      ) {
+        const lastLeaseEndDate = selectedProperty.leases[0].end_date;
+        const newStartDate = DateTime.fromISO(lastLeaseEndDate)
+          .plus({ days: 1 })
+          .toISODate();
+        setFormData((prev) => ({
+          ...prev,
+          start_date: newStartDate,
+          [name]: e.target.checked,
+        }));
+        return;
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          start_date: "",
+          [name]: e.target.checked,
+        }));
+        return;
+      }
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -138,6 +169,26 @@ function NewLeaseForm() {
             </Select>
           </FormControl>
 
+          {selectedProperty &&
+            selectedProperty.leases &&
+            selectedProperty.leases.length > 0 && (
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.is_renewal}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        is_renewal: e.target.checked,
+                      }))
+                    }
+                    name="is_renewal"
+                    color="primary"
+                  />
+                }
+                label="Is Renewal"
+              />
+            )}
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <TextField
@@ -150,8 +201,10 @@ function NewLeaseForm() {
                 onChange={handleChange}
                 required
                 InputLabelProps={{ shrink: true }}
+                disabled={formData.is_renewal}
               />
             </Grid>
+
             <Grid item xs={6}>
               <TextField
                 fullWidth
@@ -166,7 +219,6 @@ function NewLeaseForm() {
               />
             </Grid>
           </Grid>
-
           <TextField
             fullWidth
             margin="normal"
@@ -176,24 +228,6 @@ function NewLeaseForm() {
             onChange={handleRentChange}
             required
           />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={formData.is_renewal}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    is_renewal: e.target.checked,
-                  }))
-                }
-                name="is_renewal"
-                color="primary"
-              />
-            }
-            label="Is Renewal"
-          />
-
           {!formData.is_renewal && (
             <div>
               {formData.tenants.map((tenant, index) => (
@@ -240,7 +274,6 @@ function NewLeaseForm() {
               ))}
             </div>
           )}
-
           <TextField
             fullWidth
             margin="normal"
@@ -251,7 +284,6 @@ function NewLeaseForm() {
             multiline
             rows={4}
           />
-
           <Button
             type="submit"
             fullWidth
