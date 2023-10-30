@@ -19,6 +19,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { DateTime } from "luxon";
+import { listProperties, createLease } from "../api";
 
 function NewLeaseForm() {
   const [displayedRent, setDisplayedRent] = useState("");
@@ -32,18 +33,21 @@ function NewLeaseForm() {
     tenants: [{ name: "", email: "" }],
   });
   const [properties, setProperties] = useState([]);
+  // TODO: convert this to an index instead
   const [selectedProperty, setSelectedProperty] = useState(null);
+  // TODO: factor out snackbar into its own react child component
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [reloadProperties, setReloadProperties] = useState(0);
   const [previousTenants, setPreviousTenants] = useState([]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/properties`)
-      .then((response) => response.json())
-      .then((data) => setProperties(data))
-      .catch((error) => {
-        console.error("Error fetching properties:", error);
+    listProperties()
+      .then((properties) => {
+        setProperties(properties);
+      })
+      .catch((e) => {
+        console.error("Error fetching properties:", error.message);
       });
   }, [reloadProperties]);
 
@@ -140,25 +144,17 @@ function NewLeaseForm() {
       delete dataToSend.tenants;
     }
 
-    fetch(`${process.env.REACT_APP_SERVER_URL}/leases`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataToSend),
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          const err = await response.json();
-          throw new Error(
-            err.error || `Server responded with status: ${response.status}`
-          );
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Lease created successfully:", data);
-
+    createLease(
+      formData.property_id,
+      formData.start_date,
+      formData.end_date,
+      formData.price_per_month,
+      formData.is_renewal,
+      formData.note,
+      formData.tenants
+    )
+      .then(() => {
+        console.log("Lease created successfully:");
         setFormData({
           property_id: "",
           start_date: "",
@@ -171,9 +167,9 @@ function NewLeaseForm() {
         setDisplayedRent("");
         setReloadProperties((prev) => prev + 1);
       })
-      .catch((error) => {
-        console.error("Error creating lease:", error);
-        setSnackbarMessage(`Error creating lease: ${error.message}`);
+      .catch((e) => {
+        console.error("Error creating lease:", e);
+        setSnackbarMessage(`Error creating lease: ${e.message}`);
         setSnackbarOpen(true);
       });
   };
