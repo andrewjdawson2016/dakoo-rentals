@@ -1,12 +1,18 @@
 function parseAndFormatRent(rentString) {
   const rawValue = rentString.replace(/[^\d.]/g, "");
-  const numericValue = parseFloat(rawValue) || 0;
+  let numericValue = parseFloat(rawValue);
+
+  if (isNaN(numericValue) || Math.round(numericValue) === 0) {
+    return { numericValue: 0, formattedValue: "" };
+  }
+
+  numericValue = Math.round(numericValue);
 
   const formattedValue = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(numericValue);
 
   return { numericValue, formattedValue };

@@ -18,7 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { DateTime } from "luxon";
 import { listProperties, createLease } from "../api";
-import SnackbarComponent from "./SnackbarComponent";
+import SnackbarComponent from "./Snackbar";
 import { parseAndFormatRent } from "../util";
 
 function NewLeaseForm() {
@@ -33,13 +33,12 @@ function NewLeaseForm() {
     tenants: [{ name: "", email: "" }],
   });
   const [properties, setProperties] = useState([]);
-  // TODO: convert this to an index instead
   const [selectedProperty, setSelectedProperty] = useState(null);
-  // TODO: factor out snackbar into its own react child component
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [reloadProperties, setReloadProperties] = useState(0);
   const [previousTenants, setPreviousTenants] = useState([]);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     listProperties()
@@ -88,7 +87,6 @@ function NewLeaseForm() {
           start_date: newStartDate,
           [name]: e.target.checked,
         }));
-        return;
       } else {
         setPreviousTenants([]);
         setFormData((prev) => ({
@@ -96,10 +94,8 @@ function NewLeaseForm() {
           start_date: "",
           [name]: e.target.checked,
         }));
-        return;
       }
     }
-
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -136,16 +132,7 @@ function NewLeaseForm() {
       delete dataToSend.tenants;
     }
 
-    // TODO: I think this should be using dataToSend rather than formData
-    createLease({
-      property_id: formData.property_id,
-      start_date: formData.start_date,
-      end_date: formData.end_date,
-      price_per_month: formData.price_per_month,
-      is_renewal: formData.is_renewal,
-      note: formData.note,
-      tenants: formData.tenants,
-    })
+    createLease(dataToSend)
       .then(() => {
         console.log("Lease created successfully:");
         setFormData({
