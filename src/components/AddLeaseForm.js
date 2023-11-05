@@ -13,13 +13,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { DateTime } from "luxon";
 import { listProperties, createLease } from "../api";
+import SnackbarComponent from "./SnackbarComponent";
+import { parseAndFormatRent } from "../util";
 
 function NewLeaseForm() {
   const [displayedRent, setDisplayedRent] = useState("");
@@ -51,23 +51,14 @@ function NewLeaseForm() {
       });
   }, [reloadProperties]);
 
-  // TODO: this should be factored out into util function
   const handleRentChange = (event) => {
-    const rawValue = event.target.value.replace(/\D/g, "");
-    const numericValue = parseInt(rawValue, 10);
-
+    const { numericValue, formattedValue } = parseAndFormatRent(
+      event.target.value
+    );
     setFormData((prev) => ({
       ...prev,
       price_per_month: numericValue,
     }));
-
-    const formattedValue = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(numericValue);
-
     setDisplayedRent(formattedValue);
   };
 
@@ -329,16 +320,11 @@ function NewLeaseForm() {
           </Button>
         </form>
       </Paper>
-      <Snackbar
+      <SnackbarComponent
         open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="error">
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+        message={snackbarMessage}
+        handleClose={() => setSnackbarOpen(false)}
+      />
     </Container>
   );
 }
