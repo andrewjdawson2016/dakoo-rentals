@@ -66,8 +66,8 @@ function NewLeaseForm() {
     if (name === "property_id") {
       const property = properties.find((p) => p.id === value);
       setSelectedProperty(property);
-    }
-    if (name === "is_renewal") {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    } else if (name === "is_renewal") {
       if (
         e.target.checked &&
         selectedProperty &&
@@ -95,8 +95,9 @@ function NewLeaseForm() {
           [name]: e.target.checked,
         }));
       }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleTenantChange = (index, field, value) => {
@@ -154,6 +155,7 @@ function NewLeaseForm() {
       });
   };
 
+  // TODO: remove form tag
   return (
     <Container component="main" maxWidth="md">
       <Paper style={{ padding: 16 }}>
