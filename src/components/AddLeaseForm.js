@@ -18,7 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { DateTime } from "luxon";
 import { listProperties, createLease } from "../api";
-import SnackbarComponent from "./Snackbar";
+import SnackbarAlert from "./SnackbarAlert";
 import { parseAndFormatRent } from "../util";
 
 function NewLeaseForm() {
@@ -306,7 +306,7 @@ function NewLeaseForm() {
           Submit
         </Button>
       </Paper>
-      <SnackbarComponent
+      <SnackbarAlert
         open={snackbarOpen}
         message={snackbarMessage}
         handleClose={() => setSnackbarOpen(false)}
