@@ -47,10 +47,11 @@ function NewLeaseForm() {
         setProperties(properties);
       })
       .catch((e) => {
-        console.error("Error fetching properties:", error.message);
+        console.error("Error fetching properties:", e.message);
       });
   }, [reloadProperties]);
 
+  // TODO: this should be factored out into util function
   const handleRentChange = (event) => {
     const rawValue = event.target.value.replace(/\D/g, "");
     const numericValue = parseInt(rawValue, 10);
@@ -144,15 +145,16 @@ function NewLeaseForm() {
       delete dataToSend.tenants;
     }
 
-    createLease(
-      formData.property_id,
-      formData.start_date,
-      formData.end_date,
-      formData.price_per_month,
-      formData.is_renewal,
-      formData.note,
-      formData.tenants
-    )
+    // TODO: I think this should be using dataToSend rather than formData
+    createLease({
+      property_id: formData.property_id,
+      start_date: formData.start_date,
+      end_date: formData.end_date,
+      price_per_month: formData.price_per_month,
+      is_renewal: formData.is_renewal,
+      note: formData.note,
+      tenants: formData.tenants,
+    })
       .then(() => {
         console.log("Lease created successfully:");
         setFormData({
