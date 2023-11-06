@@ -1,4 +1,6 @@
-function parseAndFormatRent(rentString) {
+import { DateTime } from "luxon";
+
+export function parseAndFormatRent(rentString) {
   const rawValue = rentString.replace(/[^\d.]/g, "");
   let numericValue = parseFloat(rawValue);
 
@@ -18,6 +20,11 @@ function parseAndFormatRent(rentString) {
   return { numericValue, formattedValue };
 }
 
+export function getStartDateFromPrevious(prevLease) {
+  return DateTime.fromISO(prevLease.end_date).plus({ days: 1 }).toISODate();
+}
+
 module.exports = {
   parseAndFormatRent,
+  getStartDateFromPrevious,
 };

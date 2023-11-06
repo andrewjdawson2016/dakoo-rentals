@@ -1,4 +1,4 @@
-const { parseAndFormatRent } = require("../index");
+import { parseAndFormatRent, getStartDateFromPrevious } from "../index";
 
 describe("parseAndFormatRent", () => {
   test("should handle a string with decimal points, rounding to the nearest dollar", () => {
@@ -57,5 +57,35 @@ describe("parseAndFormatRent", () => {
     const output = parseAndFormatRent(input);
     expect(output.numericValue).toBe(0);
     expect(output.formattedValue).toBe("");
+  });
+});
+
+describe("getStartDateFromPrevious", () => {
+  it("should return the next day as a start date in ISO format", () => {
+    const prevLease = { end_date: "2023-01-15" };
+    const expectedStartDate = "2023-01-16";
+    const actualStartDate = getStartDateFromPrevious(prevLease);
+    expect(actualStartDate).toBe(expectedStartDate);
+  });
+
+  it("should handle leap years correctly", () => {
+    const prevLease = { end_date: "2024-02-29" };
+    const expectedStartDate = "2024-03-01";
+    const actualStartDate = getStartDateFromPrevious(prevLease);
+    expect(actualStartDate).toBe(expectedStartDate);
+  });
+
+  it("should roll over to the next month correctly", () => {
+    const prevLease = { end_date: "2023-03-31" };
+    const expectedStartDate = "2023-04-01";
+    const actualStartDate = getStartDateFromPrevious(prevLease);
+    expect(actualStartDate).toBe(expectedStartDate);
+  });
+
+  it("should roll over to the next year correctly", () => {
+    const prevLease = { end_date: "2023-12-31" };
+    const expectedStartDate = "2024-01-01";
+    const actualStartDate = getStartDateFromPrevious(prevLease);
+    expect(actualStartDate).toBe(expectedStartDate);
   });
 });

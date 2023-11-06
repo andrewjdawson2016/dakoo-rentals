@@ -17,6 +17,11 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    }
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -42,6 +47,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "babel-jest": "^29.7.0",
     "jest": "^27.5.1"
   }
 }

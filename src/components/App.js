@@ -1,11 +1,7 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AddLeaseForm from "./AddLeaseForm";
+import PropertiesTable from "./PropertiesTable";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 
@@ -15,16 +11,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/add-lease" />
-          </Route>
-          <Route path="/add-lease">
-            <AddLeaseForm />
-          </Route>
-        </Switch>
-      </Router>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<PropertiesTable />} />
+          <Route path="/add-lease" element={<AddLeaseForm />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

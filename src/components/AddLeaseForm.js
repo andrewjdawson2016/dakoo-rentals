@@ -7,7 +7,6 @@ import {
   Grid,
   Container,
   Paper,
-  Typography,
   IconButton,
   FormControl,
   InputLabel,
@@ -16,10 +15,9 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { DateTime } from "luxon";
 import { listProperties, createLease } from "../api";
 import SnackbarAlert from "./SnackbarAlert";
-import { parseAndFormatRent } from "../util";
+import { parseAndFormatRent, getStartDateFromPrevious } from "../util";
 
 function NewLeaseForm() {
   const [displayedRent, setDisplayedRent] = useState("");
@@ -68,23 +66,12 @@ function NewLeaseForm() {
       setSelectedProperty(property);
       setFormData((prev) => ({ ...prev, [name]: value }));
     } else if (name === "is_renewal") {
-      if (
-        e.target.checked &&
-        selectedProperty &&
-        selectedProperty.leases &&
-        selectedProperty.leases.length > 0
-      ) {
-        const lastLease = selectedProperty.leases[0];
-        const lastLeaseEndDate = lastLease.end_date;
-        const newStartDate = DateTime.fromISO(lastLeaseEndDate)
-          .plus({ days: 1 })
-          .toISODate();
-
-        setPreviousTenants(lastLease.tenants);
-
+      if (e.target.checked) {
+        const prevLease = selectedProperty.leases[0];
+        setPreviousTenants(prevLease.tenants);
         setFormData((prev) => ({
           ...prev,
-          start_date: newStartDate,
+          start_date: getStartDateFromPrevious(prevLease),
           [name]: e.target.checked,
         }));
       } else {
@@ -157,9 +144,6 @@ function NewLeaseForm() {
   return (
     <Container component="main" maxWidth="md">
       <Paper style={{ padding: 16 }}>
-        <Typography variant="h6" align="center">
-          Create New Lease
-        </Typography>
         <FormControl fullWidth margin="normal" required>
           <InputLabel htmlFor="property_id">Property</InputLabel>
           <Select
