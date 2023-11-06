@@ -60,31 +60,39 @@ function NewLeaseForm() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "property_id") {
-      const property = properties.find((p) => p.id === value);
-      setSelectedProperty(property);
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    } else if (name === "is_renewal") {
-      if (e.target.checked) {
-        const prevLease = selectedProperty.leases[0];
-        setPreviousTenants(prevLease.tenants);
-        setFormData((prev) => ({
-          ...prev,
-          start_date: getStartDateFromPrevious(prevLease),
-          [name]: e.target.checked,
-        }));
-      } else {
-        setPreviousTenants([]);
-        setFormData((prev) => ({
-          ...prev,
-          start_date: "",
-          [name]: e.target.checked,
-        }));
-      }
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, checked } = e.target;
+    let updates = {};
+
+    switch (name) {
+      case "property_id":
+        const property = properties.find((p) => p.id === value);
+        setSelectedProperty(property);
+        updates[name] = value;
+        break;
+
+      case "is_renewal":
+        if (checked) {
+          const prevLease = selectedProperty.leases[0];
+          setPreviousTenants(prevLease.tenants);
+          updates = {
+            start_date: getStartDateFromPrevious(prevLease),
+            [name]: checked,
+          };
+        } else {
+          setPreviousTenants([]);
+          updates = {
+            start_date: "",
+            [name]: checked,
+          };
+        }
+        break;
+
+      default:
+        updates[name] = value;
+        break;
     }
+
+    setFormData((prev) => ({ ...prev, ...updates }));
   };
 
   const handleTenantChange = (index, field, value) => {
