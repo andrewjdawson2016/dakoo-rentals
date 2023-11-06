@@ -27,12 +27,9 @@ function PropertyTable() {
   const [currentAddress, setCurrentAddress] = useState("");
 
   useEffect(() => {
-    console.log("useEffect 1");
     if (!isDialogOpen) {
-      console.log("useEffect 2");
       listProperties()
         .then((properties) => {
-          console.log("useEffect 2.1");
           const newMap = new Map();
           properties.forEach((property) => {
             const currentLease = findLeaseOnDate(
@@ -41,7 +38,6 @@ function PropertyTable() {
             );
             newMap.set(property.address, currentLease || null);
           });
-          console.log("useEffect 3");
           setPropertyLeasesMap(newMap);
         })
         .catch((e) => {
