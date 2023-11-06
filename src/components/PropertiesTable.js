@@ -32,6 +32,7 @@ function PropertyTable() {
       console.log("useEffect 2");
       listProperties()
         .then((properties) => {
+          console.log("useEffect 2.1");
           const newMap = new Map();
           properties.forEach((property) => {
             const currentLease = findLeaseOnDate(
