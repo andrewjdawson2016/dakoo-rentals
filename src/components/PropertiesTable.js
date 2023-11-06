@@ -27,24 +27,23 @@ function PropertyTable() {
   const [currentAddress, setCurrentAddress] = useState("");
 
   useEffect(() => {
-    if (!isDialogOpen) {
-      listProperties()
-        .then((properties) => {
-          const newMap = new Map();
-          properties.forEach((property) => {
-            const currentLease = findLeaseOnDate(
-              property.leases,
-              DateTime.now()
-            );
-            newMap.set(property.address, currentLease || null);
-          });
-          setPropertyLeasesMap(newMap);
-        })
-        .catch((e) => {
-          console.error("Error fetching properties:", e.message);
+    reloadPropertyLeaseMap();
+  });
+
+  const reloadPropertyLeaseMap = () => {
+    listProperties()
+      .then((properties) => {
+        const newMap = new Map();
+        properties.forEach((property) => {
+          const currentLease = findLeaseOnDate(property.leases, DateTime.now());
+          newMap.set(property.address, currentLease || null);
         });
-    }
-  }, [isDialogOpen]);
+        setPropertyLeasesMap(newMap);
+      })
+      .catch((e) => {
+        console.error("Error fetching properties:", e.message);
+      });
+  };
 
   const StatusBox = ({ status }) => {
     const boxStyles = {
@@ -74,8 +73,8 @@ function PropertyTable() {
 
   const toggleDialog = (address = "") => {
     if (isDialogOpen) {
-      console.log("toggleDialog");
       setIsDialogOpen(false);
+      reloadPropertyLeaseMap();
     } else {
       setCurrentAddress(address);
       setIsDialogOpen(true);
