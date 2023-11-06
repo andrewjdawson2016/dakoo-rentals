@@ -1,7 +1,7 @@
 import {
   parseAndFormatRent,
   getStartDateFromPrevious,
-  isDateWithinLeases,
+  findLeaseOnDate,
 } from "../index";
 import { DateTime } from "luxon";
 
@@ -95,40 +95,37 @@ describe("getStartDateFromPrevious", () => {
   });
 });
 
-describe("isDateWithinLeases", () => {
-  test("should return true if target date is within a lease period", () => {
-    const leases = [
-      { start_date: "2023-01-01", end_date: "2023-06-30" },
-      { start_date: "2023-07-01", end_date: "2023-12-31" },
-    ];
-    const targetDate = DateTime.fromISO("2023-07-15");
-    expect(isDateWithinLeases(leases, targetDate)).toBe(true);
+describe("findLeaseOnDate", () => {
+  const leases = [
+    { start_date: "2023-01-01", end_date: "2023-06-30" },
+    { start_date: "2023-07-01", end_date: "2023-12-31" },
+  ];
+
+  test("should return the lease if target date is within a lease period", () => {
+    const targetDate = DateTime.fromISO("2023-02-15");
+    const expectedLease = leases[0];
+    expect(findLeaseOnDate(leases, targetDate)).toEqual(expectedLease);
   });
 
-  test("should return false if target date is not within any lease periods", () => {
-    const leases = [
-      { start_date: "2023-01-01", end_date: "2023-06-30" },
-      { start_date: "2023-08-01", end_date: "2023-12-31" },
-    ];
-    const targetDate = DateTime.fromISO("2023-07-15");
-    expect(isDateWithinLeases(leases, targetDate)).toBe(false);
+  test("should return null if target date is not within any lease periods", () => {
+    const targetDate = DateTime.fromISO("2024-01-01");
+    expect(findLeaseOnDate(leases, targetDate)).toBeNull();
   });
 
-  test("should return false for empty lease array", () => {
-    const leases = [];
-    const targetDate = DateTime.fromISO("2023-07-15");
-    expect(isDateWithinLeases(leases, targetDate)).toBe(false);
+  test("should return the lease if target date is the start date of a lease period", () => {
+    const targetDate = DateTime.fromISO("2023-07-01");
+    const expectedLease = leases[1];
+    expect(findLeaseOnDate(leases, targetDate)).toEqual(expectedLease);
   });
 
-  test("should return true if target date is exactly the start date of a lease period", () => {
-    const leases = [{ start_date: "2023-07-15", end_date: "2023-12-31" }];
-    const targetDate = DateTime.fromISO("2023-07-15");
-    expect(isDateWithinLeases(leases, targetDate)).toBe(true);
+  test("should return the lease if target date is the end date of a lease period", () => {
+    const targetDate = DateTime.fromISO("2023-06-30");
+    const expectedLease = leases[0];
+    expect(findLeaseOnDate(leases, targetDate)).toEqual(expectedLease);
   });
 
-  test("should return true if target date is exactly the end date of a lease period", () => {
-    const leases = [{ start_date: "2023-01-01", end_date: "2023-07-15" }];
-    const targetDate = DateTime.fromISO("2023-07-15");
-    expect(isDateWithinLeases(leases, targetDate)).toBe(true);
+  test("should return null if the leases array is empty", () => {
+    const targetDate = DateTime.fromISO("2023-02-15");
+    expect(findLeaseOnDate([], targetDate)).toBeNull();
   });
 });
