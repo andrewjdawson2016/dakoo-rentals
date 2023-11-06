@@ -3,6 +3,7 @@ import { listProperties, createProperty } from "../api";
 import {
   Button,
   Input,
+  TableHead,
   Table,
   TableBody,
   TableCell,
@@ -11,28 +12,39 @@ import {
   Container,
   TableFooter,
   Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { findLeaseOnDate, formatRent } from "../util";
 import { DateTime } from "luxon";
+import AddLeaseForm from "./AddLeaseForm";
 
 function PropertyTable() {
   const [propertyLeasesMap, setPropertyLeasesMap] = useState(new Map());
   const [newAddress, setNewAddress] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState("");
 
   useEffect(() => {
-    listProperties()
-      .then((properties) => {
-        const newMap = new Map();
-        properties.forEach((property) => {
-          const currentLease = findLeaseOnDate(property.leases, DateTime.now());
-          newMap.set(property.address, currentLease || null);
+    if (!isDialogOpen) {
+      listProperties()
+        .then((properties) => {
+          const newMap = new Map();
+          properties.forEach((property) => {
+            const currentLease = findLeaseOnDate(
+              property.leases,
+              DateTime.now()
+            );
+            newMap.set(property.address, currentLease || null);
+          });
+          setPropertyLeasesMap(newMap);
+        })
+        .catch((e) => {
+          console.error("Error fetching properties:", e.message);
         });
-        setPropertyLeasesMap(newMap);
-      })
-      .catch((e) => {
-        console.error("Error fetching properties:", e.message);
-      });
-  }, []);
+    }
+  }, [isDialogOpen]);
 
   const StatusBox = ({ status }) => {
     const boxStyles = {
@@ -60,6 +72,15 @@ function PropertyTable() {
     }
   };
 
+  const toggleDialog = (address = "") => {
+    if (isDialogOpen) {
+      setIsDialogOpen(false);
+    } else {
+      setCurrentAddress(address);
+      setIsDialogOpen(true);
+    }
+  };
+
   return (
     <Container component="main" maxWidth="md" style={{ marginTop: "20px" }}>
       <TableContainer
@@ -69,6 +90,15 @@ function PropertyTable() {
         }}
       >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ fontWeight: "bold" }}>Address</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Status</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Monthly Rent</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Lease Dates</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}></TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
             {Array.from(propertyLeasesMap.entries()).map(
               ([address, leaseDetails]) => (
@@ -96,6 +126,18 @@ function PropertyTable() {
                       <TableCell align="left">-</TableCell>
                     </>
                   )}
+                  <TableCell align="right">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => toggleDialog(address)}
+                      style={{
+                        textTransform: "none",
+                      }}
+                    >
+                      Add Lease
+                    </Button>
+                  </TableCell>
                 </TableRow>
               )
             )}
@@ -123,6 +165,7 @@ function PropertyTable() {
               </TableCell>
               <TableCell style={{ padding: 0, border: 0 }}></TableCell>
               <TableCell style={{ padding: 0, border: 0 }}></TableCell>
+              <TableCell style={{ padding: 0, border: 0 }}></TableCell>
               <TableCell
                 align="right"
                 style={{ paddingTop: "20px", paddingBottom: "20px" }}
@@ -142,6 +185,20 @@ function PropertyTable() {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Dialog
+        open={isDialogOpen}
+        onClose={() => toggleDialog()}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>New Lease: {currentAddress}</DialogTitle>
+        <DialogContent>
+          <AddLeaseForm
+            currentAddress={currentAddress}
+            onSubmitSuccess={() => toggleDialog()}
+          />
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 }

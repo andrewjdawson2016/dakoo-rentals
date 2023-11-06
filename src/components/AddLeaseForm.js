@@ -6,12 +6,7 @@ import {
   Switch,
   Grid,
   Container,
-  Paper,
   IconButton,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -19,7 +14,7 @@ import { listProperties, createLease } from "../api";
 import SnackbarAlert from "./SnackbarAlert";
 import { parseAndFormatRent, getStartDateFromPrevious } from "../util";
 
-function NewLeaseForm() {
+function NewLeaseForm({ currentAddress, onSubmitSuccess }) {
   const [displayedRent, setDisplayedRent] = useState("");
   const [formData, setFormData] = useState({
     property_id: "",
@@ -30,9 +25,7 @@ function NewLeaseForm() {
     note: "",
     tenants: [{ name: "", email: "" }],
   });
-  const [properties, setProperties] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState(null);
-  const [reloadProperties, setReloadProperties] = useState(0);
   const [previousTenants, setPreviousTenants] = useState([]);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -41,12 +34,17 @@ function NewLeaseForm() {
   useEffect(() => {
     listProperties()
       .then((properties) => {
-        setProperties(properties);
+        const property = properties.find((p) => p.address === currentAddress);
+        setSelectedProperty(property);
+        setFormData((prev) => ({
+          ...prev,
+          property_id: property ? property.id : "",
+        }));
       })
       .catch((e) => {
         console.error("Error fetching properties:", e.message);
       });
-  }, [reloadProperties]);
+  });
 
   const handleRentChange = (event) => {
     const { numericValue, formattedValue } = parseAndFormatRent(
@@ -64,12 +62,6 @@ function NewLeaseForm() {
     let updates = {};
 
     switch (name) {
-      case "property_id":
-        const property = properties.find((p) => p.id === value);
-        setSelectedProperty(property);
-        updates[name] = value;
-        break;
-
       case "is_renewal":
         if (checked) {
           const prevLease = selectedProperty.leases[0];
@@ -139,8 +131,8 @@ function NewLeaseForm() {
           tenants: [{ name: "", email: "" }],
         });
         setDisplayedRent("");
-        setReloadProperties((prev) => prev + 1);
         setSelectedProperty(null);
+        onSubmitSuccess();
       })
       .catch((e) => {
         console.error("Error creating lease:", e);
@@ -151,153 +143,134 @@ function NewLeaseForm() {
 
   return (
     <Container component="main" maxWidth="md">
-      <Paper style={{ padding: 16 }}>
-        <FormControl fullWidth margin="normal" required>
-          <InputLabel htmlFor="property_id">Property</InputLabel>
-          <Select
-            label="Property"
-            name="property_id"
-            value={formData.property_id}
-            onChange={handleChange}
-            id="property_id"
-          >
-            {properties.map((property) => (
-              <MenuItem key={property.id} value={property.id}>
-                {property.address}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {selectedProperty &&
-          selectedProperty.leases &&
-          selectedProperty.leases.length > 0 && (
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formData.is_renewal}
-                  onChange={handleChange}
-                  name="is_renewal"
-                  color="primary"
-                />
-              }
-              label="Is Renewal"
-            />
-          )}
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              margin="normal"
-              type="date"
-              label="Start Date"
-              name="start_date"
-              value={formData.start_date}
-              onChange={handleChange}
-              required
-              InputLabelProps={{ shrink: true }}
-              disabled={formData.is_renewal}
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              margin="normal"
-              type="date"
-              label="End Date"
-              name="end_date"
-              value={formData.end_date}
-              onChange={handleChange}
-              required
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-        </Grid>
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Rent"
-          name="price_per_month"
-          value={displayedRent}
-          onChange={handleRentChange}
-          required
-        />
-
-        {(formData.is_renewal ? previousTenants : formData.tenants).map(
-          (tenant, index) => (
-            <Grid container spacing={2} key={index} alignItems="center">
-              <Grid item xs={5}>
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Tenant Name"
-                  value={tenant.name}
-                  onChange={(e) =>
-                    !formData.is_renewal &&
-                    handleTenantChange(index, "name", e.target.value)
-                  }
-                  required
-                  disabled={formData.is_renewal}
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Tenant Email"
-                  type="email"
-                  value={tenant.email}
-                  onChange={(e) =>
-                    !formData.is_renewal &&
-                    handleTenantChange(index, "email", e.target.value)
-                  }
-                  required
-                  disabled={formData.is_renewal}
-                />
-              </Grid>
-              <Grid item xs={2}>
-                {!formData.is_renewal && (
-                  <>
-                    <IconButton
-                      onClick={() => removeTenant(index)}
-                      disabled={formData.tenants.length === 1}
-                    >
-                      <RemoveIcon />
-                    </IconButton>
-                    {index === formData.tenants.length - 1 && (
-                      <IconButton onClick={addTenant}>
-                        <AddIcon />
-                      </IconButton>
-                    )}
-                  </>
-                )}
-              </Grid>
-            </Grid>
-          )
+      {selectedProperty &&
+        selectedProperty.leases &&
+        selectedProperty.leases.length > 0 && (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formData.is_renewal}
+                onChange={handleChange}
+                name="is_renewal"
+                color="primary"
+              />
+            }
+            label="Is Renewal"
+          />
         )}
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            margin="normal"
+            type="date"
+            label="Start Date"
+            name="start_date"
+            value={formData.start_date}
+            onChange={handleChange}
+            required
+            InputLabelProps={{ shrink: true }}
+            disabled={formData.is_renewal}
+          />
+        </Grid>
 
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Optional Note"
-          name="note"
-          value={formData.note}
-          onChange={handleChange}
-          multiline
-          rows={4}
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          style={{ marginTop: 16 }}
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
-      </Paper>
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            margin="normal"
+            type="date"
+            label="End Date"
+            name="end_date"
+            value={formData.end_date}
+            onChange={handleChange}
+            required
+            InputLabelProps={{ shrink: true }}
+          />
+        </Grid>
+      </Grid>
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Rent"
+        name="price_per_month"
+        value={displayedRent}
+        onChange={handleRentChange}
+        required
+      />
+
+      {(formData.is_renewal ? previousTenants : formData.tenants).map(
+        (tenant, index) => (
+          <Grid container spacing={2} key={index} alignItems="center">
+            <Grid item xs={5}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Tenant Name"
+                value={tenant.name}
+                onChange={(e) =>
+                  !formData.is_renewal &&
+                  handleTenantChange(index, "name", e.target.value)
+                }
+                required
+                disabled={formData.is_renewal}
+              />
+            </Grid>
+            <Grid item xs={5}>
+              <TextField
+                fullWidth
+                margin="normal"
+                label="Tenant Email"
+                type="email"
+                value={tenant.email}
+                onChange={(e) =>
+                  !formData.is_renewal &&
+                  handleTenantChange(index, "email", e.target.value)
+                }
+                required
+                disabled={formData.is_renewal}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              {!formData.is_renewal && (
+                <>
+                  <IconButton
+                    onClick={() => removeTenant(index)}
+                    disabled={formData.tenants.length === 1}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                  {index === formData.tenants.length - 1 && (
+                    <IconButton onClick={addTenant}>
+                      <AddIcon />
+                    </IconButton>
+                  )}
+                </>
+              )}
+            </Grid>
+          </Grid>
+        )
+      )}
+
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Optional Note"
+        name="note"
+        value={formData.note}
+        onChange={handleChange}
+        multiline
+        rows={4}
+      />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        style={{ marginTop: 16 }}
+        onClick={handleSubmit}
+      >
+        Submit
+      </Button>
       <SnackbarAlert
         open={snackbarOpen}
         message={snackbarMessage}
