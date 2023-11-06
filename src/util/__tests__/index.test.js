@@ -1,4 +1,9 @@
-import { parseAndFormatRent, getStartDateFromPrevious } from "../index";
+import {
+  parseAndFormatRent,
+  getStartDateFromPrevious,
+  isDateWithinLeases,
+} from "../index";
+import { DateTime } from "luxon";
 
 describe("parseAndFormatRent", () => {
   test("should handle a string with decimal points, rounding to the nearest dollar", () => {
@@ -87,5 +92,43 @@ describe("getStartDateFromPrevious", () => {
     const expectedStartDate = "2024-01-01";
     const actualStartDate = getStartDateFromPrevious(prevLease);
     expect(actualStartDate).toBe(expectedStartDate);
+  });
+});
+
+describe("isDateWithinLeases", () => {
+  test("should return true if target date is within a lease period", () => {
+    const leases = [
+      { start_date: "2023-01-01", end_date: "2023-06-30" },
+      { start_date: "2023-07-01", end_date: "2023-12-31" },
+    ];
+    const targetDate = DateTime.fromISO("2023-07-15");
+    expect(isDateWithinLeases(leases, targetDate)).toBe(true);
+  });
+
+  test("should return false if target date is not within any lease periods", () => {
+    const leases = [
+      { start_date: "2023-01-01", end_date: "2023-06-30" },
+      { start_date: "2023-08-01", end_date: "2023-12-31" },
+    ];
+    const targetDate = DateTime.fromISO("2023-07-15");
+    expect(isDateWithinLeases(leases, targetDate)).toBe(false);
+  });
+
+  test("should return false for empty lease array", () => {
+    const leases = [];
+    const targetDate = DateTime.fromISO("2023-07-15");
+    expect(isDateWithinLeases(leases, targetDate)).toBe(false);
+  });
+
+  test("should return true if target date is exactly the start date of a lease period", () => {
+    const leases = [{ start_date: "2023-07-15", end_date: "2023-12-31" }];
+    const targetDate = DateTime.fromISO("2023-07-15");
+    expect(isDateWithinLeases(leases, targetDate)).toBe(true);
+  });
+
+  test("should return true if target date is exactly the end date of a lease period", () => {
+    const leases = [{ start_date: "2023-01-01", end_date: "2023-07-15" }];
+    const targetDate = DateTime.fromISO("2023-07-15");
+    expect(isDateWithinLeases(leases, targetDate)).toBe(true);
   });
 });

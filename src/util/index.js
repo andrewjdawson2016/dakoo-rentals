@@ -23,3 +23,11 @@ export function parseAndFormatRent(rentString) {
 export function getStartDateFromPrevious(prevLease) {
   return DateTime.fromISO(prevLease.end_date).plus({ days: 1 }).toISODate();
 }
+
+export function isDateWithinLeases(leases, targetDate) {
+  return leases.some((lease) => {
+    const startDate = DateTime.fromISO(lease.start_date);
+    const endDate = DateTime.fromISO(lease.end_date);
+    return targetDate >= startDate && targetDate <= endDate;
+  });
+}

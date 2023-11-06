@@ -7,7 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  Container,
 } from "@mui/material";
 
 function PropertyTable() {
@@ -24,31 +24,27 @@ function PropertyTable() {
   }, []);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Property ID</TableCell>
-            <TableCell align="right">Address</TableCell>
-            <TableCell align="right">Leases</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {properties.map((property) => (
-            <TableRow
-              key={property.id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {property.id}
-              </TableCell>
-              <TableCell align="right">{property.address}</TableCell>
-              <TableCell align="right">{property.leases.length}</TableCell>
+    <Container component="main" maxWidth="md" style={{ marginTop: "20px" }}>
+      <TableContainer style={{ boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="right">Address</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {properties.map((property) => (
+              <TableRow
+                key={property.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="right">{property.address}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 }
 
