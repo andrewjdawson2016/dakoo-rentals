@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { listProperties } from "../api";
+import { listProperties, createProperty } from "../api";
 import {
+  Button,
+  Input,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
   Container,
+  TableFooter,
   Box,
 } from "@mui/material";
 import { findLeaseOnDate, formatRent } from "../util";
@@ -14,6 +17,7 @@ import { DateTime } from "luxon";
 
 function PropertyTable() {
   const [propertyLeasesMap, setPropertyLeasesMap] = useState(new Map());
+  const [newAddress, setNewAddress] = useState("");
 
   useEffect(() => {
     listProperties()
@@ -39,6 +43,21 @@ function PropertyTable() {
       display: "inline-block",
     };
     return <Box style={boxStyles}>{status}</Box>;
+  };
+
+  const handleAddProperty = () => {
+    if (newAddress) {
+      createProperty({ address: newAddress })
+        .then(() => {
+          setPropertyLeasesMap(
+            new Map(propertyLeasesMap).set(newAddress, null)
+          );
+          setNewAddress("");
+        })
+        .catch((error) => {
+          console.error("Error adding property:", error.message);
+        });
+    }
   };
 
   return (
@@ -81,6 +100,46 @@ function PropertyTable() {
               )
             )}
           </TableBody>
+          <TableFooter
+            style={{
+              borderTop: "2px solid rgba(224, 224, 224, 1)",
+              backgroundColor: "#fafafa",
+            }}
+          >
+            <TableRow>
+              <TableCell
+                align="left"
+                style={{ paddingTop: "20px", paddingBottom: "20px" }}
+              >
+                <Input
+                  value={newAddress}
+                  onChange={(e) => setNewAddress(e.target.value)}
+                  placeholder="Address"
+                  fullWidth
+                  style={{
+                    fontSize: "0.875rem",
+                  }}
+                />
+              </TableCell>
+              <TableCell style={{ padding: 0, border: 0 }}></TableCell>
+              <TableCell style={{ padding: 0, border: 0 }}></TableCell>
+              <TableCell
+                align="right"
+                style={{ paddingTop: "20px", paddingBottom: "20px" }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddProperty}
+                  style={{
+                    textTransform: "none",
+                  }}
+                >
+                  Add Property
+                </Button>
+              </TableCell>
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
     </Container>
