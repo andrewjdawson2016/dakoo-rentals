@@ -23,8 +23,3 @@ export function parseAndFormatRent(rentString) {
 export function getStartDateFromPrevious(prevLease) {
   return DateTime.fromISO(prevLease.end_date).plus({ days: 1 }).toISODate();
 }
-
-module.exports = {
-  parseAndFormatRent,
-  getStartDateFromPrevious,
-};
