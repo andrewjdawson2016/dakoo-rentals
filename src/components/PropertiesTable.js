@@ -27,7 +27,9 @@ function PropertyTable() {
   const [currentAddress, setCurrentAddress] = useState("");
 
   useEffect(() => {
+    console.log("useEffect 1");
     if (!isDialogOpen) {
+      console.log("useEffect 2");
       listProperties()
         .then((properties) => {
           const newMap = new Map();
@@ -38,6 +40,7 @@ function PropertyTable() {
             );
             newMap.set(property.address, currentLease || null);
           });
+          console.log("useEffect 3");
           setPropertyLeasesMap(newMap);
         })
         .catch((e) => {
@@ -74,6 +77,7 @@ function PropertyTable() {
 
   const toggleDialog = (address = "") => {
     if (isDialogOpen) {
+      console.log("toggleDialog");
       setIsDialogOpen(false);
     } else {
       setCurrentAddress(address);
