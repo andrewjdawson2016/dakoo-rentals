@@ -83,7 +83,7 @@ function PropertyTable() {
               <TableCell style={{ fontWeight: "bold" }}>Status</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Rent</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Lease Dates</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Details</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -109,11 +109,11 @@ function PropertyTable() {
                     </>
                   ) : (
                     <>
-                      <TableCell align="left">-</TableCell>
-                      <TableCell align="left">-</TableCell>
+                      <TableCell align="left"></TableCell>
+                      <TableCell align="left"></TableCell>
                     </>
                   )}
-                  <TableCell align="left">
+                  <TableCell align="right">
                     <Button
                       variant="contained"
                       size="small"
@@ -155,6 +155,7 @@ function PropertyTable() {
                   }}
                 />
               </TableCell>
+              <TableCell style={{ padding: 0, border: 0 }}></TableCell>
               <TableCell style={{ padding: 0, border: 0 }}></TableCell>
               <TableCell style={{ padding: 0, border: 0 }}></TableCell>
               <TableCell
