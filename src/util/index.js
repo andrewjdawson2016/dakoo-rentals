@@ -1,5 +1,19 @@
 import { DateTime } from "luxon";
 
+export function formatDateRange(startDateISO, endDateISO) {
+  const start = DateTime.fromISO(startDateISO);
+  const end = DateTime.fromISO(endDateISO);
+
+  if (!start.isValid || !end.isValid) {
+    throw new Error("Invalid start or end date");
+  }
+
+  const formattedStartDate = start.toFormat("MMMM d, yyyy");
+  const formattedEndDate = end.toFormat("MMMM d, yyyy");
+
+  return `${formattedStartDate} - ${formattedEndDate}`;
+}
+
 export function parseAndFormatRent(rentString) {
   const rawValue = rentString.replace(/[^\d.]/g, "");
   let numericValue = parseFloat(rawValue);

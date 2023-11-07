@@ -2,8 +2,48 @@ import {
   parseAndFormatRent,
   getStartDateFromPrevious,
   findLeaseOnDate,
+  formatDateRange,
 } from "../index";
 import { DateTime } from "luxon";
+
+describe("formatDateRange", () => {
+  it("formats a date range correctly", () => {
+    const startDate = "2023-07-01";
+    const endDate = "2024-06-30";
+    const range = formatDateRange(startDate, endDate);
+    expect(range).toBe("July 1, 2023 - June 30, 2024");
+  });
+
+  it("throws an error for invalid start dates", () => {
+    const startDate = "invalid-date";
+    const endDate = "2024-06-30";
+    expect(() => formatDateRange(startDate, endDate)).toThrow(
+      "Invalid start or end date"
+    );
+  });
+
+  it("throws an error for invalid end dates", () => {
+    const startDate = "2023-07-01";
+    const endDate = "invalid-date";
+    expect(() => formatDateRange(startDate, endDate)).toThrow(
+      "Invalid start or end date"
+    );
+  });
+
+  it("formats a date range for the same start and end date", () => {
+    const startDate = "2023-07-01";
+    const endDate = "2023-07-01";
+    const range = formatDateRange(startDate, endDate);
+    expect(range).toBe("July 1, 2023 - July 1, 2023");
+  });
+
+  it("formats a date range across years correctly", () => {
+    const startDate = "2022-12-31";
+    const endDate = "2023-01-01";
+    const range = formatDateRange(startDate, endDate);
+    expect(range).toBe("December 31, 2022 - January 1, 2023");
+  });
+});
 
 describe("parseAndFormatRent", () => {
   test("should handle a string with decimal points, rounding to the nearest dollar", () => {
