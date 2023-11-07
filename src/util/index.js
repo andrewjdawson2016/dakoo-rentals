@@ -19,12 +19,14 @@ export function formatRent(numericValue) {
     return "";
   }
 
-  return new Intl.NumberFormat("en-US", {
+  const formattedValue = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(Math.round(numericValue));
+
+  return `${formattedValue}/mo.`;
 }
 
 export function getStartDateFromPrevious(prevLease) {
