@@ -94,7 +94,7 @@ function PropertyTable() {
             <TableRow>
               <TableCell style={{ fontWeight: "bold" }}>Address</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Status</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Monthly Rent</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Rent</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Lease Dates</TableCell>
               <TableCell style={{ fontWeight: "bold" }}></TableCell>
             </TableRow>
