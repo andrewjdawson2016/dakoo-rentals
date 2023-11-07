@@ -1,5 +1,12 @@
 import { DateTime } from "luxon";
 
+export function getInitials(name) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("");
+}
+
 export function formatDateRange(startDateISO, endDateISO) {
   const start = DateTime.fromISO(startDateISO);
   const end = DateTime.fromISO(endDateISO);
@@ -40,7 +47,7 @@ export function formatRent(numericValue) {
     maximumFractionDigits: 0,
   }).format(Math.round(numericValue));
 
-  return `${formattedValue}/mo.`;
+  return `${formattedValue} / mo.`;
 }
 
 export function getStartDateFromPrevious(prevLease) {

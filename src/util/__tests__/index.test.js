@@ -50,14 +50,14 @@ describe("parseAndFormatRent", () => {
     const input = "1234.56";
     const output = parseAndFormatRent(input);
     expect(output.numericValue).toBe(1235);
-    expect(output.formattedValue).toBe("$1,235/mo.");
+    expect(output.formattedValue).toBe("$1,235 / mo.");
   });
 
   test("should handle a string with decimal points, rounding down to the nearest dollar", () => {
     const input = "1234.49";
     const output = parseAndFormatRent(input);
     expect(output.numericValue).toBe(1234);
-    expect(output.formattedValue).toBe("$1,234/mo.");
+    expect(output.formattedValue).toBe("$1,234 / mo.");
   });
 
   test("should return 0 and an empty string if the rounded value is 0", () => {
@@ -87,14 +87,14 @@ describe("parseAndFormatRent", () => {
     const input = "$1,234.99";
     const output = parseAndFormatRent(input);
     expect(output.numericValue).toBe(1235);
-    expect(output.formattedValue).toBe("$1,235/mo.");
+    expect(output.formattedValue).toBe("$1,235 / mo.");
   });
 
   test("should round and format a large number correctly", () => {
     const input = "1234567.89";
     const output = parseAndFormatRent(input);
     expect(output.numericValue).toBe(1234568);
-    expect(output.formattedValue).toBe("$1,234,568/mo.");
+    expect(output.formattedValue).toBe("$1,234,568 / mo.");
   });
 
   test("should handle a string with just a decimal point", () => {
