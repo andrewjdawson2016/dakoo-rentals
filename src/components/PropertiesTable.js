@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { listProperties, createProperty } from "../api";
 import {
   Button,
@@ -12,25 +13,21 @@ import {
   Container,
   TableFooter,
   Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
 } from "@mui/material";
 import { findLeaseOnDate, formatRent } from "../util";
 import { DateTime } from "luxon";
-import AddLeaseForm from "./AddLeaseForm";
 
 function PropertyTable() {
   const [propertyLeasesMap, setPropertyLeasesMap] = useState(new Map());
   const [newAddress, setNewAddress] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentAddress, setCurrentAddress] = useState("");
+  const navigate = useNavigate();
+
+  const goToLeaseDetails = (address) => {
+    const encodedAddress = encodeURIComponent(address);
+    navigate(`/${encodedAddress}`);
+  };
 
   useEffect(() => {
-    reloadPropertyLeaseMap();
-  });
-
-  const reloadPropertyLeaseMap = () => {
     listProperties()
       .then((properties) => {
         const newMap = new Map();
@@ -43,7 +40,7 @@ function PropertyTable() {
       .catch((e) => {
         console.error("Error fetching properties:", e.message);
       });
-  };
+  });
 
   const StatusBox = ({ status }) => {
     const boxStyles = {
@@ -71,16 +68,6 @@ function PropertyTable() {
     }
   };
 
-  const toggleDialog = (address = "") => {
-    if (isDialogOpen) {
-      setIsDialogOpen(false);
-      reloadPropertyLeaseMap();
-    } else {
-      setCurrentAddress(address);
-      setIsDialogOpen(true);
-    }
-  };
-
   return (
     <Container component="main" maxWidth="md" style={{ marginTop: "20px" }}>
       <TableContainer
@@ -96,7 +83,7 @@ function PropertyTable() {
               <TableCell style={{ fontWeight: "bold" }}>Status</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Rent</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Lease Dates</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}></TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Details</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -126,16 +113,21 @@ function PropertyTable() {
                       <TableCell align="left">-</TableCell>
                     </>
                   )}
-                  <TableCell align="right">
+                  <TableCell align="left">
                     <Button
                       variant="contained"
-                      color="secondary"
-                      onClick={() => toggleDialog(address)}
-                      style={{
+                      size="small"
+                      sx={{
+                        backgroundColor: "grey",
+                        color: "white",
+                        "&:hover": {
+                          backgroundColor: "darkgrey",
+                        },
                         textTransform: "none",
                       }}
+                      onClick={() => goToLeaseDetails(address)}
                     >
-                      Add Lease
+                      Details
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -165,7 +157,6 @@ function PropertyTable() {
               </TableCell>
               <TableCell style={{ padding: 0, border: 0 }}></TableCell>
               <TableCell style={{ padding: 0, border: 0 }}></TableCell>
-              <TableCell style={{ padding: 0, border: 0 }}></TableCell>
               <TableCell
                 align="right"
                 style={{ paddingTop: "20px", paddingBottom: "20px" }}
@@ -185,20 +176,6 @@ function PropertyTable() {
           </TableFooter>
         </Table>
       </TableContainer>
-      <Dialog
-        open={isDialogOpen}
-        onClose={() => toggleDialog()}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>New Lease: {currentAddress}</DialogTitle>
-        <DialogContent>
-          <AddLeaseForm
-            currentAddress={currentAddress}
-            onSubmitSuccess={() => toggleDialog()}
-          />
-        </DialogContent>
-      </Dialog>
     </Container>
   );
 }
