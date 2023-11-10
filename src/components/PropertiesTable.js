@@ -20,6 +20,7 @@ import { DateTime } from "luxon";
 function PropertyTable() {
   const [propertyLeasesMap, setPropertyLeasesMap] = useState(new Map());
   const [newAddress, setNewAddress] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const goToLeaseDetails = (address) => {
@@ -39,6 +40,9 @@ function PropertyTable() {
       })
       .catch((e) => {
         console.error("Error fetching properties:", e.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   });
 
@@ -67,6 +71,10 @@ function PropertyTable() {
         });
     }
   };
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <Container component="main" maxWidth="md" style={{ marginTop: "20px" }}>
