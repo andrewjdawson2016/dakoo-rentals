@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { listProperties } from "../api";
+import { listProperties } from "../../api";
 import { Container, Box } from "@mui/material";
-import LeaseDisplay from "./LeaseDisplay";
+import LeaseTabsBox from "../lease/TabsBox";
 
-function LeaseTable() {
+function PropertyDetails() {
   const [leases, setLeases] = useState([]);
   const { address } = useParams();
 
@@ -25,11 +25,11 @@ function LeaseTable() {
     <Container component="main" maxWidth="md" style={{ marginTop: "20px" }}>
       {leases.map((lease, index) => (
         <Box key={lease.id || index} mb={10}>
-          <LeaseDisplay lease={lease} />
+          <LeaseTabsBox lease={lease} />
         </Box>
       ))}
     </Container>
   );
 }
 
-export default LeaseTable;
+export default PropertyDetails;

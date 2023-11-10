@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { listProperties, createProperty } from "../api";
+import { listProperties, createProperty } from "../../api";
 import {
   Button,
   Input,
@@ -14,7 +14,7 @@ import {
   TableFooter,
   Box,
 } from "@mui/material";
-import { findLeaseOnDate, formatRent } from "../util";
+import { findLeaseOnDate, formatRent } from "../../util";
 import { DateTime } from "luxon";
 
 function PropertyTable() {

@@ -10,11 +10,11 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { listProperties, createLease } from "../api";
-import SnackbarAlert from "./SnackbarAlert";
-import { parseAndFormatRent, getStartDateFromPrevious } from "../util";
+import { listProperties, createLease } from "../../api";
+import SnackbarAlert from "../common/SnackbarAlert";
+import { parseAndFormatRent, getStartDateFromPrevious } from "../../util";
 
-function NewLeaseForm({ currentAddress, onSubmitSuccess }) {
+function LeaseAddForm({ currentAddress, onSubmitSuccess }) {
   const [displayedRent, setDisplayedRent] = useState("");
   const [formData, setFormData] = useState({
     property_id: "",
@@ -280,4 +280,4 @@ function NewLeaseForm({ currentAddress, onSubmitSuccess }) {
   );
 }
 
-export default NewLeaseForm;
+export default LeaseAddForm;
