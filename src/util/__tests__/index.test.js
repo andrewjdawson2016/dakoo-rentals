@@ -3,6 +3,7 @@ import {
   getStartDateFromPrevious,
   findLeaseOnDate,
   formatDateRange,
+  determineLeaseStatus,
 } from "../index";
 import { DateTime } from "luxon";
 
@@ -167,5 +168,34 @@ describe("findLeaseOnDate", () => {
   test("should return null if the leases array is empty", () => {
     const targetDate = DateTime.fromISO("2023-02-15");
     expect(findLeaseOnDate([], targetDate)).toBeNull();
+  });
+});
+
+describe("determineLeaseStatus", () => {
+  it("should return a negative number for a past lease", () => {
+    const startDate = DateTime.now().minus({ days: 30 }).toISO();
+    const endDate = DateTime.now().minus({ days: 15 }).toISO();
+    const currentDate = DateTime.now().toISO();
+
+    const result = determineLeaseStatus(startDate, endDate, currentDate);
+    expect(result).toBeLessThan(0);
+  });
+
+  it("should return 0 for a current lease", () => {
+    const startDate = DateTime.now().minus({ days: 15 }).toISO();
+    const endDate = DateTime.now().plus({ days: 15 }).toISO();
+    const currentDate = DateTime.now().toISO();
+
+    const result = determineLeaseStatus(startDate, endDate, currentDate);
+    expect(result).toBe(0);
+  });
+
+  it("should return a positive number for a future lease", () => {
+    const startDate = DateTime.now().plus({ days: 15 }).toISO();
+    const endDate = DateTime.now().plus({ days: 30 }).toISO();
+    const currentDate = DateTime.now().toISO();
+
+    const result = determineLeaseStatus(startDate, endDate, currentDate);
+    expect(result).toBeGreaterThan(0);
   });
 });

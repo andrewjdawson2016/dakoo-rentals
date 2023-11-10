@@ -63,3 +63,17 @@ export function findLeaseOnDate(leases, targetDate) {
     }) || null
   );
 }
+
+export function determineLeaseStatus(startDateISO, endDateISO, currentDateISO) {
+  const startDate = DateTime.fromISO(startDateISO);
+  const endDate = DateTime.fromISO(endDateISO);
+  const currentDate = DateTime.fromISO(currentDateISO);
+
+  if (currentDate < startDate) {
+    return startDate.diff(currentDate, "days").days;
+  } else if (currentDate >= startDate && currentDate <= endDate) {
+    return 0;
+  } else {
+    return endDate.diff(currentDate, "days").days;
+  }
+}
