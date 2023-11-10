@@ -1,6 +1,9 @@
 import React from "react";
-import { Box, Paper, Typography, Container, Tabs, Tab } from "@mui/material";
+import { Box, Container, Tabs, Tab } from "@mui/material";
 import LeaseOverviewTab from "./OverviewTab";
+import LeaseEventsTab from "./EventsTab";
+import LeaseNotesTab from "./NotesTab";
+import LeaseDocumentsTab from "./DocumentsTab";
 
 function LeaseTabsBox({ lease }) {
   const [value, setValue] = React.useState(0);
@@ -24,33 +27,9 @@ function LeaseTabsBox({ lease }) {
         </Tabs>
       </Box>
       {value === 0 && <LeaseOverviewTab lease={lease} />}
-      {value === 1 && (
-        <Paper variant="outlined" square>
-          <Typography component="div" role="tabpanel">
-            <Box sx={{ p: 3, border: 1, borderColor: "divider" }}>
-              Events Content
-            </Box>
-          </Typography>
-        </Paper>
-      )}
-      {value === 2 && (
-        <Paper variant="outlined" square>
-          <Typography component="div" role="tabpanel">
-            <Box sx={{ p: 3, border: 1, borderColor: "divider" }}>
-              Notes Content
-            </Box>
-          </Typography>
-        </Paper>
-      )}
-      {value === 3 && (
-        <Paper variant="outlined" square>
-          <Typography component="div" role="tabpanel">
-            <Box sx={{ p: 3, border: 1, borderColor: "divider" }}>
-              Documents Content
-            </Box>
-          </Typography>
-        </Paper>
-      )}
+      {value === 1 && <LeaseEventsTab lease={lease} />}
+      {value === 2 && <LeaseNotesTab lease={lease} />}
+      {value === 3 && <LeaseDocumentsTab lease={lease} />}
     </Container>
   );
 }
