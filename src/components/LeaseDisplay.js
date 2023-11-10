@@ -9,10 +9,47 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import { formatRent, formatDateRange, getInitials } from "../util";
+import {
+  formatRent,
+  formatDateRange,
+  getInitials,
+  determineLeaseStatus,
+} from "../util";
+import { DateTime } from "luxon";
 
 function LeaseDisplay({ lease }) {
   const [value, setValue] = React.useState(0);
+
+  const StatusBox = ({ statusValue }) => {
+    let statusText;
+    let color;
+    let backgroundColor;
+
+    if (statusValue < 0) {
+      statusText = "Expired";
+      color = "red";
+      backgroundColor = "#ffebee";
+    } else if (statusValue === 0) {
+      statusText = "Current";
+      color = "green";
+      backgroundColor = "#e8f5e9";
+    } else {
+      statusText = "Future";
+      color = "blue";
+      backgroundColor = "#e3f2fd";
+    }
+
+    const boxStyles = {
+      color: color,
+      backgroundColor: backgroundColor,
+      borderRadius: "4px",
+      padding: "3px 8px",
+      display: "inline-block",
+      marginBottom: "20px",
+    };
+
+    return <Box style={boxStyles}>{statusText}</Box>;
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -35,6 +72,13 @@ function LeaseDisplay({ lease }) {
       {value === 0 && (
         <Paper variant="outlined" square>
           <Box sx={{ p: 3, border: 1, borderColor: "divider" }}>
+            <StatusBox
+              statusValue={determineLeaseStatus(
+                lease.start_date,
+                lease.end_date,
+                DateTime.now().toISO()
+              )}
+            />
             <Typography variant="body1">
               {formatDateRange(lease.start_date, lease.end_date)}
             </Typography>
