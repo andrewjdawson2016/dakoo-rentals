@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Paper, Typography, Button, styled } from "@mui/material";
+import { Box, Paper, Typography, Button } from "@mui/material";
 import {
   Timeline,
   TimelineItem,
@@ -11,12 +11,6 @@ import {
 } from "@mui/lab";
 import { formatDate } from "../../util";
 import { updateLeaseEventExecutionDate } from "../../api";
-
-const CustomTimelineDot = styled(TimelineDot)(({ theme, $isCompleted }) => ({
-  backgroundColor: $isCompleted
-    ? theme.palette.success.main
-    : theme.palette.grey[400],
-}));
 
 const LeaseEventsTab = ({ events }) => {
   const mapEventDescription = (description) => {
@@ -36,10 +30,11 @@ const LeaseEventsTab = ({ events }) => {
     }
   };
 
-  const handleCompleteEvent = (eventId) => {
-    const execution_date = new Date().toISOString();
-
-    updateLeaseEventExecutionDate({ id: eventId, execution_date })
+  const handleUpdateLeaseEventExecutionDate = (eventId, executionDate) => {
+    updateLeaseEventExecutionDate({
+      id: eventId,
+      execution_date: executionDate,
+    })
       .then(() => {
         // Logic to update the component state
         // This could be a state update or a re-fetch of the events data
@@ -53,6 +48,54 @@ const LeaseEventsTab = ({ events }) => {
   const firstUnexecutedIndex = events.findIndex(
     (event) => !event.execution_date
   );
+
+  const getTimelineContent = ({ events, index }) => {
+    const event = events[index];
+    if (index === firstUnexecutedIndex) {
+      return (
+        <TimelineContent sx={{ display: "flex", alignItems: "center" }}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() =>
+              handleUpdateLeaseEventExecutionDate(
+                event.id,
+                new Date().toISOString()
+              )
+            }
+          ></Button>
+        </TimelineContent>
+      );
+    }
+
+    const displayDate =
+      firstUnexecutedIndex === -1 || index < firstUnexecutedIndex;
+    const displayUndoButton =
+      (firstUnexecutedIndex === -1 && index === events.length - 1) ||
+      (firstUnexecutedIndex !== -1 && index === firstUnexecutedIndex - 1);
+
+    if (!displayDate && !displayUndoButton) {
+      return null;
+    }
+
+    return (
+      <TimelineContent sx={{ display: "flex", alignItems: "center" }}>
+        {displayDate && (
+          <Typography>{formatDate(event.execution_date)}</Typography>
+        )}
+        {displayUndoButton && (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handleUpdateLeaseEventExecutionDate(event.id, "")}
+            sx={{ ml: 2 }}
+          >
+            Undo
+          </Button>
+        )}
+      </TimelineContent>
+    );
+  };
 
   return (
     <Paper variant="outlined" square>
@@ -70,24 +113,14 @@ const LeaseEventsTab = ({ events }) => {
                   </Box>
                 </TimelineOppositeContent>
                 <TimelineSeparator>
-                  <CustomTimelineDot $isCompleted={!!event.execution_date} />
+                  {event.execution_date ? (
+                    <TimelineDot color="success" />
+                  ) : (
+                    <TimelineDot />
+                  )}
                   {index < events.length - 1 && <TimelineConnector />}
                 </TimelineSeparator>
-                <TimelineContent sx={{ display: "flex", alignItems: "center" }}>
-                  {event.execution_date ? (
-                    <Typography>{formatDate(event.execution_date)}</Typography>
-                  ) : (
-                    index === firstUnexecutedIndex && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => handleCompleteEvent(event.id)}
-                      >
-                        Complete
-                      </Button>
-                    )
-                  )}
-                </TimelineContent>
+                {getTimelineContent({ events, index })}
               </TimelineItem>
             ))}
           </Timeline>
