@@ -48,7 +48,7 @@ export function formatRent(numericValue) {
     maximumFractionDigits: 0,
   }).format(Math.round(numericValue));
 
-  return `${formattedValue} / mo.`;
+  return `${formattedValue}`;
 }
 
 export function getStartDateFromPrevious(prevLease) {
