@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
-const LeaseNotesTab = ({ lease }) => {
+const LeaseNotesTab = ({ notes }) => {
   return (
     <Paper variant="outlined" square>
       <Typography component="div" role="tabpanel">

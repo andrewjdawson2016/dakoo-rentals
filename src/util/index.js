@@ -7,16 +7,17 @@ export function getInitials(name) {
     .join("");
 }
 
-export function formatDateRange(startDateISO, endDateISO) {
-  const start = DateTime.fromISO(startDateISO);
-  const end = DateTime.fromISO(endDateISO);
-
-  if (!start.isValid || !end.isValid) {
-    throw new Error("Invalid start or end date");
+export function formatDate(dateISO) {
+  const date = DateTime.fromISO(dateISO);
+  if (!date.isValid) {
+    throw new Error("Invalid date");
   }
+  return date.toFormat("MMMM d, yyyy");
+}
 
-  const formattedStartDate = start.toFormat("MMMM d, yyyy");
-  const formattedEndDate = end.toFormat("MMMM d, yyyy");
+export function formatDateRange(startDateISO, endDateISO) {
+  const formattedStartDate = formatDate(startDateISO);
+  const formattedEndDate = formatDate(endDateISO);
 
   return `${formattedStartDate} - ${formattedEndDate}`;
 }

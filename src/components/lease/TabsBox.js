@@ -27,8 +27,8 @@ function LeaseTabsBox({ lease }) {
         </Tabs>
       </Box>
       {value === 0 && <LeaseOverviewTab lease={lease} />}
-      {value === 1 && <LeaseEventsTab lease={lease} />}
-      {value === 2 && <LeaseNotesTab lease={lease} />}
+      {value === 1 && <LeaseEventsTab events={lease.leaseEvents} />}
+      {value === 2 && <LeaseNotesTab notes={lease.leaseNotes} />}
       {value === 3 && <LeaseDocumentsTab lease={lease} />}
     </Container>
   );
