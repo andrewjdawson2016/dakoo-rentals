@@ -5,7 +5,7 @@ import LeaseEventsTab from "./EventsTab";
 import LeaseNotesTab from "./NotesTab";
 import LeaseDocumentsTab from "./DocumentsTab";
 
-function LeaseTabsBox({ lease }) {
+function LeaseTabsBox({ lease, refreshLeases }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (_event, newValue) => {
@@ -27,7 +27,12 @@ function LeaseTabsBox({ lease }) {
         </Tabs>
       </Box>
       {value === 0 && <LeaseOverviewTab lease={lease} />}
-      {value === 1 && <LeaseEventsTab events={lease.leaseEvents} />}
+      {value === 1 && (
+        <LeaseEventsTab
+          events={lease.leaseEvents}
+          refreshLeases={refreshLeases}
+        />
+      )}
       {value === 2 && <LeaseNotesTab notes={lease.leaseNotes} />}
       {value === 3 && <LeaseDocumentsTab lease={lease} />}
     </Container>

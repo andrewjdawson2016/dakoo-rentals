@@ -11,8 +11,9 @@ import {
 } from "@mui/lab";
 import { formatDate } from "../../util";
 import { updateLeaseEventExecutionDate } from "../../api";
+import { DateTime } from "luxon";
 
-const LeaseEventsTab = ({ events }) => {
+const LeaseEventsTab = ({ events, refreshLeases }) => {
   const mapEventDescription = (description) => {
     switch (description) {
       case "START":
@@ -36,12 +37,10 @@ const LeaseEventsTab = ({ events }) => {
       execution_date: executionDate,
     })
       .then(() => {
-        // Logic to update the component state
-        // This could be a state update or a re-fetch of the events data
+        refreshLeases();
       })
       .catch((error) => {
         console.error(error);
-        // Handle error (e.g., show a notification)
       });
   };
 
@@ -60,10 +59,12 @@ const LeaseEventsTab = ({ events }) => {
             onClick={() =>
               handleUpdateLeaseEventExecutionDate(
                 event.id,
-                new Date().toISOString()
+                DateTime.now().toISODate()
               )
             }
-          ></Button>
+          >
+            Complete
+          </Button>
         </TimelineContent>
       );
     }
@@ -73,10 +74,6 @@ const LeaseEventsTab = ({ events }) => {
     const displayUndoButton =
       (firstUnexecutedIndex === -1 && index === events.length - 1) ||
       (firstUnexecutedIndex !== -1 && index === firstUnexecutedIndex - 1);
-
-    if (!displayDate && !displayUndoButton) {
-      return null;
-    }
 
     return (
       <TimelineContent sx={{ display: "flex", alignItems: "center" }}>

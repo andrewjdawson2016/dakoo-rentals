@@ -9,6 +9,10 @@ function PropertyDetails() {
   const { address } = useParams();
 
   useEffect(() => {
+    refreshLeases();
+  }, [address]);
+
+  const refreshLeases = () => {
     listProperties()
       .then((properties) => {
         const property = properties.find((p) => p.address === address);
@@ -19,13 +23,13 @@ function PropertyDetails() {
       .catch((e) => {
         console.error("Error fetching properties: ", e.message);
       });
-  }, [address]);
+  };
 
   return (
     <Container component="main" maxWidth="md" style={{ marginTop: "20px" }}>
       {leases.map((lease, index) => (
         <Box key={lease.id || index} mb={10}>
-          <LeaseTabsBox lease={lease} />
+          <LeaseTabsBox lease={lease} refreshLeases={refreshLeases} />
         </Box>
       ))}
     </Container>
