@@ -5,7 +5,7 @@ import LeaseEventsTab from "./EventsTab";
 import LeaseNotesTab from "./NotesTab";
 import LeaseDocumentsTab from "./DocumentsTab";
 
-function LeaseTabsBox({ lease, refreshLeases }) {
+function LeaseDetailsBox({ lease, refreshLeases }) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (_event, newValue) => {
@@ -39,4 +39,4 @@ function LeaseTabsBox({ lease, refreshLeases }) {
   );
 }
 
-export default LeaseTabsBox;
+export default LeaseDetailsBox;
