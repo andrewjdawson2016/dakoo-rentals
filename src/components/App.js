@@ -1,8 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import LeaseAddForm from "./lease/AddForm";
-import PropertiesTable from "./property/Table";
-import PropertyDetails from "./property/Details";
+import PropertiesTablePage from "./property/PropertiesTablePage";
+import PropertyDetailsPage from "./property/PropertyDetailsPage";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 
@@ -14,9 +13,8 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<PropertiesTable />} />
-          <Route path="/add-lease" element={<LeaseAddForm />} />
-          <Route path="/:address" element={<PropertyDetails />} />
+          <Route path="/" element={<PropertiesTablePage />} />
+          <Route path="/:address" element={<PropertyDetailsPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

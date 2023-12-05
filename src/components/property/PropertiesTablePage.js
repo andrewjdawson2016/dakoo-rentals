@@ -17,7 +17,7 @@ import {
 import { findLeaseOnDate, formatRent } from "../../util";
 import { DateTime } from "luxon";
 
-function PropertyTable() {
+function PropertiesTablePage() {
   const [propertyLeasesMap, setPropertyLeasesMap] = useState(new Map());
   const [newAddress, setNewAddress] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -189,4 +189,4 @@ function PropertyTable() {
   );
 }
 
-export default PropertyTable;
+export default PropertiesTablePage;
