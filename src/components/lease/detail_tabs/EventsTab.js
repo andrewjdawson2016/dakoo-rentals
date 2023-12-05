@@ -9,11 +9,11 @@ import {
   TimelineConnector,
   TimelineOppositeContent,
 } from "@mui/lab";
-import { formatDate } from "../../util";
-import { updateLeaseEventExecutionDate } from "../../api";
+import { formatDate } from "../../../util";
+import { updateLeaseEventExecutionDate } from "../../../api";
 import { DateTime } from "luxon";
 
-const LeaseEventsTab = ({ events, refreshLeases }) => {
+const EventsTab = ({ events, refreshLeases }) => {
   const mapEventDescription = (description) => {
     switch (description) {
       case "START":
@@ -127,4 +127,4 @@ const LeaseEventsTab = ({ events, refreshLeases }) => {
   );
 };
 
-export default LeaseEventsTab;
+export default EventsTab;

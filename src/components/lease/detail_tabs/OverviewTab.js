@@ -5,10 +5,10 @@ import {
   formatDateRange,
   getInitials,
   determineLeaseStatus,
-} from "../../util";
+} from "../../../util";
 import { DateTime } from "luxon";
 
-const LeaseOverviewTab = ({ lease }) => {
+const OverviewTab = ({ lease }) => {
   const StatusBox = ({ statusValue }) => {
     let statusText;
     let color;
@@ -80,4 +80,4 @@ const LeaseOverviewTab = ({ lease }) => {
   );
 };
 
-export default LeaseOverviewTab;
+export default OverviewTab;

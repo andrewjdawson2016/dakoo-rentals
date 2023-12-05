@@ -1,15 +1,15 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
-const LeaseDocumentsTab = ({ lease }) => {
+const NotesTab = ({ notes }) => {
   return (
     <Paper variant="outlined" square>
       <Typography component="div" role="tabpanel">
         <Box sx={{ p: 3, border: 1, borderColor: "divider" }}>
-          Documents Content
+          Not Yet Supported
         </Box>
       </Typography>
     </Paper>
   );
 };
 
-export default LeaseDocumentsTab;
+export default NotesTab;

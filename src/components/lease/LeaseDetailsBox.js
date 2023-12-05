@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Container, Tabs, Tab } from "@mui/material";
-import LeaseOverviewTab from "./OverviewTab";
-import LeaseEventsTab from "./EventsTab";
-import LeaseNotesTab from "./NotesTab";
-import LeaseDocumentsTab from "./DocumentsTab";
+import OverviewTab from "./detail_tabs/OverviewTab";
+import EventsTab from "./detail_tabs/EventsTab";
+import NotesTab from "./detail_tabs/NotesTab";
+import DocumentsTab from "./detail_tabs/DocumentsTab";
 
 function LeaseDetailsBox({ lease, refreshLeases }) {
   const [value, setValue] = React.useState(0);
@@ -26,15 +26,12 @@ function LeaseDetailsBox({ lease, refreshLeases }) {
           <Tab label="Documents" />
         </Tabs>
       </Box>
-      {value === 0 && <LeaseOverviewTab lease={lease} />}
+      {value === 0 && <OverviewTab lease={lease} />}
       {value === 1 && (
-        <LeaseEventsTab
-          events={lease.leaseEvents}
-          refreshLeases={refreshLeases}
-        />
+        <EventsTab events={lease.leaseEvents} refreshLeases={refreshLeases} />
       )}
-      {value === 2 && <LeaseNotesTab notes={lease.leaseNotes} />}
-      {value === 3 && <LeaseDocumentsTab lease={lease} />}
+      {value === 2 && <NotesTab notes={lease.leaseNotes} />}
+      {value === 3 && <DocumentsTab lease={lease} />}
     </Container>
   );
 }

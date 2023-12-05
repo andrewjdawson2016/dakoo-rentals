@@ -1,6 +1,8 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Tabs, Tab } from "@mui/material";
+import OverviewTab from "./detail_tabs/OverviewTab";
+import LeasesTab from "./detail_tabs/LeasesTab";
 
 function PropertyDetailsPage() {
   const [value, setValue] = React.useState(0);
@@ -43,6 +45,9 @@ function PropertyDetailsPage() {
           </Tabs>
         </Toolbar>
       </AppBar>
+
+      {value === 0 && <OverviewTab />}
+      {value === 1 && <LeasesTab />}
     </>
   );
 }
