@@ -1,29 +1,13 @@
-const leasesURL = `${process.env.REACT_APP_SERVER_URL}/leases`;
+const unitsURL = `${process.env.REACT_APP_SERVER_URL}/units`;
 
-export async function createLease({
-  unit_id,
-  start_date,
-  end_date,
-  price_per_month,
-  is_renewal,
-  note,
-  tenants,
-}) {
+export async function createUnit({ building_id, unit_type, unit_number }) {
   try {
-    const response = await fetch(leasesURL, {
+    const response = await fetch(unitsURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        unit_id,
-        start_date,
-        end_date,
-        price_per_month,
-        is_renewal,
-        note,
-        tenants,
-      }),
+      body: JSON.stringify({ building_id, unit_type, unit_number }),
     });
 
     if (!response.ok) {
@@ -42,9 +26,9 @@ export async function createLease({
   }
 }
 
-export async function deleteLease(id) {
+export async function deleteUnit(id) {
   try {
-    const response = await fetch(`${leasesURL}/${id}`, {
+    const response = await fetch(`${unitsURL}/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

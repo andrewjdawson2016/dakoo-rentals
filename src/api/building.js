@@ -1,13 +1,13 @@
-const propertiesURL = `${process.env.REACT_APP_SERVER_URL}/properties`;
+const buildingsURL = `${process.env.REACT_APP_SERVER_URL}/buildings`;
 
-export async function createProperty({ address }) {
+export async function createBuilding({ address, monthly_expenses }) {
   try {
-    const response = await fetch(propertiesURL, {
+    const response = await fetch(buildingsURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ address }),
+      body: JSON.stringify({ address, monthly_expenses }),
     });
 
     if (!response.ok) {
@@ -26,9 +26,9 @@ export async function createProperty({ address }) {
   }
 }
 
-export async function deleteProperty(id) {
+export async function deleteBuilding(id) {
   try {
-    const response = await fetch(`${propertiesURL}/${id}`, {
+    const response = await fetch(`${buildingsURL}/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -51,9 +51,9 @@ export async function deleteProperty(id) {
   }
 }
 
-export async function listProperties() {
+export async function listBuildings() {
   try {
-    const response = await fetch(propertiesURL, {
+    const response = await fetch(buildingsURL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -72,7 +72,7 @@ export async function listProperties() {
     }
 
     const data = await response.json();
-    return data.properties;
+    return data.buildings;
   } catch (e) {
     console.error("Error:", e.message);
     throw e;

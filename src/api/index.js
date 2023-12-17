@@ -1,4 +1,5 @@
-export * from "./property";
+export * from "./building";
+export * from "./unit";
 export * from "./tenant";
 export * from "./lease";
 export * from "./lease_note";
