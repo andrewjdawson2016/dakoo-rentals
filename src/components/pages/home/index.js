@@ -1,7 +1,8 @@
 import React from "react";
 import TopLevelToolbar from "../../common/TopLevelToolbar";
+import { AppBar } from "@mui/material";
 
-function HomePage() {
+export function HomePage() {
   return (
     <>
       <AppBar position="static" sx={{ backgroundColor: "#f5f5f5" }}>
@@ -10,5 +11,3 @@ function HomePage() {
     </>
   );
 }
-
-export default HomePage;
