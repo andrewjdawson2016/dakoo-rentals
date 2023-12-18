@@ -12,38 +12,42 @@ import {
 import { createBuilding } from "../../../api";
 import SnackbarAlert from "../../common/SnackbarAlert";
 
-function AddForm() {
+function AddForm({ onSuccessfulSubmit }) {
   const [formData, setFormData] = useState({
     nickname: "",
     address: "",
     building_type: "",
-    unit_numbers: [],
+    unit_numbers: "",
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
-
-    const inputValue = type === "checkbox" ? checked : value;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: inputValue,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    createBuilding({ ...formData })
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const processedFormData = {
+      ...formData,
+      unit_numbers: formData.unit_numbers
+        .split(",")
+        .map((unit) => unit.trim())
+        .filter((unit) => unit !== ""),
+    };
+
+    createBuilding(processedFormData)
       .then(() => {
-        console.log("Building created successfully", formData);
+        console.log("Building created successfully", processedFormData);
         setFormData({
           nickname: "",
           address: "",
           building_type: "",
-          unit_numbers: [],
+          unit_numbers: "",
         });
+        onSuccessfulSubmit();
       })
       .catch((e) => {
         console.error("Error creating building", e);
@@ -54,24 +58,6 @@ function AddForm() {
 
   return (
     <Container component="main" maxWidth="md">
-      <FormControl fullWidth margin="normal">
-        <TextField
-          label="Nickname"
-          name="nickname"
-          value={formData.nickname}
-          onChange={handleChange}
-          required
-        />
-      </FormControl>
-      <FormControl fullWidth margin="normal">
-        <TextField
-          label="Address"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          required
-        />
-      </FormControl>
       <FormControl component="fieldset" margin="normal">
         <FormLabel component="legend">Building Type</FormLabel>
         <RadioGroup
@@ -92,11 +78,43 @@ function AddForm() {
           />
         </RadioGroup>
       </FormControl>
+
+      {formData.building_type === "MULTI_FAMILY" && (
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Unit Numbers (comma-separated)"
+            name="unit_numbers"
+            value={formData.unit_numbers}
+            onChange={handleChange}
+            helperText="Enter unit numbers separated by commas"
+          />
+        </FormControl>
+      )}
+
+      <FormControl fullWidth margin="normal">
+        <TextField
+          label="Nickname"
+          name="nickname"
+          value={formData.nickname}
+          onChange={handleChange}
+          required
+        />
+      </FormControl>
+      <FormControl fullWidth margin="normal">
+        <TextField
+          label="Address"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+        />
+      </FormControl>
+
       <Button
         type="submit"
         fullWidth
         onClick={handleSubmit}
-        style={{ marginTop: 16 }}
+        style={{ marginTop: 16, marginBottom: 20 }}
         variant="contained"
         color="primary"
       >

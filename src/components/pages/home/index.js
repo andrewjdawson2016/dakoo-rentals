@@ -7,7 +7,7 @@ import { listBuildings } from "../../../api";
 export function HomePage() {
   const [buildings, setBuildings] = useState([]);
 
-  useEffect(() => {
+  const refreshBuildings = () => {
     listBuildings()
       .then((buildings) => {
         setBuildings(buildings);
@@ -15,6 +15,10 @@ export function HomePage() {
       .catch((error) => {
         console.error("Failed to fetch buildings:", error);
       });
+  };
+
+  useEffect(() => {
+    refreshBuildings();
   }, []);
   return (
     <>
@@ -22,7 +26,10 @@ export function HomePage() {
         <TopLevelToolbar />
       </AppBar>
       <Container component="main" maxWidth="lg" style={{ marginTop: "20px" }}>
-        <Header buildings={buildings.map((building) => building.nickname)} />
+        <Header
+          buildings={buildings.map((building) => building.nickname)}
+          onRefresh={refreshBuildings}
+        />
       </Container>
     </>
   );

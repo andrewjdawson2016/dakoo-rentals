@@ -12,7 +12,7 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddForm from "./AddForm";
 
-function Header({ buildings }) {
+function Header({ buildings, onRefresh }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
@@ -74,7 +74,12 @@ function Header({ buildings }) {
       </Grid>
       <Divider style={{ margin: "20px 0" }} />
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <AddForm />
+        <AddForm
+          onSuccessfulSubmit={() => {
+            handleCloseDialog();
+            onRefresh();
+          }}
+        />
       </Dialog>
     </>
   );
