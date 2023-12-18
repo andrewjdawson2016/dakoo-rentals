@@ -10,7 +10,6 @@ import {
   Button,
 } from "@mui/material";
 import { createBuilding } from "../../../api";
-import { parseAndFormatMonthlyMoneyValue } from "../../../util";
 import SnackbarAlert from "../../common/SnackbarAlert";
 
 function AddForm() {
@@ -25,14 +24,20 @@ function AddForm() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange = (e) => {
-    const { name, value, checked } = e.target;
-    setFormData((prev) => ({ ...prev, name: value }));
+    const { name, value, checked, type } = e.target;
+
+    const inputValue = type === "checkbox" ? checked : value;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: inputValue,
+    }));
   };
 
   const handleSubmit = () => {
     createBuilding({ ...formData })
       .then(() => {
-        console.log("Building created successfully");
+        console.log("Building created successfully", formData);
         setFormData({
           nickname: "",
           address: "",
@@ -41,7 +46,7 @@ function AddForm() {
         });
       })
       .catch((e) => {
-        console.error("Error creating building");
+        console.error("Error creating building", e);
         setSnackbarMessage(`Error creating building: ${e.message}`);
         setSnackbarOpen(true);
       });
@@ -76,12 +81,12 @@ function AddForm() {
           onChange={handleChange}
         >
           <FormControlLabel
-            value="single"
+            value="SINGLE_FAMILY"
             control={<Radio />}
             label="Single Family"
           />
           <FormControlLabel
-            value="multi"
+            value="MULTI_FAMILY"
             control={<Radio />}
             label="Multi-Family"
           />
