@@ -9,7 +9,7 @@ export function HomePage() {
       <AppBar position="static" sx={{ backgroundColor: "#f5f5f5" }}>
         <TopLevelToolbar />
       </AppBar>
-      <Container component="main" maxWidth="lx" style={{ marginTop: "20px" }}>
+      <Container component="main" maxWidth="lg" style={{ marginTop: "20px" }}>
         <Header buildings={["Building 1", "Building 2", "Building 3"]} />
       </Container>
     </>
