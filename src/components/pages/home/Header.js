@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Grid,
   Typography,
@@ -16,6 +17,7 @@ function Header({ buildings, onRefresh }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -32,6 +34,11 @@ function Header({ buildings, onRefresh }) {
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
+  };
+
+  const handleSelectBuilding = (buildingId) => {
+    navigate(`/${buildingId}`);
+    handleCloseMenu();
   };
 
   return (
@@ -54,8 +61,11 @@ function Header({ buildings, onRefresh }) {
           </Box>
           <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
             {buildings.map((building, index) => (
-              <MenuItem key={index} onClick={handleCloseMenu}>
-                {building}
+              <MenuItem
+                key={index}
+                onClick={() => handleSelectBuilding(building.id)}
+              >
+                {building.nickname}
               </MenuItem>
             ))}
             <Divider />

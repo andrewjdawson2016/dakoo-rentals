@@ -26,10 +26,7 @@ export function HomePage() {
         <TopLevelToolbar />
       </AppBar>
       <Container component="main" maxWidth="lg" style={{ marginTop: "20px" }}>
-        <Header
-          buildings={buildings.map((building) => building.nickname)}
-          onRefresh={refreshBuildings}
-        />
+        <Header buildings={buildings} onRefresh={refreshBuildings} />
       </Container>
     </>
   );
