@@ -14,28 +14,15 @@ import { parseAndFormatMonthlyMoneyValue } from "../../../util";
 import SnackbarAlert from "../../common/SnackbarAlert";
 
 function AddForm() {
-  const [displayedMonthlyExpenses, setDisplayedMonthlyExpenses] = useState("");
   const [formData, setFormData] = useState({
     nickname: "",
     address: "",
     building_type: "",
-    monthly_expenses: "",
     unit_numbers: [],
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-
-  const handleMonthlyExpensesChange = (event) => {
-    const { numericValue, formattedValue } = parseAndFormatMonthlyMoneyValue(
-      event.target.value
-    );
-    setFormData((prev) => ({
-      ...prev,
-      monthly_expenses: numericValue,
-    }));
-    setDisplayedMonthlyExpenses(formattedValue);
-  };
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
@@ -50,10 +37,8 @@ function AddForm() {
           nickname: "",
           address: "",
           building_type: "",
-          monthly_expenses: "",
           unit_numbers: [],
         });
-        setDisplayedMonthlyExpenses("");
       })
       .catch((e) => {
         console.error("Error creating building");
@@ -101,15 +86,6 @@ function AddForm() {
             label="Multi-Family"
           />
         </RadioGroup>
-      </FormControl>
-      <FormControl fullWidth margin="normal">
-        <TextField
-          label="Estimated Monthly Expenses ($)"
-          name="monthly_expenses"
-          value={displayedMonthlyExpenses}
-          onChange={handleMonthlyExpensesChange}
-          required
-        />
       </FormControl>
       <Button
         type="submit"

@@ -2,7 +2,6 @@ const buildingsURL = `${process.env.REACT_APP_SERVER_URL}/buildings`;
 
 export async function createBuilding({
   address,
-  monthly_expenses,
   nickname,
   building_type,
   unit_numbers,
@@ -15,7 +14,6 @@ export async function createBuilding({
       },
       body: JSON.stringify({
         address,
-        monthly_expenses,
         nickname,
         building_type,
         unit_numbers,
