@@ -1,13 +1,25 @@
 const buildingsURL = `${process.env.REACT_APP_SERVER_URL}/buildings`;
 
-export async function createBuilding({ address, monthly_expenses }) {
+export async function createBuilding({
+  address,
+  monthly_expenses,
+  nickname,
+  building_type,
+  unit_numbers,
+}) {
   try {
     const response = await fetch(buildingsURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ address, monthly_expenses }),
+      body: JSON.stringify({
+        address,
+        monthly_expenses,
+        nickname,
+        building_type,
+        unit_numbers,
+      }),
     });
 
     if (!response.ok) {

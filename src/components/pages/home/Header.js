@@ -7,11 +7,13 @@ import {
   MenuItem,
   Box,
   Button,
+  Dialog,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 function Header({ buildings }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const open = Boolean(anchorEl);
 
   const handleOpenMenu = (event) => {
@@ -23,8 +25,12 @@ function Header({ buildings }) {
   };
 
   const handleAddNewProperty = () => {
-    console.log("Add new property logic goes here");
+    setDialogOpen(true);
     handleCloseMenu();
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
   };
 
   return (
@@ -66,6 +72,9 @@ function Header({ buildings }) {
         </Grid>
       </Grid>
       <Divider style={{ margin: "20px 0" }} />
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <AddBuildingForm />
+      </Dialog>
     </>
   );
 }

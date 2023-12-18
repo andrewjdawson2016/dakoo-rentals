@@ -22,8 +22,8 @@ export function formatDateRange(startDateISO, endDateISO) {
   return `${formattedStartDate} - ${formattedEndDate}`;
 }
 
-export function parseAndFormatRent(rentString) {
-  const rawValue = rentString.replace(/[^\d.]/g, "");
+export function parseAndFormatMonthlyMoneyValue(moneyValueString) {
+  const rawValue = moneyValueString.replace(/[^\d.]/g, "");
   let numericValue = parseFloat(rawValue);
 
   if (isNaN(numericValue) || numericValue === 0) {
@@ -31,12 +31,12 @@ export function parseAndFormatRent(rentString) {
   }
 
   numericValue = Math.round(numericValue);
-  const formattedValue = formatRent(numericValue);
+  const formattedValue = formatMonthlyMoneyValue(numericValue);
 
   return { numericValue, formattedValue };
 }
 
-export function formatRent(numericValue) {
+export function formatMonthlyMoneyValue(numericValue) {
   if (isNaN(numericValue) || numericValue === 0) {
     return "";
   }
