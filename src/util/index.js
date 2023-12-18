@@ -1,5 +1,51 @@
 import { DateTime } from "luxon";
 
+export function getFlattenedLeases(buildings) {
+  let leases = [];
+
+  buildings.forEach((building) => {
+    building.units.forEach((unit) => {
+      unit.leases.forEach((lease) => {
+        leases.push(lease);
+      });
+    });
+  });
+
+  return leases;
+}
+
+export function getLeaseYears(lease) {
+  const startYear = DateTime.fromISO(lease.start_date).year;
+  const endYear = DateTime.fromISO(lease.end_date).year;
+  const years = [];
+
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(year);
+  }
+
+  return years;
+}
+
+export function getLeaseDatesForYear(year, lease) {
+  const leaseStart = DateTime.fromISO(lease.start_date);
+  const leaseEnd = DateTime.fromISO(lease.end_date);
+  const yearStart = DateTime.fromObject({ year: year, month: 1, day: 1 });
+  const yearEnd = DateTime.fromObject({ year: year, month: 12, day: 31 });
+
+  let effectiveStart = leaseStart > yearStart ? leaseStart : yearStart;
+  let effectiveEnd = leaseEnd < yearEnd ? leaseEnd : yearEnd;
+
+  if (effectiveStart > effectiveEnd) {
+    return null;
+  }
+
+  return {
+    start_date: effectiveStart.toISODate(),
+    end_date: effectiveEnd.toISODate(),
+    price_per_month: lease.price_per_month,
+  };
+}
+
 export function getInitials(name) {
   return name
     .split(" ")
