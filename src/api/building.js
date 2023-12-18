@@ -61,6 +61,34 @@ export async function deleteBuilding(id) {
   }
 }
 
+export async function getBuilding(id) {
+  try {
+    const response = await fetch(`${buildingsURL}/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      let errorMessage = "An unexpected error occurred";
+
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch (jsonError) {}
+
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data.building;
+  } catch (e) {
+    console.error("Error:", e.message);
+    throw e;
+  }
+}
+
 export async function listBuildings() {
   try {
     const response = await fetch(buildingsURL, {
