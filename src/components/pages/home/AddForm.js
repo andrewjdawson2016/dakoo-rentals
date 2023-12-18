@@ -9,11 +9,11 @@ import {
   FormLabel,
   Button,
 } from "@mui/material";
-import createBuilding from "../../../api";
+import { createBuilding } from "../../../api";
 import { parseAndFormatMonthlyMoneyValue } from "../../../util";
 import SnackbarAlert from "../../common/SnackbarAlert";
 
-function AddBuildingForm() {
+function AddForm() {
   const [displayedMonthlyExpenses, setDisplayedMonthlyExpenses] = useState("");
   const [formData, setFormData] = useState({
     nickname: "",
@@ -131,4 +131,4 @@ function AddBuildingForm() {
   );
 }
 
-export default AddBuildingForm;
+export default AddForm;

@@ -10,6 +10,7 @@ import {
   Dialog,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import AddForm from "./AddForm";
 
 function Header({ buildings }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -73,7 +74,7 @@ function Header({ buildings }) {
       </Grid>
       <Divider style={{ margin: "20px 0" }} />
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <AddBuildingForm />
+        <AddForm />
       </Dialog>
     </>
   );
