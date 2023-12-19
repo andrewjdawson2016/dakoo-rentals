@@ -92,10 +92,39 @@ describe("getTotalIncomeByYear", () => {
           },
         ],
       },
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2018-06-15",
+                end_date: "2020-06-05",
+                price_per_month: 600,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2016-01-15",
+                end_date: "2018-10-10",
+                price_per_month: 1100,
+              },
+            ],
+          },
+        ],
+      },
     ];
     const totalIncome = getTotalIncomeByYear(buildings);
-    expect(totalIncome.get(2019)).toBeCloseTo(6400);
-    expect(totalIncome.get(2020)).toBeCloseTo(5400);
+    expect(totalIncome.get(2016)).toBeCloseTo(12703.2258);
+    expect(totalIncome.get(2017)).toBeCloseTo(13200);
+    expect(totalIncome.get(2018)).toBeCloseTo(14174.838);
+    expect(totalIncome.get(2019)).toBeCloseTo(13600);
+    expect(totalIncome.get(2020)).toBeCloseTo(8500);
     expect(totalIncome.get(2021)).toBeCloseTo(6600);
   });
 });
