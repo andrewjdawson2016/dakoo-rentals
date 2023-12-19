@@ -4,8 +4,51 @@ import {
   findLeaseOnDate,
   formatDateRange,
   determineLeaseStatus,
+  getLeaseBoundsInYear,
 } from "../index";
 import { DateTime } from "luxon";
+
+describe("getLeaseBoundsInYear", () => {
+  test("should handle lease entirely within the year", () => {
+    const year = 2021;
+    const lease = { start_date: "2021-04-01", end_date: "2021-10-31" };
+    const bounds = getLeaseBoundsInYear(year, lease);
+    expect(bounds.start.toISODate()).toBe("2021-04-01");
+    expect(bounds.end.toISODate()).toBe("2021-10-31");
+  });
+
+  test("should handle lease starting before and ending within the year", () => {
+    const year = 2021;
+    const lease = { start_date: "2020-12-15", end_date: "2021-05-15" };
+    const bounds = getLeaseBoundsInYear(year, lease);
+    expect(bounds.start.toISODate()).toBe("2021-01-01");
+    expect(bounds.end.toISODate()).toBe("2021-05-15");
+  });
+
+  test("should handle lease starting within and ending after the year", () => {
+    const year = 2021;
+    const lease = { start_date: "2021-07-01", end_date: "2022-03-01" };
+    const bounds = getLeaseBoundsInYear(year, lease);
+    expect(bounds.start.toISODate()).toBe("2021-07-01");
+    expect(bounds.end.toISODate()).toBe("2021-12-31");
+  });
+
+  test("should handle lease completely before the year", () => {
+    const year = 2021;
+    const lease = { start_date: "2019-01-01", end_date: "2020-12-31" };
+    const bounds = getLeaseBoundsInYear(year, lease);
+    expect(bounds.start.toISODate()).toBe("2021-01-01");
+    expect(bounds.end.toISODate()).toBe("2020-12-31");
+  });
+
+  test("should handle lease completely after the year", () => {
+    const year = 2018;
+    const lease = { start_date: "2019-01-01", end_date: "2020-12-31" };
+    const bounds = getLeaseBoundsInYear(year, lease);
+    expect(bounds.start.toISODate()).toBe("2019-01-01");
+    expect(bounds.end.toISODate()).toBe("2018-12-31");
+  });
+});
 
 describe("formatDateRange", () => {
   it("formats a date range correctly", () => {
@@ -18,17 +61,13 @@ describe("formatDateRange", () => {
   it("throws an error for invalid start dates", () => {
     const startDate = "invalid-date";
     const endDate = "2024-06-30";
-    expect(() => formatDateRange(startDate, endDate)).toThrow(
-      "Invalid start or end date"
-    );
+    expect(() => formatDateRange(startDate, endDate)).toThrow("Invalid date");
   });
 
   it("throws an error for invalid end dates", () => {
     const startDate = "2023-07-01";
     const endDate = "invalid-date";
-    expect(() => formatDateRange(startDate, endDate)).toThrow(
-      "Invalid start or end date"
-    );
+    expect(() => formatDateRange(startDate, endDate)).toThrow("Invalid date");
   });
 
   it("formats a date range for the same start and end date", () => {
@@ -51,14 +90,14 @@ describe("parseAndFormatMonthlyMoneyValue", () => {
     const input = "1234.56";
     const output = parseAndFormatMonthlyMoneyValue(input);
     expect(output.numericValue).toBe(1235);
-    expect(output.formattedValue).toBe("$1,235 / mo.");
+    expect(output.formattedValue).toBe("$1,235");
   });
 
   test("should handle a string with decimal points, rounding down to the nearest dollar", () => {
     const input = "1234.49";
     const output = parseAndFormatMonthlyMoneyValue(input);
     expect(output.numericValue).toBe(1234);
-    expect(output.formattedValue).toBe("$1,234 / mo.");
+    expect(output.formattedValue).toBe("$1,234");
   });
 
   test("should return 0 and an empty string if the rounded value is 0", () => {
@@ -88,14 +127,14 @@ describe("parseAndFormatMonthlyMoneyValue", () => {
     const input = "$1,234.99";
     const output = parseAndFormatMonthlyMoneyValue(input);
     expect(output.numericValue).toBe(1235);
-    expect(output.formattedValue).toBe("$1,235 / mo.");
+    expect(output.formattedValue).toBe("$1,235");
   });
 
   test("should round and format a large number correctly", () => {
     const input = "1234567.89";
     const output = parseAndFormatMonthlyMoneyValue(input);
     expect(output.numericValue).toBe(1234568);
-    expect(output.formattedValue).toBe("$1,234,568 / mo.");
+    expect(output.formattedValue).toBe("$1,234,568");
   });
 
   test("should handle a string with just a decimal point", () => {
