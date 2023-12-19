@@ -18,7 +18,7 @@ import {
   getStartDateFromPrevious,
 } from "../../../util";
 
-function LeaseAddForm({ building, unit, onSubmitSuccess }) {
+function AddLeaseForm({ building, unit, onSubmitSuccess }) {
   const [displayedRent, setDisplayedRent] = useState("");
   const [formData, setFormData] = useState({
     start_date: "",
@@ -273,4 +273,4 @@ function LeaseAddForm({ building, unit, onSubmitSuccess }) {
   );
 }
 
-export default LeaseAddForm;
+export default AddLeaseForm;

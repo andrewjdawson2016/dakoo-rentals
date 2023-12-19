@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Typography,
@@ -12,21 +12,19 @@ import {
 import AddLeaseForm from "./AddLeaseForm";
 
 function BuildingLeasesTab({ building }) {
-  const [selectedUnit, setSelectedUnit] = useState("");
+  const [selectedUnit, setSelectedUnit] = useState(building.units[0]);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (building.building_type === "MULTI_FAMILY") {
-      setSelectedUnit(building.units[0]?.unit_number);
-    }
-  }, [building]);
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
 
   const handleChange = (event) => {
-    setSelectedUnit(event.target.value);
+    const unitNumber = event.target.value;
+    const unitObject = building.units.find(
+      (unit) => unit.unit_number === unitNumber
+    );
+    setSelectedUnit(unitObject);
   };
 
   const handleAddNewLease = () => {
@@ -44,7 +42,7 @@ function BuildingLeasesTab({ building }) {
             <>
               <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
                 <Select
-                  value={selectedUnit}
+                  value={selectedUnit.unit_number}
                   onChange={handleChange}
                   inputProps={{ "aria-label": "Without label" }}
                 >
@@ -71,9 +69,7 @@ function BuildingLeasesTab({ building }) {
         <AddLeaseForm
           building={building}
           unit={selectedUnit}
-          onSuccessfulSubmit={() => {
-            handleCloseDialog();
-          }}
+          onSubmitSuccess={handleCloseDialog}
         />
       </Dialog>
     </>
