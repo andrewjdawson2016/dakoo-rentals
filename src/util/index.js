@@ -20,6 +20,7 @@ export function getTotalIncomeByYear(buildings) {
       });
     });
   });
+  return totalIncomeByYear;
 }
 
 export function getYearsLeaseSpans(lease) {
