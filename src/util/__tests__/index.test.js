@@ -5,8 +5,52 @@ import {
   formatDateRange,
   determineLeaseStatus,
   getLeaseBoundsInYear,
+  getTotalIncomeFromBounds,
 } from "../index";
 import { DateTime } from "luxon";
+
+describe("getTotalIncomeFromBounds", () => {
+  const pricePerMonth = 1000;
+
+  test("should handle lease covering entire month", () => {
+    const start = DateTime.fromISO("2021-06-01");
+    const end = DateTime.fromISO("2021-06-30");
+    const income = getTotalIncomeFromBounds(start, end, pricePerMonth);
+    expect(income).toBeCloseTo(pricePerMonth);
+  });
+
+  test("should handle lease starting and ending mid-month", () => {
+    const start = DateTime.fromISO("2021-06-15");
+    const end = DateTime.fromISO("2021-06-25");
+    const income = getTotalIncomeFromBounds(start, end, pricePerMonth);
+    const expectedIncome = (11 / 30) * pricePerMonth;
+    expect(income).toBeCloseTo(expectedIncome);
+  });
+
+  test("should handle lease spanning multiple months", () => {
+    const start = DateTime.fromISO("2021-06-15");
+    const end = DateTime.fromISO("2021-08-10");
+    const income = getTotalIncomeFromBounds(start, end, pricePerMonth);
+    const expectedIncome = (16 / 30 + 1 + 10 / 31) * pricePerMonth;
+    expect(income).toBeCloseTo(expectedIncome);
+  });
+
+  test("should handle lease within a single month", () => {
+    const start = DateTime.fromISO("2021-06-05");
+    const end = DateTime.fromISO("2021-06-20");
+    const income = getTotalIncomeFromBounds(start, end, pricePerMonth);
+    const expectedIncome = (16 / 30) * pricePerMonth;
+    expect(income).toBeCloseTo(expectedIncome);
+  });
+
+  test("should handle lease with same start and end date", () => {
+    const start = DateTime.fromISO("2021-06-01");
+    const end = DateTime.fromISO("2021-06-01");
+    const income = getTotalIncomeFromBounds(start, end, pricePerMonth);
+    const expectedIncome = (1 / 30) * pricePerMonth;
+    expect(income).toBeCloseTo(expectedIncome);
+  });
+});
 
 describe("getLeaseBoundsInYear", () => {
   test("should handle lease entirely within the year", () => {

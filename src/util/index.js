@@ -38,25 +38,26 @@ export function getTotalLeaseIncomeInYear(year, lease) {
   if (start > end) {
     return 0;
   }
-  return getTotalIncomeInYearFromBounds(start, end, lease.price_per_month);
+  return getTotalIncomeFromBounds(start, end, lease.price_per_month);
 }
 
-export function getTotalIncomeInYearFromBounds(start, end, pricePerMonth) {
-  const interval = Interval.fromDateTimes(start, end);
+export function getTotalIncomeFromBounds(start, end, pricePerMonth) {
   let sum = 0;
+  let current = start.startOf("month");
+  end = end.endOf("day");
 
-  interval.splitBy({ months: 1 }).forEach((period) => {
-    const startOfMonth = period.start.startOf("month");
-    const endOfMonth = period.end.endOf("month");
-    const daysInMonth = startOfMonth.daysInMonth;
-    const overlap = period.intersection(
-      Interval.fromDateTimes(startOfMonth, endOfMonth)
-    );
-    const daysActive = overlap ? overlap.length("days") : 0;
-    const dailyRate = pricePerMonth / daysInMonth;
+  while (current <= end) {
+    const daysInMonth = current.daysInMonth;
+    const startOfMonth = current;
+    const endOfMonth = current.endOf("month");
 
-    sum += daysActive * dailyRate;
-  });
+    const overlapStart = start > startOfMonth ? start : startOfMonth;
+    const overlapEnd = end < endOfMonth ? end : endOfMonth;
+    const daysActive = overlapEnd.diff(overlapStart, "days").days;
+
+    sum += (daysActive / daysInMonth) * pricePerMonth;
+    current = current.plus({ months: 1 }).startOf("month");
+  }
 
   return sum;
 }
