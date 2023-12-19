@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   TextField,
@@ -6,6 +6,7 @@ import {
   Switch,
   Grid,
   Container,
+  Typography,
   IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -30,6 +31,14 @@ function LeaseAddForm({ building, unit, onSubmitSuccess }) {
   const [previousTenants, setPreviousTenants] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const formTitle = () => {
+    let title = building.nickname;
+    if (building.building_type === "MULTI_FAMILY") {
+      title += ` - Unit ${unit.unit_number}`;
+    }
+    return title;
+  };
 
   const handleRentChange = (event) => {
     const { numericValue, formattedValue } = parseAndFormatMonthlyMoneyValue(
@@ -126,6 +135,9 @@ function LeaseAddForm({ building, unit, onSubmitSuccess }) {
 
   return (
     <Container component="main" maxWidth="md">
+      <Typography variant="h5" style={{ marginTop: 16, marginBottom: 20 }}>
+        Create Lease for {formTitle()}
+      </Typography>
       {unit && unit.leases && unit.leases.length > 0 && (
         <FormControlLabel
           control={

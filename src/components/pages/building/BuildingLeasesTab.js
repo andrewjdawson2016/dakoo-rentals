@@ -7,10 +7,13 @@ import {
   MenuItem,
   FormControl,
   Button,
+  Dialog,
 } from "@mui/material";
+import AddLeaseForm from "./AddLeaseForm";
 
 function BuildingLeasesTab({ building }) {
   const [selectedUnit, setSelectedUnit] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     if (building.building_type === "MULTI_FAMILY") {
@@ -18,12 +21,16 @@ function BuildingLeasesTab({ building }) {
     }
   }, [building]);
 
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
   const handleChange = (event) => {
     setSelectedUnit(event.target.value);
   };
 
   const handleAddNewLease = () => {
-    console.log("Add New Lease Clicked");
+    setDialogOpen(true);
   };
 
   return (
@@ -60,6 +67,15 @@ function BuildingLeasesTab({ building }) {
         </Grid>
       </Grid>
       <Divider sx={{ my: 2 }} />
+      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+        <AddLeaseForm
+          building={building}
+          unit={selectedUnit}
+          onSuccessfulSubmit={() => {
+            handleCloseDialog();
+          }}
+        />
+      </Dialog>
     </>
   );
 }

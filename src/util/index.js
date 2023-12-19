@@ -1,4 +1,4 @@
-import { DateTime, Interval } from "luxon";
+import { DateTime } from "luxon";
 
 export function getTotalIncomeByYear(buildings) {
   const totalIncomeByYear = new Map();
