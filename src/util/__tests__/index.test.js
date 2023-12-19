@@ -7,8 +7,29 @@ import {
   getLeaseBoundsInYear,
   getTotalIncomeFromBounds,
   getTotalLeaseIncomeInYear,
+  getYearsLeaseSpans,
 } from "../index";
 import { DateTime } from "luxon";
+
+describe("getYearsLeaseSpans", () => {
+  test("should handle lease within a single year", () => {
+    const lease = { start_date: "2021-04-01", end_date: "2021-10-31" };
+    const years = getYearsLeaseSpans(lease);
+    expect(years).toEqual([2021]);
+  });
+
+  test("should handle lease spanning multiple years", () => {
+    const lease = { start_date: "2020-05-01", end_date: "2022-03-01" };
+    const years = getYearsLeaseSpans(lease);
+    expect(years).toEqual([2020, 2021, 2022]);
+  });
+
+  test("should handle lease at year boundary", () => {
+    const lease = { start_date: "2020-12-31", end_date: "2021-01-02" };
+    const years = getYearsLeaseSpans(lease);
+    expect(years).toEqual([2020, 2021]);
+  });
+});
 
 describe("getTotalLeaseIncomeInYear", () => {
   const pricePerMonth = 1000;
