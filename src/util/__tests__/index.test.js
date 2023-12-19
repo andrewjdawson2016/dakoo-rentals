@@ -6,8 +6,60 @@ import {
   determineLeaseStatus,
   getLeaseBoundsInYear,
   getTotalIncomeFromBounds,
+  getTotalLeaseIncomeInYear,
 } from "../index";
 import { DateTime } from "luxon";
+
+describe("getTotalLeaseIncomeInYear", () => {
+  const pricePerMonth = 1000;
+
+  test("should handle lease entirely within the year", () => {
+    const year = 2021;
+    const lease = {
+      start_date: "2021-04-01",
+      end_date: "2021-10-31",
+      price_per_month: pricePerMonth,
+    };
+    const income = getTotalLeaseIncomeInYear(year, lease);
+    const expectedIncome = 7 * pricePerMonth;
+    expect(income).toBeCloseTo(expectedIncome);
+  });
+
+  test("should handle lease starting before and ending within the year", () => {
+    const year = 2021;
+    const lease = {
+      start_date: "2020-12-15",
+      end_date: "2021-05-15",
+      price_per_month: pricePerMonth,
+    };
+    const income = getTotalLeaseIncomeInYear(year, lease);
+    const expectedIncome = (4 + 15 / 31) * pricePerMonth;
+    expect(income).toBeCloseTo(expectedIncome);
+  });
+
+  test("should handle lease starting within and ending after the year", () => {
+    const year = 2021;
+    const lease = {
+      start_date: "2021-07-05",
+      end_date: "2022-03-01",
+      price_per_month: pricePerMonth,
+    };
+    const income = getTotalLeaseIncomeInYear(year, lease);
+    const expectedIncome = (5 + 27 / 31) * pricePerMonth;
+    expect(income).toBeCloseTo(expectedIncome);
+  });
+
+  test("should handle lease completely outside the year", () => {
+    const year = 2021;
+    const lease = {
+      start_date: "2019-01-01",
+      end_date: "2020-12-31",
+      price_per_month: pricePerMonth,
+    };
+    const income = getTotalLeaseIncomeInYear(year, lease);
+    expect(income).toBeCloseTo(0);
+  });
+});
 
 describe("getTotalIncomeFromBounds", () => {
   const pricePerMonth = 1000;
