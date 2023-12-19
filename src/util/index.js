@@ -1,6 +1,6 @@
 import { DateTime, Interval } from "luxon";
 
-export function getLeasesWithDatesByYear(buildings) {
+export function getTotalIncomeByYear(buildings) {
   const totalIncomeByYear = new Map();
   buildings.forEach((building) => {
     building.units.forEach((unit) => {
