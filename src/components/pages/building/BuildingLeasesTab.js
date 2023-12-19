@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import AddLeaseForm from "./AddLeaseForm";
 
-function BuildingLeasesTab({ building }) {
+function BuildingLeasesTab({ building, onReloadBuilding }) {
   const [selectedUnit, setSelectedUnit] = useState(building.units[0]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -29,6 +29,11 @@ function BuildingLeasesTab({ building }) {
 
   const handleAddNewLease = () => {
     setDialogOpen(true);
+  };
+
+  const onSubmitSuccess = () => {
+    handleCloseDialog();
+    onReloadBuilding();
   };
 
   return (
@@ -69,7 +74,7 @@ function BuildingLeasesTab({ building }) {
         <AddLeaseForm
           building={building}
           unit={selectedUnit}
-          onSubmitSuccess={handleCloseDialog}
+          onSubmitSuccess={onSubmitSuccess}
         />
       </Dialog>
     </>

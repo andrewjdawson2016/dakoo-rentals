@@ -55,7 +55,12 @@ export function BuildingPage() {
       </AppBar>
       <Container component="main" maxWidth="lg" style={{ marginTop: "20px" }}>
         {selectedTab === 0 && <BuildingOverviewTab />}
-        {selectedTab === 1 && <BuildingLeasesTab building={building} />}
+        {selectedTab === 1 && (
+          <BuildingLeasesTab
+            building={building}
+            onReloadBuilding={refreshBuilding}
+          />
+        )}
       </Container>
     </>
   );
