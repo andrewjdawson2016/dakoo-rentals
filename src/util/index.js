@@ -1,49 +1,75 @@
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
-export function getFlattenedLeases(buildings) {
-  let leases = [];
-
+export function getLeasesWithDatesByYear(buildings) {
+  const totalIncomeByYear = new Map();
   buildings.forEach((building) => {
     building.units.forEach((unit) => {
       unit.leases.forEach((lease) => {
-        leases.push(lease);
+        let yearsLeaseSpans = getYearsLeaseSpans(lease);
+        yearsLeaseSpans.forEach((year) => {
+          let totalLeaseIncomeInYear = getTotalLeaseIncomeInYear(year, lease);
+          if (totalIncomeByYear.has(year)) {
+            totalIncomeByYear.set(
+              year,
+              totalIncomeByYear.get(year) + totalLeaseIncomeInYear
+            );
+          } else {
+            totalIncomeByYear.set(year, totalLeaseIncomeInYear);
+          }
+        });
       });
     });
   });
-
-  return leases;
 }
 
-export function getLeaseYears(lease) {
+export function getYearsLeaseSpans(lease) {
+  let years = [];
   const startYear = DateTime.fromISO(lease.start_date).year;
   const endYear = DateTime.fromISO(lease.end_date).year;
-  const years = [];
 
   for (let year = startYear; year <= endYear; year++) {
     years.push(year);
   }
-
   return years;
 }
 
-export function getLeaseDatesForYear(year, lease) {
+export function getTotalLeaseIncomeInYear(year, lease) {
+  let { start, end } = getLeaseBoundsInYear(year, lease);
+  if (start > end) {
+    return 0;
+  }
+  return getTotalIncomeInYearFromBounds(start, end, lease.price_per_month);
+}
+
+export function getTotalIncomeInYearFromBounds(start, end, pricePerMonth) {
+  const interval = Interval.fromDateTimes(start, end);
+  let sum = 0;
+
+  interval.splitBy({ months: 1 }).forEach((period) => {
+    const startOfMonth = period.start.startOf("month");
+    const endOfMonth = period.end.endOf("month");
+    const daysInMonth = startOfMonth.daysInMonth;
+    const overlap = period.intersection(
+      Interval.fromDateTimes(startOfMonth, endOfMonth)
+    );
+    const daysActive = overlap ? overlap.length("days") : 0;
+    const dailyRate = pricePerMonth / daysInMonth;
+
+    sum += daysActive * dailyRate;
+  });
+
+  return sum;
+}
+
+export function getLeaseBoundsInYear(year, lease) {
   const leaseStart = DateTime.fromISO(lease.start_date);
   const leaseEnd = DateTime.fromISO(lease.end_date);
   const yearStart = DateTime.fromObject({ year: year, month: 1, day: 1 });
   const yearEnd = DateTime.fromObject({ year: year, month: 12, day: 31 });
 
-  let effectiveStart = leaseStart > yearStart ? leaseStart : yearStart;
-  let effectiveEnd = leaseEnd < yearEnd ? leaseEnd : yearEnd;
-
-  if (effectiveStart > effectiveEnd) {
-    return null;
-  }
-
-  return {
-    start_date: effectiveStart.toISODate(),
-    end_date: effectiveEnd.toISODate(),
-    price_per_month: lease.price_per_month,
-  };
+  const effectiveStart = leaseStart > yearStart ? leaseStart : yearStart;
+  const effectiveEnd = leaseEnd < yearEnd ? leaseEnd : yearEnd;
+  return { start: effectiveStart, end: effectiveEnd };
 }
 
 export function getInitials(name) {
