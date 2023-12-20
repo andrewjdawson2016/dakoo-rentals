@@ -58,7 +58,7 @@ export function BuildingPage() {
         {selectedTab === 1 && (
           <BuildingLeasesTab
             building={building}
-            onReloadBuilding={refreshBuilding}
+            refreshBuilding={refreshBuilding}
           />
         )}
       </Container>

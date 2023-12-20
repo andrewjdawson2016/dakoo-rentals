@@ -9,11 +9,11 @@ import {
   TimelineConnector,
   TimelineOppositeContent,
 } from "@mui/lab";
-import { formatDate } from "../../../util";
-import { updateLeaseEventExecutionDate } from "../../../api";
+import { formatDate } from "../../../../util";
+import { updateLeaseEventExecutionDate } from "../../../../api";
 import { DateTime } from "luxon";
 
-const EventsTab = ({ events, refreshLeases }) => {
+const EventsTab = ({ events, refreshBuilding }) => {
   const mapEventDescription = (description) => {
     switch (description) {
       case "START":
@@ -37,7 +37,7 @@ const EventsTab = ({ events, refreshLeases }) => {
       execution_date: executionDate,
     })
       .then(() => {
-        refreshLeases();
+        refreshBuilding();
       })
       .catch((error) => {
         console.error(error);

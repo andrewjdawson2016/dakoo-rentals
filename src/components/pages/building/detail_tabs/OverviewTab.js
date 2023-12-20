@@ -1,11 +1,11 @@
 import React from "react";
 import { Avatar, Box, Paper, Tooltip, Typography } from "@mui/material";
 import {
-  formatRent,
+  formatMonthlyMoneyValue,
   formatDateRange,
   getInitials,
   determineLeaseStatus,
-} from "../../../util";
+} from "../../../../util";
 import { DateTime } from "luxon";
 
 const OverviewTab = ({ lease }) => {
@@ -54,7 +54,7 @@ const OverviewTab = ({ lease }) => {
           {formatDateRange(lease.start_date, lease.end_date)}
         </Typography>
         <Typography variant="body1">
-          {formatRent(lease.price_per_month)}
+          {formatMonthlyMoneyValue(lease.price_per_month)}
         </Typography>
         <Box sx={{ display: "flex", gap: 2, alignItems: "center", mt: 2 }}>
           {lease.tenants.map((tenant, index) => (

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
-const NotesTab = ({ notes }) => {
+const DocumentsTab = () => {
   return (
     <Paper variant="outlined" square>
       <Typography component="div" role="tabpanel">
@@ -12,4 +12,4 @@ const NotesTab = ({ notes }) => {
   );
 };
 
-export default NotesTab;
+export default DocumentsTab;

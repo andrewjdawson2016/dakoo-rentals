@@ -8,12 +8,15 @@ import {
   FormControl,
   Button,
   Dialog,
+  Box,
 } from "@mui/material";
 import AddLeaseForm from "./AddLeaseForm";
+import LeaseDetailsBox from "./LeaseDetailsBox";
 
-function BuildingLeasesTab({ building, onReloadBuilding }) {
-  const [selectedUnit, setSelectedUnit] = useState(building.units[0]);
+function BuildingLeasesTab({ building, refreshBuilding }) {
+  const [selectedUnitIndex, setSelectedUnitIndex] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const selectedUnit = building.units[selectedUnitIndex];
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
@@ -21,10 +24,10 @@ function BuildingLeasesTab({ building, onReloadBuilding }) {
 
   const handleChange = (event) => {
     const unitNumber = event.target.value;
-    const unitObject = building.units.find(
+    const unitIndex = building.units.findIndex(
       (unit) => unit.unit_number === unitNumber
     );
-    setSelectedUnit(unitObject);
+    setSelectedUnitIndex(unitIndex);
   };
 
   const handleAddNewLease = () => {
@@ -33,7 +36,7 @@ function BuildingLeasesTab({ building, onReloadBuilding }) {
 
   const onSubmitSuccess = () => {
     handleCloseDialog();
-    onReloadBuilding();
+    refreshBuilding();
   };
 
   return (
@@ -47,7 +50,7 @@ function BuildingLeasesTab({ building, onReloadBuilding }) {
             <>
               <FormControl variant="standard" sx={{ minWidth: 120, mr: 2 }}>
                 <Select
-                  value={selectedUnit.unit_number}
+                  value={selectedUnit ? selectedUnit.unit_number : ""}
                   onChange={handleChange}
                   inputProps={{ "aria-label": "Without label" }}
                 >
@@ -70,6 +73,12 @@ function BuildingLeasesTab({ building, onReloadBuilding }) {
         </Grid>
       </Grid>
       <Divider sx={{ my: 2 }} />
+      {selectedUnit &&
+        selectedUnit.leases.map((lease, index) => (
+          <Box key={lease.id || index} mb={10}>
+            <LeaseDetailsBox lease={lease} refreshBuilding={refreshBuilding} />
+          </Box>
+        ))}
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <AddLeaseForm
           building={building}
