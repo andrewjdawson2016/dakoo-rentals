@@ -4,6 +4,7 @@ export async function createBuilding({
   address,
   nickname,
   building_type,
+  first_rental_month,
   unit_numbers,
 }) {
   try {
@@ -16,6 +17,7 @@ export async function createBuilding({
         address,
         nickname,
         building_type,
+        first_rental_month,
         unit_numbers,
       }),
     });
