@@ -18,6 +18,7 @@ function AddForm({ onSuccessfulSubmit }) {
     address: "",
     building_type: "",
     unit_numbers: "",
+    first_rental_month: "",
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -107,6 +108,17 @@ function AddForm({ onSuccessfulSubmit }) {
           value={formData.address}
           onChange={handleChange}
           required
+        />
+      </FormControl>
+
+      <FormControl fullWidth margin="normal">
+        <TextField
+          label="First Rental Month (YYYY-MM)"
+          name="first_rental_month"
+          value={formData.first_rental_month}
+          onChange={handleChange}
+          required
+          helperText="Enter the first rental month in YYYY-MM format"
         />
       </FormControl>
 
