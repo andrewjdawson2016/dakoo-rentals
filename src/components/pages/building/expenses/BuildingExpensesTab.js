@@ -1,36 +1,51 @@
-import React, { useState } from "react";
-import { Grid, Typography, Divider, Button, Dialog } from "@mui/material";
-import LogExpensesForm from "./LogExpensesForm";
-function BuildingExpensesTab({ building, refreshBuilding }) {
-  const [dialogOpen, setDialogOpen] = useState(false);
+import React from "react";
+import {
+  Grid,
+  Typography,
+  Divider,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-  };
-
-  const handleLogExpenses = () => {
-    setDialogOpen(true);
-  };
+function BuildingExpensesTab({ building }) {
   return (
     <>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
           <Typography variant="h4">Expenses</Typography>
         </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleLogExpenses}
-          >
-            Log Expenses
-          </Button>
-        </Grid>
       </Grid>
       <Divider sx={{ my: 2 }} />
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <LogExpensesForm building={building} />
-      </Dialog>
+
+      <TableContainer component={Paper}>
+        <Table aria-label="expenses table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell align="right">Fixed Amount</TableCell>
+              <TableCell align="right">Variable Amount</TableCell>
+              <TableCell>Note</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {building.expenses.map((expense, index) => (
+              <TableRow key={index}>
+                <TableCell component="th" scope="row">
+                  {expense.month_year}
+                </TableCell>
+                <TableCell align="right">{expense.fixed_amount}</TableCell>
+                <TableCell align="right">{expense.variable_amount}</TableCell>
+                <TableCell>{expense.note}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }

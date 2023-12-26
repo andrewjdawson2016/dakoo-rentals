@@ -14,17 +14,17 @@ import {
 import { DateTime } from "luxon";
 
 describe("getUnloggedExpenseMonths", () => {
-  test("should return all months when no expenses are logged", () => {
+  test("should return all months with null expenses when no expenses are logged", () => {
     const expenses = [];
     const firstRentalMonth = "2020-01";
-    const currentDate = DateTime.fromISO("2020-06-01");
+    const currentDate = DateTime.fromISO("2020-06-01").toISODate();
     const expected = [
-      "2020-01",
-      "2020-02",
-      "2020-03",
-      "2020-04",
-      "2020-05",
-      "2020-06",
+      ["2020-01", null],
+      ["2020-02", null],
+      ["2020-03", null],
+      ["2020-04", null],
+      ["2020-05", null],
+      ["2020-06", null],
     ];
     expect(
       getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
@@ -41,17 +41,25 @@ describe("getUnloggedExpenseMonths", () => {
       { month_year: "2020-06" },
     ];
     const firstRentalMonth = "2020-01";
-    const currentDate = DateTime.fromISO("2020-06-01");
+    const currentDate = DateTime.fromISO("2020-06-01").toISODate();
+    const expected = expenses.map((expense) => [expense.month_year, expense]);
     expect(
       getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
-    ).toEqual([]);
+    ).toEqual(expected);
   });
 
-  test("should return only unlogged months", () => {
+  test("should return only unlogged months with corresponding null expenses", () => {
     const expenses = [{ month_year: "2020-01" }, { month_year: "2020-03" }];
     const firstRentalMonth = "2020-01";
-    const currentDate = DateTime.fromISO("2020-06-01");
-    const expected = ["2020-02", "2020-04", "2020-05", "2020-06"];
+    const currentDate = DateTime.fromISO("2020-06-01").toISODate();
+    const expected = [
+      ["2020-01", expenses[0]],
+      ["2020-02", null],
+      ["2020-03", expenses[1]],
+      ["2020-04", null],
+      ["2020-05", null],
+      ["2020-06", null],
+    ];
     expect(
       getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
     ).toEqual(expected);
@@ -60,7 +68,7 @@ describe("getUnloggedExpenseMonths", () => {
   test("should handle empty expenses and future firstRentalMonth correctly", () => {
     const expenses = [];
     const firstRentalMonth = "2021-01";
-    const currentDate = DateTime.fromISO("2020-06-01");
+    const currentDate = DateTime.fromISO("2020-06-01").toISODate();
     expect(
       getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
     ).toEqual([]);

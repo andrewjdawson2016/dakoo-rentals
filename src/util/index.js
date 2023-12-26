@@ -5,25 +5,25 @@ export function getUnloggedExpenseMonths(
   firstRentalMonth,
   currentDate
 ) {
-  const loggedMonths = new Set();
+  const expenseMap = new Map();
 
   expenses.forEach((expense) => {
-    loggedMonths.add(expense.month_year);
+    expenseMap.set(expense.month_year, expense);
   });
 
   const start = DateTime.fromISO(firstRentalMonth + "-01");
-  const unloggedMonths = [];
+  const end = DateTime.fromISO(currentDate);
+  const result = [];
   let month = start;
 
-  while (month <= currentDate) {
+  while (month <= end) {
     const monthStr = month.toISODate().slice(0, 7);
-    if (!loggedMonths.has(monthStr)) {
-      unloggedMonths.push(monthStr);
-    }
+    const expense = expenseMap.get(monthStr) || null;
+    result.push([monthStr, expense]);
     month = month.plus({ months: 1 });
   }
 
-  return unloggedMonths;
+  return result;
 }
 
 export function getTotalIncomeByYear(buildings) {
