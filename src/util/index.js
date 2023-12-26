@@ -1,10 +1,11 @@
 import { DateTime } from "luxon";
 
-export function getUnloggedExpenseMonths(
-  expenses,
-  firstRentalMonth,
-  currentDate
-) {
+export function formatDateToMonthYear(dateString) {
+  const date = DateTime.fromISO(dateString + "-01");
+  return date.toFormat("LLL yyyy");
+}
+
+export function getExpenseMonths(expenses, firstRentalMonth, currentDate) {
   const expenseMap = new Map();
 
   expenses.forEach((expense) => {

@@ -11,8 +11,16 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { getExpenseMonths } from "../../../../util";
+import { DateTime } from "luxon";
 
 function BuildingExpensesTab({ building }) {
+  const expensesData = getExpenseMonths(
+    building.expenses,
+    building.first_rental_month,
+    DateTime.now().toISODate()
+  );
+
   return (
     <>
       <Grid container justifyContent="space-between" alignItems="center">
@@ -33,14 +41,18 @@ function BuildingExpensesTab({ building }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {building.expenses.map((expense, index) => (
+            {expensesData.map(([month, expense], index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row">
-                  {expense.month_year}
+                  {month}
                 </TableCell>
-                <TableCell align="right">{expense.fixed_amount}</TableCell>
-                <TableCell align="right">{expense.variable_amount}</TableCell>
-                <TableCell>{expense.note}</TableCell>
+                <TableCell align="right">
+                  {expense ? expense.fixed_amount : "-"}
+                </TableCell>
+                <TableCell align="right">
+                  {expense ? expense.variable_amount : "-"}
+                </TableCell>
+                <TableCell>{expense ? expense.note : "-"}</TableCell>
               </TableRow>
             ))}
           </TableBody>
