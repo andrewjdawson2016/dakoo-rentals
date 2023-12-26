@@ -29,7 +29,7 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
       </Grid>
       <Divider sx={{ my: 2 }} />
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <LogExpensesForm />
+        <LogExpensesForm building={building} />
       </Dialog>
     </>
   );
