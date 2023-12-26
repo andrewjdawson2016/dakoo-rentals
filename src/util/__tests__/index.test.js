@@ -9,8 +9,63 @@ import {
   getTotalLeaseIncomeInYear,
   getYearsLeaseSpans,
   getTotalIncomeByYear,
+  getUnloggedExpenseMonths,
 } from "../index";
 import { DateTime } from "luxon";
+
+describe("getUnloggedExpenseMonths", () => {
+  test("should return all months when no expenses are logged", () => {
+    const expenses = [];
+    const firstRentalMonth = "2020-01";
+    const currentDate = DateTime.fromISO("2020-06-01");
+    const expected = [
+      "2020-01",
+      "2020-02",
+      "2020-03",
+      "2020-04",
+      "2020-05",
+      "2020-06",
+    ];
+    expect(
+      getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
+    ).toEqual(expected);
+  });
+
+  test("should return no months when all are logged", () => {
+    const expenses = [
+      { month_year: "2020-01" },
+      { month_year: "2020-02" },
+      { month_year: "2020-03" },
+      { month_year: "2020-04" },
+      { month_year: "2020-05" },
+      { month_year: "2020-06" },
+    ];
+    const firstRentalMonth = "2020-01";
+    const currentDate = DateTime.fromISO("2020-06-01");
+    expect(
+      getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
+    ).toEqual([]);
+  });
+
+  test("should return only unlogged months", () => {
+    const expenses = [{ month_year: "2020-01" }, { month_year: "2020-03" }];
+    const firstRentalMonth = "2020-01";
+    const currentDate = DateTime.fromISO("2020-06-01");
+    const expected = ["2020-02", "2020-04", "2020-05", "2020-06"];
+    expect(
+      getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
+    ).toEqual(expected);
+  });
+
+  test("should handle empty expenses and future firstRentalMonth correctly", () => {
+    const expenses = [];
+    const firstRentalMonth = "2021-01";
+    const currentDate = DateTime.fromISO("2020-06-01");
+    expect(
+      getUnloggedExpenseMonths(expenses, firstRentalMonth, currentDate)
+    ).toEqual([]);
+  });
+});
 
 describe("getTotalIncomeByYear", () => {
   test("should handle a single building with a single lease", () => {

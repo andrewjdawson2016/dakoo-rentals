@@ -27,6 +27,7 @@ function BuildingToolbar({ building, selectedTab, setSelectedTab }) {
         >
           <Tab label="Overview" />
           <Tab label="Leases" />
+          <Tab label="Expenses" />
         </Tabs>
       </Toolbar>
     </>

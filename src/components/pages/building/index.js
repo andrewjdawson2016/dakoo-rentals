@@ -4,7 +4,8 @@ import TopLevelToolbar from "../../common/TopLevelToolbar";
 import { AppBar, Container, CircularProgress, Box } from "@mui/material";
 import BuildingToolbar from "./BuildingToolbar";
 import BuildingOverviewTab from "./BuildingOverviewTab";
-import BuildingLeasesTab from "./BuildingLeasesTab";
+import BuildingLeasesTab from "./leases/BuildingLeasesTab";
+import BuildingExpensesTab from "./expenses/BuildingExpensesTab";
 import { getBuilding } from "../../../api";
 
 export function BuildingPage() {
@@ -57,6 +58,12 @@ export function BuildingPage() {
         {selectedTab === 0 && <BuildingOverviewTab />}
         {selectedTab === 1 && (
           <BuildingLeasesTab
+            building={building}
+            refreshBuilding={refreshBuilding}
+          />
+        )}
+        {selectedTab === 2 && (
+          <BuildingExpensesTab
             building={building}
             refreshBuilding={refreshBuilding}
           />

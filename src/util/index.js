@@ -1,5 +1,31 @@
 import { DateTime } from "luxon";
 
+export function getUnloggedExpenseMonths(
+  expenses,
+  firstRentalMonth,
+  currentDate
+) {
+  const loggedMonths = new Set();
+
+  expenses.forEach((expense) => {
+    loggedMonths.add(expense.month_year);
+  });
+
+  const start = DateTime.fromISO(firstRentalMonth + "-01");
+  const unloggedMonths = [];
+  let month = start;
+
+  while (month <= currentDate) {
+    const monthStr = month.toISODate().slice(0, 7);
+    if (!loggedMonths.has(monthStr)) {
+      unloggedMonths.push(monthStr);
+    }
+    month = month.plus({ months: 1 });
+  }
+
+  return unloggedMonths;
+}
+
 export function getTotalIncomeByYear(buildings) {
   const totalIncomeByYear = new Map();
   buildings.forEach((building) => {

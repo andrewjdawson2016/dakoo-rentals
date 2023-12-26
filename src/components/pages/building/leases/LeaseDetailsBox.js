@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Container, Tabs, Tab } from "@mui/material";
-import OverviewTab from "./detail_tabs/OverviewTab";
-import EventsTab from "./detail_tabs/EventsTab";
-import NotesTab from "./detail_tabs/NotesTab";
-import DocumentsTab from "./detail_tabs/DocumentsTab";
+import OverviewTab from "./OverviewTab";
+import EventsTab from "./EventsTab";
+import NotesTab from "./NotesTab";
+import DocumentsTab from "./DocumentsTab";
 
 function LeaseDetailsBox({ lease, refreshBuilding }) {
   const [value, setValue] = React.useState(0);
