@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Button, TextField, Container, Typography } from "@mui/material";
 import SnackbarAlert from "../../../common/SnackbarAlert";
 import { createExpense } from "../../../../api";
-import { formatDateToMonthYear } from "../../../../util";
+import {
+  formatDateToMonthYear,
+  parseAndFormatMonthlyMoneyValue,
+} from "../../../../util";
 
 function LogExpenseForm({ building, monthYear, onSubmitSuccess }) {
   const [formData, setFormData] = useState({
@@ -10,13 +13,36 @@ function LogExpenseForm({ building, monthYear, onSubmitSuccess }) {
     variable_amount: "",
     note: "",
   });
+  const [displayedFixedAmount, setDisplayedFixedAmount] = useState("");
+  const [displayedVariableAmount, setDisplayedVariableAmount] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const handleFixedAmountChange = (event) => {
+    const { numericValue, formattedValue } = parseAndFormatMonthlyMoneyValue(
+      event.target.value
+    );
+    setFormData((prev) => ({
+      ...prev,
+      fixed_amount: numericValue,
+    }));
+    setDisplayedFixedAmount(formattedValue);
+  };
+
+  const handleVariableAmountChange = (event) => {
+    const { numericValue, formattedValue } = parseAndFormatMonthlyMoneyValue(
+      event.target.value
+    );
+    setFormData((prev) => ({
+      ...prev,
+      variable_amount: numericValue,
+    }));
+    setDisplayedVariableAmount(formattedValue);
+  };
+
   const handleChange = (e) => {
-    const { name, value, checked } = e.target;
-    let updates = (updates[name] = value);
-    setFormData((prev) => ({ ...prev, ...updates }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = () => {
@@ -34,6 +60,8 @@ function LogExpenseForm({ building, monthYear, onSubmitSuccess }) {
           variable_amount: "",
           note: "",
         });
+        setDisplayedFixedAmount("");
+        setDisplayedVariableAmount("");
         onSubmitSuccess();
       })
       .catch((e) => {
@@ -53,17 +81,17 @@ function LogExpenseForm({ building, monthYear, onSubmitSuccess }) {
         margin="normal"
         label="Fixed Amount"
         name="fixed_amount"
-        value={formData.fixed_amount}
-        onChange={handleChange}
+        value={displayedFixedAmount}
+        onChange={handleFixedAmountChange}
         required
       />
       <TextField
         fullWidth
         margin="normal"
-        label="Flexiable Amount"
-        name="flexiable_amount"
-        value={formData.flexiable_amount}
-        onChange={handleChange}
+        label="Variable Amount"
+        name="variable_amount"
+        value={displayedVariableAmount}
+        onChange={handleVariableAmountChange}
         required
       />
 
