@@ -6,6 +6,7 @@ import {
   getTotalIncomeFromBounds,
   getLeaseBoundsInYear,
   getTotalExpensesByYear,
+  computeProfitByYear,
 } from "../Graphing";
 
 describe("getTotalIncomeByYear", () => {
@@ -321,5 +322,76 @@ describe("getTotalExpensesByYear", () => {
     const result = getTotalExpensesByYear(buildings);
     expect(result.get("2023")).toBe(410);
     expect(result.get("2022")).toBe(100);
+  });
+});
+
+describe("computeProfitByYear", () => {
+  it("computes profit correctly when years are in both income and expenses", () => {
+    const totalIncomeByYear = new Map([
+      ["2023", 1000],
+      ["2022", 800],
+    ]);
+    const totalExpensesByYear = new Map([
+      ["2023", 500],
+      ["2022", 300],
+    ]);
+    const expectedProfit = new Map([
+      ["2023", 500],
+      ["2022", 500],
+    ]);
+
+    const profitByYear = computeProfitByYear(
+      totalIncomeByYear,
+      totalExpensesByYear
+    );
+    expect(profitByYear).toEqual(expectedProfit);
+  });
+
+  it("handles years present only in income", () => {
+    const totalIncomeByYear = new Map([
+      ["2023", 1000],
+      ["2021", 700],
+    ]);
+    const totalExpensesByYear = new Map([["2023", 500]]);
+    const expectedProfit = new Map([
+      ["2023", 500],
+      ["2021", 700],
+    ]);
+
+    const profitByYear = computeProfitByYear(
+      totalIncomeByYear,
+      totalExpensesByYear
+    );
+    expect(profitByYear).toEqual(expectedProfit);
+  });
+
+  it("handles years present only in expenses", () => {
+    const totalIncomeByYear = new Map([["2023", 1000]]);
+    const totalExpensesByYear = new Map([
+      ["2023", 500],
+      ["2022", 400],
+    ]);
+    const expectedProfit = new Map([
+      ["2023", 500],
+      ["2022", -400],
+    ]);
+
+    const profitByYear = computeProfitByYear(
+      totalIncomeByYear,
+      totalExpensesByYear
+    );
+    expect(profitByYear).toEqual(expectedProfit);
+  });
+
+  it("returns an empty map when both income and expenses are empty", () => {
+    const totalIncomeByYear = new Map();
+    const totalExpensesByYear = new Map();
+    const expectedProfit = new Map();
+
+    const profitByYear = computeProfitByYear(
+      totalIncomeByYear,
+      totalExpensesByYear
+    );
+    expect(profitByYear).toEqual(expectedProfit);
   });
 });

@@ -1,5 +1,27 @@
 import { DateTime } from "luxon";
 
+export function computeProfitByYear(totalIncomeByYear, totalExpensesByYear) {
+  const profitByYear = new Map();
+
+  const addProfitData = (year, income, expense) => {
+    profitByYear.set(year, (income || 0) - (expense || 0));
+  };
+
+  totalIncomeByYear.forEach((income, year) => {
+    const expense = totalExpensesByYear.get(year);
+    addProfitData(year, income, expense);
+  });
+
+  totalExpensesByYear.forEach((expense, year) => {
+    if (!profitByYear.has(year)) {
+      const income = totalIncomeByYear.get(year);
+      addProfitData(year, income, expense);
+    }
+  });
+
+  return profitByYear;
+}
+
 export function getTotalExpensesByYear(buildings) {
   const totalExpensesByYear = new Map();
   buildings.forEach((building) => {
