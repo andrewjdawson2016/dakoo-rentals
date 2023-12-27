@@ -14,7 +14,11 @@ import {
   Dialog,
 } from "@mui/material";
 import { Add, Edit } from "@mui/icons-material";
-import { getExpenseMonths, formatDateToMonthYear } from "../../../../util";
+import {
+  getExpenseMonths,
+  formatDateToMonthYear,
+  formatMonthlyMoneyValue,
+} from "../../../../util";
 import { DateTime } from "luxon";
 import LogExpenseForm from "./LogExpenseForm";
 
@@ -71,8 +75,16 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
                 <TableCell component="th" scope="row">
                   {formatDateToMonthYear(month)}
                 </TableCell>
-                <TableCell>{expense ? expense.fixed_amount : "-"}</TableCell>
-                <TableCell>{expense ? expense.variable_amount : "-"}</TableCell>
+                <TableCell>
+                  {expense
+                    ? formatMonthlyMoneyValue(expense.fixed_amount)
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {expense
+                    ? formatMonthlyMoneyValue(expense.variable_amount)
+                    : "-"}
+                </TableCell>
                 <TableCell>{expense ? expense.note : "-"}</TableCell>
                 <TableCell>
                   <IconButton
