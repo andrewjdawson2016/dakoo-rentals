@@ -1,9 +1,8 @@
 import { DateTime } from "luxon";
 
-export function computeFinancialSummaryByYear(
-  totalIncomeByYear,
-  totalExpensesByYear
-) {
+export function computeFinancialSummaryByYear(buildings) {
+  const totalIncomeByYear = getTotalIncomeByYear(buildings);
+  const totalExpensesByYear = getTotalExpensesByYear(buildings);
   const financialSummaryByYear = new Map();
 
   totalIncomeByYear.forEach((income, year) => {
