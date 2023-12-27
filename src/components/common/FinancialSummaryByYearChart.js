@@ -63,6 +63,9 @@ function FinancialSummaryByYearChart({ buildings }) {
         display: true,
         text: "Financial Summary By Year",
       },
+      legend: {
+        display: false,
+      },
       tooltip: {
         callbacks: {
           label: function (context) {
