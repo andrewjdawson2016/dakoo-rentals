@@ -1,9 +1,13 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
 import { computeFinancialSummaryByYear } from "../../util";
+
+Chart.register(...registerables);
 
 function FinancialSummaryByYearChart({ buildings }) {
   const financialSummary = computeFinancialSummaryByYear(buildings);
+  console.log("andrew got financialSummary: ", financialSummary);
   const chartData = {
     labels: [],
     datasets: [
@@ -33,28 +37,20 @@ function FinancialSummaryByYearChart({ buildings }) {
 
   const options = {
     scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: false,
-            callback: function (value, index, values) {
-              return value.toLocaleString();
-            },
-          },
-          scaleLabel: {
-            display: true,
-            labelString: "Dollars",
+      y: {
+        beginAtZero: false,
+        ticks: {
+          callback: function (value) {
+            return value.toLocaleString();
           },
         },
-      ],
-      xAxes: [
-        {
-          scaleLabel: {
-            display: true,
-            labelString: "Year",
-          },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Year",
         },
-      ],
+      },
     },
   };
 

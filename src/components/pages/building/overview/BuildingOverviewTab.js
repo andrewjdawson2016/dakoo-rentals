@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, Typography, Divider } from "@mui/material";
-import { FinancialSummaryByYearChart } from "../../../common/FinancialSummaryByYearChart";
+import FinancialSummaryByYearChart from "../../../common/FinancialSummaryByYearChart";
 
 function BuildingOverviewTab({ building }) {
   return (

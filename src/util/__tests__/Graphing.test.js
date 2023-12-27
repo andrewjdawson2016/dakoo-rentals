@@ -300,7 +300,7 @@ describe("getTotalExpensesByYear", () => {
     ];
 
     const result = getTotalExpensesByYear(buildings);
-    expect(result.get("2023")).toBe(390);
+    expect(result.get(2023)).toBe(390);
   });
 
   it("should correctly calculate the total expenses for multiple buildings", () => {
@@ -320,8 +320,8 @@ describe("getTotalExpensesByYear", () => {
     ];
 
     const result = getTotalExpensesByYear(buildings);
-    expect(result.get("2023")).toBe(410);
-    expect(result.get("2022")).toBe(100);
+    expect(result.get(2023)).toBe(410);
+    expect(result.get(2022)).toBe(100);
   });
 });
 
