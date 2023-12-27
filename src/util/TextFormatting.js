@@ -31,7 +31,7 @@ export function parseAndFormatMonthlyMoneyValue(moneyValueString) {
   const rawValue = moneyValueString.replace(/[^\d.]/g, "");
   let numericValue = parseFloat(rawValue);
 
-  if (isNaN(numericValue) || numericValue === 0) {
+  if (isNaN(numericValue)) {
     return { numericValue: 0, formattedValue: "" };
   }
 
@@ -42,7 +42,7 @@ export function parseAndFormatMonthlyMoneyValue(moneyValueString) {
 }
 
 export function formatMonthlyMoneyValue(numericValue) {
-  if (isNaN(numericValue) || numericValue === 0) {
+  if (isNaN(numericValue)) {
     return "";
   }
 
