@@ -73,7 +73,7 @@ describe("parseAndFormatMonthlyMoneyValue", () => {
     inputs.forEach((input) => {
       const output = parseAndFormatMonthlyMoneyValue(input);
       expect(output.numericValue).toBe(0);
-      expect(output.formattedValue).toBe("");
+      expect(output.formattedValue).toBe("$0");
     });
   });
 
