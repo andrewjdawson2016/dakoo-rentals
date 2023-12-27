@@ -1,5 +1,29 @@
 import { DateTime } from "luxon";
 
+export function computeFinancialSummaryByMonth(buildings) {
+  const startMonth = getEarliestFirstRentalMonth(buildings);
+  const endMonth = DateTime.now().toFormat("yyyy-MM");
+
+  const totalIncomeByMonth = getTotalIncomeByMonth(buildings);
+  const totalExpensesByMonth = getTotalExpensesByMonth(buildings);
+  const financialSummary = [];
+
+  let currentMonth = DateTime.fromFormat(startMonth, "yyyy-MM");
+
+  while (currentMonth.toFormat("yyyy-MM") <= endMonth) {
+    const monthYear = currentMonth.toFormat("yyyy-MM");
+    const income = totalIncomeByMonth.get(monthYear) || 0;
+    const expense = totalExpensesByMonth.get(monthYear) || 0;
+    const profit = income - expense;
+
+    financialSummary.push({ monthYear, income, expense, profit });
+
+    currentMonth = currentMonth.plus({ months: 1 });
+  }
+
+  return financialSummary;
+}
+
 export function getTotalIncomeByMonth(buildings) {
   const totalIncomeByMonth = new Map();
 
@@ -197,4 +221,16 @@ export function getLeaseBoundsInYear(year, lease) {
   const effectiveStart = leaseStart > yearStart ? leaseStart : yearStart;
   const effectiveEnd = leaseEnd < yearEnd ? leaseEnd : yearEnd;
   return { start: effectiveStart, end: effectiveEnd };
+}
+
+export function getEarliestFirstRentalMonth(buildings) {
+  let earliestMonth = DateTime.now().toFormat("yyyy-MM");
+
+  buildings.forEach((building) => {
+    if (building.first_rental_month < earliestMonth) {
+      earliestMonth = building.first_rental_month;
+    }
+  });
+
+  return earliestMonth;
 }
