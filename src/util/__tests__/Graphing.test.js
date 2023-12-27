@@ -86,6 +86,11 @@ describe("getTotalIncomeByYear", () => {
                 end_date: "2021-12-31",
                 price_per_month: 1100,
               },
+              {
+                start_date: "2022-01-01",
+                end_date: "2022-12-31",
+                price_per_month: 1200,
+              },
             ],
           },
         ],
@@ -125,6 +130,7 @@ describe("getTotalIncomeByYear", () => {
     expect(totalIncome.get(2019)).toBeCloseTo(13600);
     expect(totalIncome.get(2020)).toBeCloseTo(8500);
     expect(totalIncome.get(2021)).toBeCloseTo(6600);
+    expect(totalIncome.get(2022)).toBeCloseTo(13238.7097);
   });
 });
 
