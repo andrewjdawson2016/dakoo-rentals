@@ -1,5 +1,24 @@
 import { DateTime } from "luxon";
 
+export function getTotalExpensesByYear(buildings) {
+  const totalExpensesByYear = new Map();
+  buildings.forEach((building) => {
+    building.expenses.forEach((expense) => {
+      const year = expense.month_year.split("-")[0];
+      const totalExpenseAmount = expense.fixed_amount + expense.variable_amount;
+      if (!totalExpensesByYear.has(year)) {
+        totalExpensesByYear.set(year, 0);
+      }
+      totalExpensesByYear.set(
+        year,
+        totalExpensesByYear.get(year) + totalExpenseAmount
+      );
+    });
+  });
+
+  return totalExpensesByYear;
+}
+
 export function getTotalIncomeByYear(buildings) {
   const totalIncomeByYear = new Map();
   buildings.forEach((building) => {

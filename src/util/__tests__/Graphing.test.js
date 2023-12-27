@@ -5,6 +5,7 @@ import {
   getTotalLeaseIncomeInYear,
   getTotalIncomeFromBounds,
   getLeaseBoundsInYear,
+  getTotalExpensesByYear,
 } from "../Graphing";
 
 describe("getTotalIncomeByYear", () => {
@@ -277,5 +278,48 @@ describe("getLeaseBoundsInYear", () => {
     const bounds = getLeaseBoundsInYear(year, lease);
     expect(bounds.start.toISODate()).toBe("2019-01-01");
     expect(bounds.end.toISODate()).toBe("2018-12-31");
+  });
+});
+
+describe("getTotalExpensesByYear", () => {
+  it("should return an empty map for no buildings", () => {
+    const result = getTotalExpensesByYear([]);
+    expect(result.size).toBe(0);
+  });
+
+  it("should correctly calculate the total expenses for a single building", () => {
+    const buildings = [
+      {
+        expenses: [
+          { month_year: "2023-01", fixed_amount: 100, variable_amount: 50 },
+          { month_year: "2023-02", fixed_amount: 100, variable_amount: 60 },
+          { month_year: "2023-01", fixed_amount: 50, variable_amount: 30 },
+        ],
+      },
+    ];
+
+    const result = getTotalExpensesByYear(buildings);
+    expect(result.get("2023")).toBe(390);
+  });
+
+  it("should correctly calculate the total expenses for multiple buildings", () => {
+    const buildings = [
+      {
+        expenses: [
+          { month_year: "2023-01", fixed_amount: 100, variable_amount: 50 },
+          { month_year: "2023-02", fixed_amount: 100, variable_amount: 60 },
+        ],
+      },
+      {
+        expenses: [
+          { month_year: "2022-11", fixed_amount: 80, variable_amount: 20 },
+          { month_year: "2023-01", fixed_amount: 70, variable_amount: 30 },
+        ],
+      },
+    ];
+
+    const result = getTotalExpensesByYear(buildings);
+    expect(result.get("2023")).toBe(410);
+    expect(result.get("2022")).toBe(100);
   });
 });
