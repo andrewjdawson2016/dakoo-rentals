@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import TopLevelToolbar from "../../common/TopLevelToolbar";
 import { AppBar, Container, CircularProgress, Box } from "@mui/material";
 import BuildingToolbar from "./BuildingToolbar";
-import BuildingOverviewTab from "./BuildingOverviewTab";
+import BuildingOverviewTab from "./overview/BuildingOverviewTab";
 import BuildingLeasesTab from "./leases/BuildingLeasesTab";
 import BuildingExpensesTab from "./expenses/BuildingExpensesTab";
 import { getBuilding } from "../../../api";
