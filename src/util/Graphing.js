@@ -3,23 +3,25 @@ import { DateTime } from "luxon";
 export function computeFinancialSummaryByYear(buildings) {
   const totalIncomeByYear = getTotalIncomeByYear(buildings);
   const totalExpensesByYear = getTotalExpensesByYear(buildings);
-  const financialSummaryByYear = new Map();
+  const financialSummary = [];
 
   totalIncomeByYear.forEach((income, year) => {
     const expense = totalExpensesByYear.get(year) || 0;
     const profit = income - expense;
-    financialSummaryByYear.set(year, [income, expense, profit]);
+    financialSummary.push({ year, income, expense, profit });
   });
 
   totalExpensesByYear.forEach((expense, year) => {
-    if (!financialSummaryByYear.has(year)) {
+    if (!financialSummary.some((summary) => summary.year === year)) {
       const income = 0;
       const profit = income - expense;
-      financialSummaryByYear.set(year, [income, expense, profit]);
+      financialSummary.push({ year, income, expense, profit });
     }
   });
 
-  return financialSummaryByYear;
+  financialSummary.sort((a, b) => a.year - b.year);
+
+  return financialSummary;
 }
 
 export function getTotalExpensesByYear(buildings) {
@@ -44,14 +46,18 @@ export function getTotalExpensesByYear(buildings) {
   return totalExpensesByYear;
 }
 
-export function getTotalIncomeByYear(buildings) {
+export function getTotalIncomeByYear(buildings, now) {
   const totalIncomeByYear = new Map();
   buildings.forEach((building) => {
     building.units.forEach((unit) => {
       unit.leases.forEach((lease) => {
         let yearsLeaseSpans = getYearsLeaseSpans(lease);
         yearsLeaseSpans.forEach((year) => {
-          let totalLeaseIncomeInYear = getTotalLeaseIncomeInYear(year, lease);
+          let totalLeaseIncomeInYear = getTotalLeaseIncomeInYear(
+            year,
+            lease,
+            now
+          );
           if (totalIncomeByYear.has(year)) {
             totalIncomeByYear.set(
               year,
@@ -78,10 +84,13 @@ export function getYearsLeaseSpans(lease) {
   return years;
 }
 
-export function getTotalLeaseIncomeInYear(year, lease) {
+export function getTotalLeaseIncomeInYear(year, lease, now) {
   let { start, end } = getLeaseBoundsInYear(year, lease);
   if (start > end) {
     return 0;
+  }
+  if (end > now) {
+    end = now;
   }
   return getTotalIncomeFromBounds(start, end, lease.price_per_month);
 }
