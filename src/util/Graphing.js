@@ -33,9 +33,15 @@ export function getTotalExpensesByMonth(buildings) {
 
   buildings.forEach((building) => {
     building.expenses.forEach((expense) => {
+      if (!totalExpensesByMonth.has(expense.month_year)) {
+        totalExpensesByMonth.set(expense.month_year, 0);
+      }
+
       totalExpensesByMonth.set(
         expense.month_year,
-        expense.fixed_amount + expense.variable_amount
+        totalExpensesByMonth.get(expense.month_year) +
+          expense.fixed_amount +
+          expense.variable_amount
       );
     });
   });

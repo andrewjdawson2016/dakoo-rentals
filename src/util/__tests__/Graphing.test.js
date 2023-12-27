@@ -6,7 +6,64 @@ import {
   getTotalIncomeFromBounds,
   getLeaseBoundsInYear,
   getTotalExpensesByYear,
+  getTotalExpensesByMonth,
 } from "../Graphing";
+
+describe("getTotalExpensesByMonth", () => {
+  it("returns an empty map for no buildings", () => {
+    expect(getTotalExpensesByMonth([])).toEqual(new Map());
+  });
+
+  it("returns an empty map for a building with no expenses", () => {
+    const buildings = [{ expenses: [] }];
+    expect(getTotalExpensesByMonth(buildings)).toEqual(new Map());
+  });
+
+  it("calculates expenses correctly for one building with one expense", () => {
+    const buildings = [
+      {
+        expenses: [
+          { month_year: "2023-01", fixed_amount: 500, variable_amount: 300 },
+        ],
+      },
+    ];
+    const expected = new Map([["2023-01", 800]]);
+    expect(getTotalExpensesByMonth(buildings)).toEqual(expected);
+  });
+
+  it("aggregates expenses correctly for multiple buildings with expenses in the same month", () => {
+    const buildings = [
+      {
+        expenses: [
+          { month_year: "2023-01", fixed_amount: 500, variable_amount: 300 },
+        ],
+      },
+      {
+        expenses: [
+          { month_year: "2023-01", fixed_amount: 200, variable_amount: 100 },
+        ],
+      },
+    ];
+    const expected = new Map([["2023-01", 1100]]);
+    expect(getTotalExpensesByMonth(buildings)).toEqual(expected);
+  });
+
+  it("handles expenses in different months correctly", () => {
+    const buildings = [
+      {
+        expenses: [
+          { month_year: "2023-01", fixed_amount: 500, variable_amount: 300 },
+          { month_year: "2023-02", fixed_amount: 400, variable_amount: 200 },
+        ],
+      },
+    ];
+    const expected = new Map([
+      ["2023-01", 800],
+      ["2023-02", 600],
+    ]);
+    expect(getTotalExpensesByMonth(buildings)).toEqual(expected);
+  });
+});
 
 describe("getTotalIncomeByYear", () => {
   test("should handle a single building with a single lease", () => {
