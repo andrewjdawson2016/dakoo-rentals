@@ -1,18 +1,24 @@
 import { DateTime } from "luxon";
 
 export function computeFinancialSummaryByYear(buildings) {
+  const currentYear = DateTime.now().year;
   const totalIncomeByYear = getTotalIncomeByYear(buildings, DateTime.now());
   const totalExpensesByYear = getTotalExpensesByYear(buildings);
   const financialSummary = [];
 
   totalIncomeByYear.forEach((income, year) => {
-    const expense = totalExpensesByYear.get(year) || 0;
-    const profit = income - expense;
-    financialSummary.push({ year, income, expense, profit });
+    if (year <= currentYear) {
+      const expense = totalExpensesByYear.get(year) || 0;
+      const profit = income - expense;
+      financialSummary.push({ year, income, expense, profit });
+    }
   });
 
   totalExpensesByYear.forEach((expense, year) => {
-    if (!financialSummary.some((summary) => summary.year === year)) {
+    if (
+      year <= currentYear &&
+      !financialSummary.some((summary) => summary.year === year)
+    ) {
       const income = 0;
       const profit = income - expense;
       financialSummary.push({ year, income, expense, profit });
