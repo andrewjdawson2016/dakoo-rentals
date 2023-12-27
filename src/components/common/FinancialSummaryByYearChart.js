@@ -7,7 +7,6 @@ Chart.register(...registerables);
 
 function FinancialSummaryByYearChart({ buildings }) {
   const financialSummary = computeFinancialSummaryByYear(buildings);
-  console.log("andrew got financialSummary: ", financialSummary);
   const chartData = {
     labels: [],
     datasets: [
