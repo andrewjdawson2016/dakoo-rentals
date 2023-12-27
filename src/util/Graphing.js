@@ -1,5 +1,48 @@
 import { DateTime } from "luxon";
 
+export function getTotalIncomeByMonth(buildings) {
+  const totalIncomeByMonth = new Map();
+
+  buildings.forEach((building) => {
+    building.units.forEach((unit) => {
+      unit.leases.forEach((lease) => {
+        const incomeByMonth = getTotalIncomeFromBoundsByMonth(
+          DateTime.fromISO(lease.start_date),
+          DateTime.fromISO(lease.end_date),
+          lease.price_per_month
+        );
+
+        incomeByMonth.forEach((income, monthYear) => {
+          if (!totalIncomeByMonth.has(monthYear)) {
+            totalIncomeByMonth.set(monthYear, 0);
+          }
+          totalIncomeByMonth.set(
+            monthYear,
+            totalIncomeByMonth.get(monthYear) + income
+          );
+        });
+      });
+    });
+  });
+
+  return totalIncomeByMonth;
+}
+
+export function getTotalExpensesByMonth(buildings) {
+  const totalExpensesByMonth = new Map();
+
+  buildings.forEach((building) => {
+    building.expenses.forEach((expense) => {
+      totalExpensesByMonth.set(
+        expense.month_year,
+        expense.fixed_amount + expense.variable_amount
+      );
+    });
+  });
+
+  return totalExpensesByMonth;
+}
+
 export function computeFinancialSummaryByYear(buildings) {
   const currentYear = DateTime.now().year;
   const totalIncomeByYear = getTotalIncomeByYear(buildings, DateTime.now());
@@ -101,8 +144,8 @@ export function getTotalLeaseIncomeInYear(year, lease, now) {
   return getTotalIncomeFromBounds(start, end, lease.price_per_month);
 }
 
-export function getTotalIncomeFromBounds(start, end, pricePerMonth) {
-  let sum = 0;
+export function getTotalIncomeFromBoundsByMonth(start, end, pricePerMonth) {
+  let incomeByMonth = new Map();
   let current = start.startOf("month");
   end = end.endOf("day");
 
@@ -115,10 +158,27 @@ export function getTotalIncomeFromBounds(start, end, pricePerMonth) {
     const overlapEnd = end < endOfMonth ? end : endOfMonth;
     const daysActive = overlapEnd.diff(overlapStart, "days").days;
 
-    sum += (daysActive / daysInMonth) * pricePerMonth;
+    incomeByMonth.set(
+      current.toFormat("yyyy-MM"),
+      (daysActive / daysInMonth) * pricePerMonth
+    );
+
     current = current.plus({ months: 1 }).startOf("month");
   }
 
+  return incomeByMonth;
+}
+
+export function getTotalIncomeFromBounds(start, end, pricePerMonth) {
+  const incomeByMonth = getTotalIncomeFromBoundsByMonth(
+    start,
+    end,
+    pricePerMonth
+  );
+  let sum = 0;
+  incomeByMonth.forEach((income) => {
+    sum += income;
+  });
   return sum;
 }
 
