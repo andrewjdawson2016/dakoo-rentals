@@ -8,122 +8,125 @@ import {
   getTotalExpensesByYear,
 } from "../Graphing";
 
-// describe("getTotalIncomeByYear", () => {
-//   test("should handle a single building with a single lease", () => {
-//     const buildings = [
-//       {
-//         units: [
-//           {
-//             leases: [
-//               {
-//                 start_date: "2021-01-01",
-//                 end_date: "2021-12-31",
-//                 price_per_month: 1000,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//     ];
-//     const totalIncome = getTotalIncomeByYear(buildings);
-//     expect(totalIncome.get(2021)).toBeCloseTo(12000);
-//   });
+describe("getTotalIncomeByYear", () => {
+  test("should handle a single building with a single lease", () => {
+    const buildings = [
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2021-01-01",
+                end_date: "2021-12-31",
+                price_per_month: 1000,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const now = DateTime.local(2022, 12, 1);
+    const totalIncome = getTotalIncomeByYear(buildings, now);
+    expect(totalIncome.get(2021)).toBeCloseTo(12000);
+  });
 
-//   test("should handle a single building with multiple leases", () => {
-//     const buildings = [
-//       {
-//         units: [
-//           {
-//             leases: [
-//               {
-//                 start_date: "2020-06-01",
-//                 end_date: "2020-12-31",
-//                 price_per_month: 1000,
-//               },
-//               {
-//                 start_date: "2021-01-01",
-//                 end_date: "2021-12-31",
-//                 price_per_month: 1200,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//     ];
-//     const totalIncome = getTotalIncomeByYear(buildings);
-//     expect(totalIncome.get(2020)).toBeCloseTo(7000);
-//     expect(totalIncome.get(2021)).toBeCloseTo(14400);
-//   });
+  test("should handle a single building with multiple leases", () => {
+    const buildings = [
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2020-06-01",
+                end_date: "2020-12-31",
+                price_per_month: 1000,
+              },
+              {
+                start_date: "2021-01-01",
+                end_date: "2021-12-31",
+                price_per_month: 1200,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const now = DateTime.local(2022, 12, 1);
+    const totalIncome = getTotalIncomeByYear(buildings, now);
+    expect(totalIncome.get(2020)).toBeCloseTo(7000);
+    expect(totalIncome.get(2021)).toBeCloseTo(14400);
+  });
 
-//   test("should handle multiple buildings with various leases", () => {
-//     const buildings = [
-//       {
-//         units: [
-//           {
-//             leases: [
-//               {
-//                 start_date: "2019-05-01",
-//                 end_date: "2019-12-31",
-//                 price_per_month: 800,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//       {
-//         units: [
-//           {
-//             leases: [
-//               {
-//                 start_date: "2020-01-01",
-//                 end_date: "2020-06-30",
-//                 price_per_month: 900,
-//               },
-//               {
-//                 start_date: "2021-07-01",
-//                 end_date: "2021-12-31",
-//                 price_per_month: 1100,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//       {
-//         units: [
-//           {
-//             leases: [
-//               {
-//                 start_date: "2018-06-15",
-//                 end_date: "2020-06-05",
-//                 price_per_month: 600,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//       {
-//         units: [
-//           {
-//             leases: [
-//               {
-//                 start_date: "2016-01-15",
-//                 end_date: "2018-10-10",
-//                 price_per_month: 1100,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//     ];
-//     const totalIncome = getTotalIncomeByYear(buildings);
-//     expect(totalIncome.get(2016)).toBeCloseTo(12703.2258);
-//     expect(totalIncome.get(2017)).toBeCloseTo(13200);
-//     expect(totalIncome.get(2018)).toBeCloseTo(14174.838);
-//     expect(totalIncome.get(2019)).toBeCloseTo(13600);
-//     expect(totalIncome.get(2020)).toBeCloseTo(8500);
-//     expect(totalIncome.get(2021)).toBeCloseTo(6600);
-//   });
-// });
+  test("should handle multiple buildings with various leases", () => {
+    const buildings = [
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2019-05-01",
+                end_date: "2019-12-31",
+                price_per_month: 800,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2020-01-01",
+                end_date: "2020-06-30",
+                price_per_month: 900,
+              },
+              {
+                start_date: "2021-07-01",
+                end_date: "2021-12-31",
+                price_per_month: 1100,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2018-06-15",
+                end_date: "2020-06-05",
+                price_per_month: 600,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        units: [
+          {
+            leases: [
+              {
+                start_date: "2016-01-15",
+                end_date: "2018-10-10",
+                price_per_month: 1100,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const now = DateTime.local(2022, 12, 1);
+    const totalIncome = getTotalIncomeByYear(buildings, now);
+    expect(totalIncome.get(2016)).toBeCloseTo(12703.2258);
+    expect(totalIncome.get(2017)).toBeCloseTo(13200);
+    expect(totalIncome.get(2018)).toBeCloseTo(14174.838);
+    expect(totalIncome.get(2019)).toBeCloseTo(13600);
+    expect(totalIncome.get(2020)).toBeCloseTo(8500);
+    expect(totalIncome.get(2021)).toBeCloseTo(6600);
+  });
+});
 
 describe("getYearsLeaseSpans", () => {
   test("should handle lease within a single year", () => {
