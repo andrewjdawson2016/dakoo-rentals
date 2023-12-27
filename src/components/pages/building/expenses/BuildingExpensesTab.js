@@ -13,12 +13,13 @@ import {
   IconButton,
   Dialog,
 } from "@mui/material";
-import { Add, Edit } from "@mui/icons-material";
+import { Add, Delete } from "@mui/icons-material";
 import {
   getExpenseMonths,
   formatDateToMonthYear,
   formatMonthlyMoneyValue,
 } from "../../../../util";
+import { deleteExpense } from "../../../../api";
 import { DateTime } from "luxon";
 import LogExpenseForm from "./LogExpenseForm";
 
@@ -45,8 +46,13 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
     setDialogOpen(true);
   };
 
-  const handleEditExpense = (expense) => {
-    console.log("Edit expense", expense);
+  const handleDeleteExpense = async (expense) => {
+    try {
+      await deleteExpense(expense.id);
+      refreshBuilding();
+    } catch (error) {
+      console.error("Error deleting expense:", error.message);
+    }
   };
 
   return (
@@ -76,25 +82,23 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
                   {formatDateToMonthYear(month)}
                 </TableCell>
                 <TableCell>
-                  {expense
-                    ? formatMonthlyMoneyValue(expense.fixed_amount)
-                    : "-"}
+                  {expense ? formatMonthlyMoneyValue(expense.fixed_amount) : ""}
                 </TableCell>
                 <TableCell>
                   {expense
                     ? formatMonthlyMoneyValue(expense.variable_amount)
-                    : "-"}
+                    : ""}
                 </TableCell>
-                <TableCell>{expense ? expense.note : "-"}</TableCell>
+                <TableCell>{expense ? expense.note : ""}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() =>
                       expense
-                        ? handleEditExpense(expense)
+                        ? handleDeleteExpense(expense)
                         : handleAddExpense(month)
                     }
                   >
-                    {expense ? <Edit /> : <Add />}
+                    {expense ? <Delete /> : <Add />}
                   </IconButton>
                 </TableCell>
               </TableRow>
