@@ -6,7 +6,7 @@ import {
   getTotalIncomeFromBounds,
   getLeaseBoundsInYear,
   getTotalExpensesByYear,
-  computeProfitByYear,
+  computeFinancialSummaryByYear,
 } from "../Graphing";
 
 describe("getTotalIncomeByYear", () => {
@@ -325,8 +325,8 @@ describe("getTotalExpensesByYear", () => {
   });
 });
 
-describe("computeProfitByYear", () => {
-  it("computes profit correctly when years are in both income and expenses", () => {
+describe("computeFinancialSummaryByYear", () => {
+  it("correctly computes financial summary when years are in both income and expenses", () => {
     const totalIncomeByYear = new Map([
       ["2023", 1000],
       ["2022", 800],
@@ -335,16 +335,16 @@ describe("computeProfitByYear", () => {
       ["2023", 500],
       ["2022", 300],
     ]);
-    const expectedProfit = new Map([
-      ["2023", 500],
-      ["2022", 500],
+    const expectedSummary = new Map([
+      ["2023", [1000, 500, 500]],
+      ["2022", [800, 300, 500]],
     ]);
 
-    const profitByYear = computeProfitByYear(
+    const summary = computeFinancialSummaryByYear(
       totalIncomeByYear,
       totalExpensesByYear
     );
-    expect(profitByYear).toEqual(expectedProfit);
+    expect(summary).toEqual(expectedSummary);
   });
 
   it("handles years present only in income", () => {
@@ -353,16 +353,16 @@ describe("computeProfitByYear", () => {
       ["2021", 700],
     ]);
     const totalExpensesByYear = new Map([["2023", 500]]);
-    const expectedProfit = new Map([
-      ["2023", 500],
-      ["2021", 700],
+    const expectedSummary = new Map([
+      ["2023", [1000, 500, 500]],
+      ["2021", [700, 0, 700]],
     ]);
 
-    const profitByYear = computeProfitByYear(
+    const summary = computeFinancialSummaryByYear(
       totalIncomeByYear,
       totalExpensesByYear
     );
-    expect(profitByYear).toEqual(expectedProfit);
+    expect(summary).toEqual(expectedSummary);
   });
 
   it("handles years present only in expenses", () => {
@@ -371,27 +371,27 @@ describe("computeProfitByYear", () => {
       ["2023", 500],
       ["2022", 400],
     ]);
-    const expectedProfit = new Map([
-      ["2023", 500],
-      ["2022", -400],
+    const expectedSummary = new Map([
+      ["2023", [1000, 500, 500]],
+      ["2022", [0, 400, -400]],
     ]);
 
-    const profitByYear = computeProfitByYear(
+    const summary = computeFinancialSummaryByYear(
       totalIncomeByYear,
       totalExpensesByYear
     );
-    expect(profitByYear).toEqual(expectedProfit);
+    expect(summary).toEqual(expectedSummary);
   });
 
   it("returns an empty map when both income and expenses are empty", () => {
     const totalIncomeByYear = new Map();
     const totalExpensesByYear = new Map();
-    const expectedProfit = new Map();
+    const expectedSummary = new Map();
 
-    const profitByYear = computeProfitByYear(
+    const summary = computeFinancialSummaryByYear(
       totalIncomeByYear,
       totalExpensesByYear
     );
-    expect(profitByYear).toEqual(expectedProfit);
+    expect(summary).toEqual(expectedSummary);
   });
 });
