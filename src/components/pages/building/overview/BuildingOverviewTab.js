@@ -1,7 +1,8 @@
 import React from "react";
 import { Grid, Typography, Divider } from "@mui/material";
+import { FinancialSummaryByYearChart } from "../../../common/FinancialSummaryByYearChart";
 
-function BuildingOverviewTab() {
+function BuildingOverviewTab({ building }) {
   return (
     <>
       <Grid container justifyContent="space-between" alignItems="center">
@@ -10,6 +11,7 @@ function BuildingOverviewTab() {
         </Grid>
       </Grid>
       <Divider style={{ margin: "20px 0" }} />
+      <FinancialSummaryByYearChart buildings={[building]} />
     </>
   );
 }
