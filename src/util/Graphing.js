@@ -3,10 +3,15 @@ import { DateTime } from "luxon";
 export function getPercentageFinancialSummaryYearlyPercentChange(buildings) {
   const financialSummary = computeFinancialSummaryByYear(buildings);
   const percentageSummary = [];
+  const currentYear = new Date().getFullYear();
 
-  for (let i = 1; i < financialSummary.length - 1; i++) {
+  for (let i = 1; i < financialSummary.length; i++) {
     const prevYearData = financialSummary[i - 1];
     const currentYearData = financialSummary[i];
+
+    if (currentYearData.year === currentYear) {
+      break;
+    }
 
     const incomeChangePercent = calculatePercentageChange(
       prevYearData.income,
