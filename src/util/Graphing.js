@@ -1,5 +1,44 @@
 import { DateTime } from "luxon";
 
+export function getPercentageFinancialSummaryYearlyPercentChange(buildings) {
+  const financialSummary = computeFinancialSummaryByYear(buildings);
+  const percentageSummary = [];
+
+  for (let i = 1; i < financialSummary.length - 1; i++) {
+    const prevYearData = financialSummary[i - 1];
+    const currentYearData = financialSummary[i];
+
+    const incomeChangePercent = calculatePercentageChange(
+      prevYearData.income,
+      currentYearData.income
+    );
+    const expenseChangePercent = calculatePercentageChange(
+      prevYearData.expense,
+      currentYearData.expense
+    );
+    const profitChangePercent = calculatePercentageChange(
+      prevYearData.profit,
+      currentYearData.profit
+    );
+
+    percentageSummary.push({
+      year: currentYearData.year,
+      incomeChangePercent,
+      expenseChangePercent,
+      profitChangePercent,
+    });
+  }
+
+  return percentageSummary;
+}
+
+function calculatePercentageChange(oldValue, newValue) {
+  if (oldValue === 0) {
+    return newValue !== 0 ? Infinity : 0;
+  }
+  return ((newValue - oldValue) / oldValue) * 100;
+}
+
 export function computeFinancialSummaryByMonth(buildings) {
   const startMonth = getEarliestFirstRentalMonth(buildings);
   const endMonth = DateTime.now().toFormat("yyyy-MM");

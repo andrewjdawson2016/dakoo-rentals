@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, Typography, Divider } from "@mui/material";
 import FinancialSummaryByYearChart from "../../../common/FinancialSummaryByYearChart";
 import FinancialSummaryByMonthChart from "../../../common/FinancialSummaryByMonthChart";
+import YearlyPercentChangeChart from "../../../common/YearlyPercentChangeChart";
 
 function BuildingOverviewTab({ building }) {
   return (
@@ -14,6 +15,7 @@ function BuildingOverviewTab({ building }) {
       <Divider style={{ margin: "20px 0" }} />
       <FinancialSummaryByYearChart buildings={[building]} />
       <FinancialSummaryByMonthChart buildings={[building]} />
+      <YearlyPercentChangeChart buildings={[building]} />
     </>
   );
 }
