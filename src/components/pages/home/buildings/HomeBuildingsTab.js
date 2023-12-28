@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Grid,
   Typography,
@@ -14,6 +15,7 @@ import { formatDateToMonthYear } from "../../../../util";
 
 function HomeBuildingsTab({ buildings, onRefresh }) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddNewProperty = () => {
     setDialogOpen(true);
@@ -21,6 +23,10 @@ function HomeBuildingsTab({ buildings, onRefresh }) {
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
+  };
+
+  const handleBuildingDetails = (buildingId) => {
+    navigate(`/${buildingId}`);
   };
 
   return (
@@ -43,8 +49,8 @@ function HomeBuildingsTab({ buildings, onRefresh }) {
 
       <Grid container spacing={2}>
         {buildings.map((building, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4}>
-            <Card>
+          <Grid item key={index} xs={12} sm={6} lg={4}>
+            <Card sx={{ maxWidth: 345, minHeight: 200 }}>
               <CardContent>
                 <Typography variant="h5" component="div">
                   {building.nickname}
@@ -53,14 +59,23 @@ function HomeBuildingsTab({ buildings, onRefresh }) {
                   {building.address}
                 </Typography>
                 <Typography color="text.secondary">
-                  {building.units.length} units
+                  {building.units.length}{" "}
+                  {building.units.length > 1 ? "units" : "unit"}
                 </Typography>
                 <Typography color="text.secondary">
-                  Started renting in{" "}
+                  Started renting{" "}
                   {formatDateToMonthYear(building.first_rental_month)}
                 </Typography>
               </CardContent>
-              <CardActions></CardActions>
+              <CardActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleBuildingDetails(building.id)}
+                >
+                  Building Details
+                </Button>
+              </CardActions>
             </Card>
           </Grid>
         ))}
