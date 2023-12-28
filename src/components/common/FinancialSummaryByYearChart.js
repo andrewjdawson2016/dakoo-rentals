@@ -80,10 +80,11 @@ function FinancialSummaryByYearChart({ buildings }) {
             }
             const value = context.parsed.y;
             if (value !== null) {
+              const formattedValue = new Intl.NumberFormat().format(
+                Math.abs(value)
+              );
               label +=
-                value < 0
-                  ? `($${Math.abs(value).toLocaleString()})`
-                  : "$" + value.toLocaleString();
+                value < 0 ? `($${formattedValue})` : `$${formattedValue}`;
             }
             return label;
           },
