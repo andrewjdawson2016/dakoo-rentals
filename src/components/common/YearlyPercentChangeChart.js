@@ -12,22 +12,44 @@ function YearlyPercentChangeChart({ buildings }) {
     labels: [],
     datasets: [
       {
-        label: "Income Change %",
+        label: "Income Change",
         data: [],
         backgroundColor: "rgba(75, 192, 192, 0.2)",
       },
       {
-        label: "Expense Change %",
+        label: "Expense Change",
         data: [],
         backgroundColor: "rgba(255, 99, 132, 0.2)",
       },
       {
-        label: "Profit Change %",
+        label: "Profit Change",
         data: [],
         backgroundColor: "rgba(153, 102, 255, 0.2)",
       },
     ],
   };
+
+  let maxValue = 0;
+  let minValue = 0;
+  percentageSummary.forEach(
+    ({ incomeChangePercent, expenseChangePercent, profitChangePercent }) => {
+      maxValue = Math.max(
+        maxValue,
+        incomeChangePercent,
+        expenseChangePercent,
+        profitChangePercent
+      );
+      minValue = Math.min(
+        minValue,
+        incomeChangePercent,
+        expenseChangePercent,
+        profitChangePercent
+      );
+    }
+  );
+
+  const suggestedMax = maxValue + 10;
+  const suggestedMin = minValue - 10;
 
   percentageSummary.forEach(
     ({
@@ -52,6 +74,8 @@ function YearlyPercentChangeChart({ buildings }) {
             return value.toFixed(2) + "%";
           },
         },
+        suggestedMax: suggestedMax,
+        suggestedMin: suggestedMin,
       },
       x: {
         title: {

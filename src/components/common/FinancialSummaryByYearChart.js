@@ -29,16 +29,18 @@ function FinancialSummaryByYearChart({ buildings }) {
   };
 
   let maxValue = 0;
+  let minValue = 0;
   financialSummary.forEach(({ year, income, expense, profit }) => {
     chartData.labels.push(year);
     chartData.datasets[0].data.push(income);
     chartData.datasets[1].data.push(expense);
     chartData.datasets[2].data.push(profit);
-    maxValue = Math.max(maxValue, income, expense, Math.abs(profit));
+    maxValue = Math.max(maxValue, income, expense, profit);
+    minValue = Math.min(minValue, income, expense, profit);
   });
 
-  const buffer = maxValue * 0.1;
-  const suggestedMax = maxValue + buffer;
+  const suggestedMax = maxValue + maxValue * 0.1;
+  const suggestedMin = minValue - Math.abs(minValue) * 0.1;
 
   const options = {
     scales: {
@@ -52,6 +54,7 @@ function FinancialSummaryByYearChart({ buildings }) {
           },
         },
         suggestedMax: suggestedMax,
+        suggestedMin: suggestedMin,
       },
       x: {
         title: {
