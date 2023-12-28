@@ -7,7 +7,61 @@ import {
   getLeaseBoundsInYear,
   getTotalExpensesByYear,
   getTotalExpensesByMonth,
+  calculateProfitChangePercent,
+  calculatePercentageChange,
 } from "../Graphing";
+
+describe("calculateProfitChangePercent", () => {
+  test("both profits are positive and increasing", () => {
+    expect(calculateProfitChangePercent(100, 200)).toBe(100);
+  });
+
+  test("both profits are positive and decreasing", () => {
+    expect(calculateProfitChangePercent(200, 100)).toBe(-50);
+  });
+
+  test("both profits are negative and decreasing", () => {
+    expect(calculateProfitChangePercent(-200, -100)).toBe(50);
+  });
+
+  test("both profits are negative and increasing", () => {
+    expect(calculateProfitChangePercent(-100, -200)).toBe(-100);
+  });
+
+  test("profit changes from positive to negative", () => {
+    expect(calculateProfitChangePercent(100, -100)).toBe(-200);
+  });
+
+  test("profit changes from negative to positive", () => {
+    expect(calculateProfitChangePercent(-100, 100)).toBe(200);
+  });
+});
+
+describe("calculatePercentageChange", () => {
+  test("positive increase", () => {
+    expect(calculatePercentageChange(100, 150)).toBe(50);
+  });
+
+  test("positive decrease", () => {
+    expect(calculatePercentageChange(150, 100)).toBe(-33.33333333333333);
+  });
+
+  test("negative decrease", () => {
+    expect(calculatePercentageChange(-100, -150)).toBe(-50);
+  });
+
+  test("negative increase", () => {
+    expect(calculatePercentageChange(-150, -100)).toBe(33.33333333333333);
+  });
+
+  test("change from negative to positive", () => {
+    expect(calculatePercentageChange(-100, 100)).toBe(200);
+  });
+
+  test("change from positive to negative", () => {
+    expect(calculatePercentageChange(100, -100)).toBe(-200);
+  });
+});
 
 describe("getTotalExpensesByMonth", () => {
   it("returns an empty map for no buildings", () => {

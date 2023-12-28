@@ -16,7 +16,7 @@ export function getPercentageFinancialSummaryYearlyPercentChange(buildings) {
       prevYearData.expense,
       currentYearData.expense
     );
-    const profitChangePercent = calculatePercentageChange(
+    const profitChangePercent = calculateProfitChangePercent(
       prevYearData.profit,
       currentYearData.profit
     );
@@ -32,11 +32,20 @@ export function getPercentageFinancialSummaryYearlyPercentChange(buildings) {
   return percentageSummary;
 }
 
-function calculatePercentageChange(oldValue, newValue) {
-  if (oldValue === 0) {
-    return newValue !== 0 ? Infinity : 0;
+export function calculateProfitChangePercent(prevProfit, currentProfit) {
+  if (prevProfit < 0 && currentProfit >= 0) {
+    return ((currentProfit - prevProfit) / -prevProfit) * 100;
   }
-  return ((newValue - oldValue) / oldValue) * 100;
+
+  if (prevProfit > 0 && currentProfit <= 0) {
+    return ((currentProfit - prevProfit) / prevProfit) * 100;
+  }
+
+  return ((currentProfit - prevProfit) / Math.abs(prevProfit)) * 100;
+}
+
+export function calculatePercentageChange(oldValue, newValue) {
+  return ((newValue - oldValue) / Math.abs(oldValue)) * 100;
 }
 
 export function computeFinancialSummaryByMonth(buildings) {

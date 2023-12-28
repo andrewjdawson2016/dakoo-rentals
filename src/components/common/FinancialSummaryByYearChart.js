@@ -21,7 +21,7 @@ function FinancialSummaryByYearChart({ buildings }) {
         backgroundColor: "rgba(255, 99, 132, 0.2)",
       },
       {
-        label: "Profit",
+        label: "Profit/Loss",
         data: [],
         backgroundColor: "rgba(153, 102, 255, 0.2)",
       },
@@ -32,9 +32,9 @@ function FinancialSummaryByYearChart({ buildings }) {
   financialSummary.forEach(({ year, income, expense, profit }) => {
     chartData.labels.push(year);
     chartData.datasets[0].data.push(income);
-    chartData.datasets[1].data.push(-expense);
+    chartData.datasets[1].data.push(expense);
     chartData.datasets[2].data.push(profit);
-    maxValue = Math.max(maxValue, income, -expense, profit);
+    maxValue = Math.max(maxValue, income, expense, Math.abs(profit));
   });
 
   const buffer = maxValue * 0.1;
@@ -46,7 +46,9 @@ function FinancialSummaryByYearChart({ buildings }) {
         beginAtZero: false,
         ticks: {
           callback: function (value) {
-            return "$" + value.toLocaleString();
+            return value < 0
+              ? `($${Math.abs(value).toLocaleString()})`
+              : "$" + value.toLocaleString();
           },
         },
         suggestedMax: suggestedMax,
@@ -73,12 +75,12 @@ function FinancialSummaryByYearChart({ buildings }) {
             if (label) {
               label += ": ";
             }
-            if (context.parsed.y !== null) {
-              const value =
-                context.datasetIndex === 1
-                  ? -context.parsed.y
-                  : context.parsed.y;
-              label += "$" + new Intl.NumberFormat().format(Math.round(value));
+            const value = context.parsed.y;
+            if (value !== null) {
+              label +=
+                value < 0
+                  ? `($${Math.abs(value).toLocaleString()})`
+                  : "$" + value.toLocaleString();
             }
             return label;
           },
