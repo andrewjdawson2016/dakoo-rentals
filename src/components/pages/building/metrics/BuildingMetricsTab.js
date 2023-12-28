@@ -4,12 +4,12 @@ import FinancialSummaryByYearChart from "../../../common/FinancialSummaryByYearC
 import FinancialSummaryByMonthChart from "../../../common/FinancialSummaryByMonthChart";
 import YearlyPercentChangeChart from "../../../common/YearlyPercentChangeChart";
 
-function BuildingOverviewTab({ building }) {
+function BuildingMetricsTab({ building }) {
   return (
     <>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
-          <Typography variant="h4">Building Overview</Typography>
+          <Typography variant="h4">Metrics</Typography>
         </Grid>
       </Grid>
       <Divider style={{ margin: "20px 0" }} />
@@ -20,4 +20,4 @@ function BuildingOverviewTab({ building }) {
   );
 }
 
-export default BuildingOverviewTab;
+export default BuildingMetricsTab;

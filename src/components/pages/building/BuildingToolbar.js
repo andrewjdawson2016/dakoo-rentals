@@ -25,7 +25,7 @@ function BuildingToolbar({ building, selectedTab, setSelectedTab }) {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="Overview" />
+          <Tab label="Metrics" />
           <Tab label="Leases" />
           <Tab label="Expenses" />
         </Tabs>
