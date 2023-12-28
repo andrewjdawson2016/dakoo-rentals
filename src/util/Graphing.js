@@ -132,9 +132,14 @@ export function computeFinancialSummaryByYear(buildings) {
 
   totalIncomeByYear.forEach((income, year) => {
     if (year <= currentYear) {
-      const expense = totalExpensesByYear.get(year) || 0;
-      const profit = income - expense;
-      financialSummary.push({ year, income, expense, profit });
+      const expense = Math.round(totalExpensesByYear.get(year) || 0);
+      const profit = Math.round(income - expense);
+      financialSummary.push({
+        year,
+        income: Math.round(income),
+        expense,
+        profit,
+      });
     }
   });
 
@@ -144,8 +149,13 @@ export function computeFinancialSummaryByYear(buildings) {
       !financialSummary.some((summary) => summary.year === year)
     ) {
       const income = 0;
-      const profit = income - expense;
-      financialSummary.push({ year, income, expense, profit });
+      const profit = Math.round(income - expense);
+      financialSummary.push({
+        year,
+        income,
+        expense: Math.round(expense),
+        profit,
+      });
     }
   });
 
