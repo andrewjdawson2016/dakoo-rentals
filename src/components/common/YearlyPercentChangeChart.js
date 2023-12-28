@@ -99,8 +99,12 @@ function YearlyPercentChangeChart({ buildings }) {
             if (label) {
               label += ": ";
             }
-            if (context.parsed.y !== null) {
-              label += context.parsed.y.toFixed(2) + "%";
+            const value = context.parsed.y;
+            if (value !== null) {
+              label +=
+                value < 0
+                  ? `(${Math.abs(value).toFixed(2)}%)`
+                  : value.toFixed(2) + "%";
             }
             return label;
           },
