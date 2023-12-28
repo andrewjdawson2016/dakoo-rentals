@@ -9,8 +9,8 @@ import {
   FormLabel,
   Button,
 } from "@mui/material";
-import { createBuilding } from "../../../api";
-import SnackbarAlert from "../../common/SnackbarAlert";
+import { createBuilding } from "../../../../api";
+import SnackbarAlert from "../../../common/SnackbarAlert";
 
 function AddForm({ onSuccessfulSubmit }) {
   const [formData, setFormData] = useState({
