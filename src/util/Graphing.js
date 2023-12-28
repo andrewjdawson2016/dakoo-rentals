@@ -63,9 +63,7 @@ export function getTotalExpensesByMonth(buildings) {
 
       totalExpensesByMonth.set(
         expense.month_year,
-        totalExpensesByMonth.get(expense.month_year) +
-          expense.fixed_amount +
-          expense.variable_amount
+        totalExpensesByMonth.get(expense.month_year) + expense.amount
       );
     });
   });
@@ -109,7 +107,6 @@ export function getTotalExpensesByYear(buildings) {
   buildings.forEach((building) => {
     building.expenses.forEach((expense) => {
       const year = parseInt(expense.month_year.split("-")[0], 10);
-      const totalExpenseAmount = expense.fixed_amount + expense.variable_amount;
 
       if (!totalExpensesByYear.has(year)) {
         totalExpensesByYear.set(year, 0);
@@ -117,7 +114,7 @@ export function getTotalExpensesByYear(buildings) {
 
       totalExpensesByYear.set(
         year,
-        totalExpensesByYear.get(year) + totalExpenseAmount
+        totalExpensesByYear.get(year) + expense.amount
       );
     });
   });

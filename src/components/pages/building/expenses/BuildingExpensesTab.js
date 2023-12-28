@@ -69,8 +69,7 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
           <TableHead>
             <TableRow>
               <TableCell>Date</TableCell>
-              <TableCell>Fixed Amount</TableCell>
-              <TableCell>Variable Amount</TableCell>
+              <TableCell>Amount</TableCell>
               <TableCell>Note</TableCell>
               <TableCell>Add/Edit</TableCell>
             </TableRow>
@@ -82,12 +81,7 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
                   {formatDateToMonthYear(month)}
                 </TableCell>
                 <TableCell>
-                  {expense ? formatMonthlyMoneyValue(expense.fixed_amount) : ""}
-                </TableCell>
-                <TableCell>
-                  {expense
-                    ? formatMonthlyMoneyValue(expense.variable_amount)
-                    : ""}
+                  {expense ? formatMonthlyMoneyValue(expense.amount) : ""}
                 </TableCell>
                 <TableCell>{expense ? expense.note : ""}</TableCell>
                 <TableCell>

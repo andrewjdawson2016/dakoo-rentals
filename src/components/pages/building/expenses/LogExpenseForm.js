@@ -9,35 +9,22 @@ import {
 
 function LogExpenseForm({ building, monthYear, onSubmitSuccess }) {
   const [formData, setFormData] = useState({
-    fixed_amount: "",
-    variable_amount: "",
+    amount: "",
     note: "",
   });
-  const [displayedFixedAmount, setDisplayedFixedAmount] = useState("");
-  const [displayedVariableAmount, setDisplayedVariableAmount] = useState("");
+  const [displayedAmount, setDisplayedAmount] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const handleFixedAmountChange = (event) => {
+  const handleAmountChange = (event) => {
     const { numericValue, formattedValue } = parseAndFormatMonthlyMoneyValue(
       event.target.value
     );
     setFormData((prev) => ({
       ...prev,
-      fixed_amount: numericValue,
+      amount: numericValue,
     }));
-    setDisplayedFixedAmount(formattedValue);
-  };
-
-  const handleVariableAmountChange = (event) => {
-    const { numericValue, formattedValue } = parseAndFormatMonthlyMoneyValue(
-      event.target.value
-    );
-    setFormData((prev) => ({
-      ...prev,
-      variable_amount: numericValue,
-    }));
-    setDisplayedVariableAmount(formattedValue);
+    setDisplayedAmount(formattedValue);
   };
 
   const handleChange = (e) => {
@@ -56,12 +43,10 @@ function LogExpenseForm({ building, monthYear, onSubmitSuccess }) {
       .then(() => {
         console.log("Expense created successfully:");
         setFormData({
-          fixed_amount: "",
-          variable_amount: "",
+          amount: "",
           note: "",
         });
-        setDisplayedFixedAmount("");
-        setDisplayedVariableAmount("");
+        setDisplayedAmount("");
         onSubmitSuccess();
       })
       .catch((e) => {
@@ -79,19 +64,10 @@ function LogExpenseForm({ building, monthYear, onSubmitSuccess }) {
       <TextField
         fullWidth
         margin="normal"
-        label="Fixed Amount"
-        name="fixed_amount"
-        value={displayedFixedAmount}
-        onChange={handleFixedAmountChange}
-        required
-      />
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Variable Amount"
-        name="variable_amount"
-        value={displayedVariableAmount}
-        onChange={handleVariableAmountChange}
+        label="Amount"
+        name="amount"
+        value={displayedAmount}
+        onChange={handleAmountChange}
         required
       />
 

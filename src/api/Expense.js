@@ -1,12 +1,6 @@
 const expensesURL = `${process.env.REACT_APP_SERVER_URL}/expenses`;
 
-export async function createExpense({
-  building_id,
-  month_year,
-  fixed_amount,
-  variable_amount,
-  note,
-}) {
+export async function createExpense({ building_id, month_year, amount, note }) {
   try {
     const response = await fetch(expensesURL, {
       method: "POST",
@@ -16,8 +10,7 @@ export async function createExpense({
       body: JSON.stringify({
         building_id,
         month_year,
-        fixed_amount,
-        variable_amount,
+        amount,
         note,
       }),
     });

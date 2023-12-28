@@ -22,9 +22,7 @@ describe("getTotalExpensesByMonth", () => {
   it("calculates expenses correctly for one building with one expense", () => {
     const buildings = [
       {
-        expenses: [
-          { month_year: "2023-01", fixed_amount: 500, variable_amount: 300 },
-        ],
+        expenses: [{ month_year: "2023-01", amount: 800 }],
       },
     ];
     const expected = new Map([["2023-01", 800]]);
@@ -34,14 +32,10 @@ describe("getTotalExpensesByMonth", () => {
   it("aggregates expenses correctly for multiple buildings with expenses in the same month", () => {
     const buildings = [
       {
-        expenses: [
-          { month_year: "2023-01", fixed_amount: 500, variable_amount: 300 },
-        ],
+        expenses: [{ month_year: "2023-01", amount: 800 }],
       },
       {
-        expenses: [
-          { month_year: "2023-01", fixed_amount: 200, variable_amount: 100 },
-        ],
+        expenses: [{ month_year: "2023-01", amount: 300 }],
       },
     ];
     const expected = new Map([["2023-01", 1100]]);
@@ -52,8 +46,8 @@ describe("getTotalExpensesByMonth", () => {
     const buildings = [
       {
         expenses: [
-          { month_year: "2023-01", fixed_amount: 500, variable_amount: 300 },
-          { month_year: "2023-02", fixed_amount: 400, variable_amount: 200 },
+          { month_year: "2023-01", amount: 800 },
+          { month_year: "2023-02", amount: 600 },
         ],
       },
     ];
@@ -388,9 +382,9 @@ describe("getTotalExpensesByYear", () => {
     const buildings = [
       {
         expenses: [
-          { month_year: "2023-01", fixed_amount: 100, variable_amount: 50 },
-          { month_year: "2023-02", fixed_amount: 100, variable_amount: 60 },
-          { month_year: "2023-01", fixed_amount: 50, variable_amount: 30 },
+          { month_year: "2023-01", amount: 150 },
+          { month_year: "2023-02", amount: 160 },
+          { month_year: "2023-01", amount: 80 },
         ],
       },
     ];
@@ -403,14 +397,14 @@ describe("getTotalExpensesByYear", () => {
     const buildings = [
       {
         expenses: [
-          { month_year: "2023-01", fixed_amount: 100, variable_amount: 50 },
-          { month_year: "2023-02", fixed_amount: 100, variable_amount: 60 },
+          { month_year: "2023-01", amount: 150 },
+          { month_year: "2023-02", amount: 160 },
         ],
       },
       {
         expenses: [
-          { month_year: "2022-11", fixed_amount: 80, variable_amount: 20 },
-          { month_year: "2023-01", fixed_amount: 70, variable_amount: 30 },
+          { month_year: "2022-11", amount: 100 },
+          { month_year: "2023-01", amount: 100 },
         ],
       },
     ];
