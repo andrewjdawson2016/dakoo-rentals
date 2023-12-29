@@ -7,6 +7,7 @@ export async function deleteTenant(id) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!response.ok) {

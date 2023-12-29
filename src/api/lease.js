@@ -15,6 +15,7 @@ export async function createLease({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         unit_id,
         start_date,
@@ -49,6 +50,7 @@ export async function deleteLease(id) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!response.ok) {

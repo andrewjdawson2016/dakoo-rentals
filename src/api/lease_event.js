@@ -7,6 +7,7 @@ export async function updateLeaseEventExecutionDate({ id, execution_date }) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ id, execution_date }),
     });
 

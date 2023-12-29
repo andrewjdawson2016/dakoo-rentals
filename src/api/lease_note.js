@@ -7,6 +7,7 @@ export async function createLeaseNote({ lease_id, note }) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ lease_id, note }),
     });
 
@@ -33,6 +34,7 @@ export async function deleteLeaseNote(id) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!response.ok) {

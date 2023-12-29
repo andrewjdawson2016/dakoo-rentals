@@ -13,6 +13,7 @@ export async function createBuilding({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         address,
         nickname,
@@ -45,6 +46,7 @@ export async function deleteBuilding(id) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -70,6 +72,7 @@ export async function getBuilding(id) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -98,6 +101,7 @@ export async function listBuildings() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!response.ok) {

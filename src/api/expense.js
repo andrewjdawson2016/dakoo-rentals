@@ -7,6 +7,7 @@ export async function createExpense({ building_id, month_year, amount, note }) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         building_id,
         month_year,
@@ -38,6 +39,7 @@ export async function deleteExpense(id) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!response.ok) {

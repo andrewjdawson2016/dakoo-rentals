@@ -27,6 +27,7 @@ export async function login({ email, password }) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         email,
         password,
@@ -45,6 +46,7 @@ export async function logout() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
   } catch (e) {
     console.error("Error: ", e.message);
