@@ -2,7 +2,7 @@ const usersURL = `${process.env.REACT_APP_SERVER_URL}/users`;
 
 export async function signup({ email, password, first_name, last_name }) {
   try {
-    const response = await fetch(`${usersURL}/signup`, {
+    await fetch(`${usersURL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +22,7 @@ export async function signup({ email, password, first_name, last_name }) {
 
 export async function login({ email, password }) {
   try {
-    const response = await fetch(`${usersURL}/login`, {
+    await fetch(`${usersURL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export async function login({ email, password }) {
 
 export async function logout() {
   try {
-    const response = await fetch(`${usersURL}/logout`, {
+    await fetch(`${usersURL}/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
