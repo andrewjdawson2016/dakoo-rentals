@@ -26,7 +26,7 @@ function TopLevelToolbar() {
           <img src="/logo.png" alt="DaKoo Rentals" style={{ height: "50px" }} />
         </Link>
       </Typography>
-      <Button color="inherit" onClick={handleLogout}>
+      <Button color="primary" onClick={handleLogout}>
         Logout
       </Button>
     </Toolbar>
