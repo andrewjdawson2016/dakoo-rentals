@@ -1,15 +1,15 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Toolbar, Typography, Button } from "@mui/material";
 import { logout } from "../../api";
 
 function TopLevelToolbar() {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await logout();
-      history.push("/login");
+      navigate("/login");
     } catch (e) {
       console.error("Logout failed: ", e);
     }
