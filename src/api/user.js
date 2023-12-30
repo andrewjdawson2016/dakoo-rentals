@@ -16,12 +16,13 @@ export async function signup({ email, password, first_name, last_name }) {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || "Signup failed");
+      const errorResponse = await response.json();
+      const errorMessage = errorResponse.error || "Signup failed";
+      throw new Error(errorMessage);
     }
   } catch (e) {
     console.error("Error: ", e.message);
-    throw e;
+    throw new Error(e.message);
   }
 }
 
