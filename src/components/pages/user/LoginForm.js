@@ -16,6 +16,7 @@ function LoginForm() {
     email: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,7 +31,7 @@ function LoginForm() {
       await login(formData);
       navigate("/");
     } catch (error) {
-      alert("Login failed: " + error.message);
+      setErrorMessage("Incorrect username or password");
     }
   };
 
@@ -41,6 +42,11 @@ function LoginForm() {
           <Typography variant="h4" component="h1" gutterBottom>
             Login
           </Typography>
+          {errorMessage && (
+            <Typography color="error" style={{ marginBottom: "16px" }}>
+              {errorMessage}
+            </Typography>
+          )}
           <TextField
             label="Email"
             variant="outlined"
