@@ -29,7 +29,7 @@ export function BuildingPage() {
           }
         });
     }
-  }, [building_id]);
+  }, [building_id, navigate]);
 
   useEffect(() => {
     refreshBuilding();

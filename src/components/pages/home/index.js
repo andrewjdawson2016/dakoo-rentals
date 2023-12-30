@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import TopLevelToolbar from "../../common/TopLevelToolbar";
 import { AppBar, Container, CircularProgress, Box } from "@mui/material";
@@ -13,7 +13,7 @@ export function HomePage() {
   const [selectedTab, setSelectedTab] = useState(0);
   const navigate = useNavigate();
 
-  const refreshBuildings = () => {
+  const refreshBuildings = useCallback(() => {
     listBuildings()
       .then((buildings) => {
         setBuildings(buildings);
@@ -25,11 +25,11 @@ export function HomePage() {
           console.error("Failed to fetch buildings:", error);
         }
       });
-  };
+  }, [navigate]);
 
   useEffect(() => {
     refreshBuildings();
-  }, []);
+  }, [refreshBuildings]);
 
   if (!buildings) {
     return (

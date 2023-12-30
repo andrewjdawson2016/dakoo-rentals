@@ -47,6 +47,7 @@ function AddForm({ onSuccessfulSubmit }) {
           address: "",
           building_type: "",
           unit_numbers: "",
+          first_rental_month: "",
         });
         onSuccessfulSubmit();
       })
