@@ -75,6 +75,10 @@ export async function getBuilding(id) {
       credentials: "include",
     });
 
+    if (response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+
     if (!response.ok) {
       let errorMessage = "An unexpected error occurred";
 
@@ -104,14 +108,16 @@ export async function listBuildings() {
       credentials: "include",
     });
 
+    if (response.status === 401) {
+      throw new Error("Unauthorized");
+    }
+
     if (!response.ok) {
       let errorMessage = "An unexpected error occurred";
-
       try {
         const errorData = await response.json();
         errorMessage = errorData.error || errorMessage;
       } catch (jsonError) {}
-
       throw new Error(errorMessage);
     }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import TopLevelToolbar from "../../common/TopLevelToolbar";
 import { AppBar, Container, CircularProgress, Box } from "@mui/material";
 import HomeToolbar from "./HomeToolbar";
@@ -10,6 +11,7 @@ import HomeBuildingsTab from "./buildings/HomeBuildingsTab";
 export function HomePage() {
   const [buildings, setBuildings] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
+  const navigate = useNavigate();
 
   const refreshBuildings = () => {
     listBuildings()
@@ -17,7 +19,11 @@ export function HomePage() {
         setBuildings(buildings);
       })
       .catch((error) => {
-        console.error("Failed to fetch buildings:", error);
+        if (error.message === "Unauthorized") {
+          navigate("/login");
+        } else {
+          console.error("Failed to fetch buildings:", error);
+        }
       });
   };
 

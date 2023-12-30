@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import TopLevelToolbar from "../../common/TopLevelToolbar";
 import { AppBar, Container, CircularProgress, Box } from "@mui/material";
@@ -12,6 +13,7 @@ export function BuildingPage() {
   const [building, setBuilding] = useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
   const { building_id } = useParams();
+  const navigate = useNavigate();
 
   const refreshBuilding = useCallback(() => {
     if (building_id) {
@@ -20,7 +22,11 @@ export function BuildingPage() {
           setBuilding(building);
         })
         .catch((error) => {
-          console.error("Failed to fetch building:", error);
+          if (error.message === "Unauthorized") {
+            navigate("/login");
+          } else {
+            console.error("Failed to fetch buildings:", error);
+          }
         });
     }
   }, [building_id]);
