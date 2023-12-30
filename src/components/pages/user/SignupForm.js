@@ -15,9 +15,11 @@ function SignupForm() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
     first_name: "",
     last_name: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -28,11 +30,16 @@ function SignupForm() {
   };
 
   const handleClick = async () => {
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
     try {
       await signup(formData);
       navigate("/login");
     } catch (error) {
-      alert("Signup failed: " + error.message);
+      setErrorMessage(error.message);
     }
   };
 
@@ -43,6 +50,11 @@ function SignupForm() {
           <Typography variant="h4" component="h1" gutterBottom>
             Signup
           </Typography>
+          {errorMessage && (
+            <Typography color="error" style={{ marginBottom: "16px" }}>
+              {errorMessage}
+            </Typography>
+          )}
           <TextField
             label="First Name"
             variant="outlined"
@@ -77,6 +89,16 @@ function SignupForm() {
             name="password"
             type="password"
             value={formData.password}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Confirm Password"
+            variant="outlined"
+            name="confirmPassword"
+            type="password"
+            value={formData.confirmPassword}
             onChange={handleChange}
             fullWidth
             margin="normal"
