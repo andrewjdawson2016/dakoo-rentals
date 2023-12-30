@@ -2,7 +2,7 @@ const usersURL = `${process.env.REACT_APP_SERVER_URL}/users`;
 
 export async function signup({ email, password, first_name, last_name }) {
   try {
-    await fetch(`${usersURL}/signup`, {
+    const response = await fetch(`${usersURL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -14,6 +14,11 @@ export async function signup({ email, password, first_name, last_name }) {
         last_name,
       }),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Signup failed");
+    }
   } catch (e) {
     console.error("Error: ", e.message);
     throw e;
@@ -22,7 +27,7 @@ export async function signup({ email, password, first_name, last_name }) {
 
 export async function login({ email, password }) {
   try {
-    await fetch(`${usersURL}/login`, {
+    const response = await fetch(`${usersURL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,6 +38,11 @@ export async function login({ email, password }) {
         password,
       }),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Login failed");
+    }
   } catch (e) {
     console.error("Error: ", e.message);
     throw e;
@@ -41,13 +51,18 @@ export async function login({ email, password }) {
 
 export async function logout() {
   try {
-    await fetch(`${usersURL}/logout`, {
+    const response = await fetch(`${usersURL}/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Logout failed");
+    }
   } catch (e) {
     console.error("Error: ", e.message);
     throw e;
