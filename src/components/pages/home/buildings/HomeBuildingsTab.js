@@ -8,7 +8,6 @@ import {
   Dialog,
   Card,
   CardContent,
-  CardActions,
 } from "@mui/material";
 import AddForm from "./AddForm";
 import { formatDateToMonthYear } from "../../../../util";
@@ -50,33 +49,29 @@ function HomeBuildingsTab({ buildings, onRefresh }) {
       <Grid container spacing={2}>
         {buildings.map((building, index) => (
           <Grid item key={index} xs={12} sm={6} lg={4}>
-            <Card sx={{ maxWidth: 345, minHeight: 200 }}>
-              <CardContent>
-                <Typography variant="h5" component="div">
-                  {building.nickname}
-                </Typography>
-                <Typography color="text.secondary">
-                  {building.address}
-                </Typography>
-                <Typography color="text.secondary">
-                  {building.units.length}{" "}
-                  {building.units.length > 1 ? "units" : "unit"}
-                </Typography>
-                <Typography color="text.secondary">
-                  Started renting{" "}
-                  {formatDateToMonthYear(building.first_rental_month)}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleBuildingDetails(building.id)}
-                >
-                  Building Details
-                </Button>
-              </CardActions>
-            </Card>
+            <Button
+              onClick={() => handleBuildingDetails(building.id)}
+              style={{ padding: 0, width: "100%" }}
+            >
+              <Card sx={{ maxWidth: 345, minHeight: 200 }}>
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {building.nickname}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {building.address}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {building.units.length}{" "}
+                    {building.units.length > 1 ? "units" : "unit"}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Started renting{" "}
+                    {formatDateToMonthYear(building.first_rental_month)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Button>
           </Grid>
         ))}
       </Grid>
