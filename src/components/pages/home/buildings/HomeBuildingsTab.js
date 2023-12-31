@@ -8,6 +8,7 @@ import {
   Dialog,
   Card,
   CardContent,
+  CardActionArea,
 } from "@mui/material";
 import AddForm from "./AddForm";
 import { formatDateToMonthYear } from "../../../../util";
@@ -49,11 +50,10 @@ function HomeBuildingsTab({ buildings, onRefresh }) {
       <Grid container spacing={2}>
         {buildings.map((building, index) => (
           <Grid item key={index} xs={12} sm={6} lg={4}>
-            <Button
-              onClick={() => handleBuildingDetails(building.id)}
-              style={{ padding: 0, width: "100%" }}
-            >
-              <Card sx={{ maxWidth: 345, minHeight: 200 }}>
+            <Card sx={{ maxWidth: 345, minHeight: 200 }}>
+              <CardActionArea
+                onClick={() => handleBuildingDetails(building.id)}
+              >
                 <CardContent>
                   <Typography variant="h5" component="div">
                     {building.nickname}
@@ -70,8 +70,8 @@ function HomeBuildingsTab({ buildings, onRefresh }) {
                     {formatDateToMonthYear(building.first_rental_month)}
                   </Typography>
                 </CardContent>
-              </Card>
-            </Button>
+              </CardActionArea>
+            </Card>
           </Grid>
         ))}
       </Grid>
