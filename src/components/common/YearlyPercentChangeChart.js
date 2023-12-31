@@ -93,6 +93,8 @@ function YearlyPercentChangeChart({ buildings }) {
         display: false,
       },
       tooltip: {
+        mode: "index",
+        intersect: false,
         callbacks: {
           label: function (context) {
             let label = context.dataset.label || "";
