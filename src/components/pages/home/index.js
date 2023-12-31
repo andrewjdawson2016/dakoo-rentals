@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TopLevelToolbar from "../../common/TopLevelToolbar";
 import { AppBar, Container, CircularProgress, Box } from "@mui/material";
 import HomeToolbar from "./HomeToolbar";
@@ -11,6 +11,8 @@ import HomeBuildingsTab from "./buildings/HomeBuildingsTab";
 export function HomePage() {
   const [buildings, setBuildings] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
+  const location = useLocation();
+  const user = location.state?.user;
   const navigate = useNavigate();
 
   const refreshBuildings = useCallback(() => {
@@ -49,7 +51,7 @@ export function HomePage() {
   return (
     <>
       <AppBar position="static" sx={{ backgroundColor: "#f5f5f5" }}>
-        <TopLevelToolbar />
+        <TopLevelToolbar user={user} />
         <HomeToolbar
           selectedTab={selectedTab}
           setSelectedTab={setSelectedTab}
@@ -60,6 +62,7 @@ export function HomePage() {
           <HomeBuildingsTab
             buildings={buildings}
             onRefresh={refreshBuildings}
+            user={user}
           />
         )}
         {selectedTab === 1 && <HomeMetricsTab buildings={buildings} />}

@@ -28,8 +28,8 @@ function LoginForm() {
 
   const handleClick = async () => {
     try {
-      await login(formData);
-      navigate("/");
+      const loginResponse = await login(formData);
+      navigate("/", { state: { user: loginResponse } });
     } catch (error) {
       setErrorMessage("Incorrect username or password");
     }
