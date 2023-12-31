@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Toolbar, Typography, Button } from "@mui/material";
 import { logout } from "../../api";
 
-function TopLevelToolbar({ user }) {
+function TopLevelToolbar() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {

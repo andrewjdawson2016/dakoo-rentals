@@ -12,7 +12,7 @@ import {
 import AddForm from "./AddForm";
 import { formatDateToMonthYear } from "../../../../util";
 
-function HomeBuildingsTab({ buildings, onRefresh, user }) {
+function HomeBuildingsTab({ buildings, onRefresh }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ function HomeBuildingsTab({ buildings, onRefresh, user }) {
   };
 
   const handleBuildingDetails = (buildingId) => {
-    navigate(`/${buildingId}`, { state: { user: user } });
+    navigate(`/${buildingId}`);
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import TopLevelToolbar from "../../common/TopLevelToolbar";
 import { AppBar, Container, CircularProgress, Box } from "@mui/material";
@@ -13,8 +13,6 @@ export function BuildingPage() {
   const [building, setBuilding] = useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
   const { building_id } = useParams();
-  const location = useLocation();
-  const user = location.state?.user;
   const navigate = useNavigate();
 
   const refreshBuilding = useCallback(() => {
@@ -31,7 +29,7 @@ export function BuildingPage() {
           }
         });
     }
-  }, [building_id]);
+  }, [building_id, navigate]);
 
   useEffect(() => {
     refreshBuilding();
@@ -55,7 +53,7 @@ export function BuildingPage() {
   return (
     <>
       <AppBar position="static" sx={{ backgroundColor: "#f5f5f5" }}>
-        <TopLevelToolbar user={user} />
+        <TopLevelToolbar />
         <BuildingToolbar
           building={building}
           selectedTab={selectedTab}
