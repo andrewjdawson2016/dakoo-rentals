@@ -3,6 +3,8 @@ import { Grid, Typography, Divider } from "@mui/material";
 import FinancialSummaryByYearChart from "../../../common/FinancialSummaryByYearChart";
 import FinancialSummaryByMonthChart from "../../../common/FinancialSummaryByMonthChart";
 import YearlyPercentChangeChart from "../../../common/YearlyPercentChangeChart";
+import FinancialSummaryByYearTable from "../../../common/FinancialSummaryByYearTable";
+import YearlyPercentChangeTable from "../../../common/YearlyPercentChangeTable";
 
 function BuildingMetricsTab({ building }) {
   return (
@@ -16,6 +18,8 @@ function BuildingMetricsTab({ building }) {
       <FinancialSummaryByYearChart buildings={[building]} />
       <FinancialSummaryByMonthChart buildings={[building]} />
       <YearlyPercentChangeChart buildings={[building]} />
+      <FinancialSummaryByYearTable buildings={[building]} />
+      <YearlyPercentChangeTable buildings={[building]} />
     </>
   );
 }
