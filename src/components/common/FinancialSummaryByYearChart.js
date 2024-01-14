@@ -71,6 +71,10 @@ function FinancialSummaryByYearChart({ buildings }) {
   const options = {
     scales: {
       y: {
+        title: {
+          display: true,
+          text: "Total",
+        },
         beginAtZero: false,
         position: "left",
         ticks: {
@@ -84,6 +88,10 @@ function FinancialSummaryByYearChart({ buildings }) {
         suggestedMin: suggestedMin,
       },
       y1: {
+        title: {
+          display: true,
+          text: "Monthly Average",
+        },
         beginAtZero: false,
         position: "right",
         grid: {
