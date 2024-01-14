@@ -28,13 +28,39 @@ function FinancialSummaryByYearChart({ buildings }) {
     ],
   };
 
+  const monthlyChartData = {
+    labels: [],
+    datasets: [
+      {
+        label: "Average Monthly Income",
+        data: [],
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+      },
+      {
+        label: "Average Monthly Expenses",
+        data: [],
+        backgroundColor: "rgba(255, 206, 86, 0.2)",
+      },
+      {
+        label: "Average Monthly Profit/Loss",
+        data: [],
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+      },
+    ],
+  };
+
   let maxValue = 0;
   let minValue = 0;
   financialSummary.forEach(({ year, income, expense, profit }) => {
     chartData.labels.push(year);
-    chartData.datasets[0].data.push(income);
-    chartData.datasets[1].data.push(expense);
-    chartData.datasets[2].data.push(profit);
+    chartData.datasets[0].data.push(Math.round(income));
+    chartData.datasets[1].data.push(Math.round(expense));
+    chartData.datasets[2].data.push(Math.round(profit));
+
+    monthlyChartData.datasets[0].data.push(Math.round(income / 12));
+    monthlyChartData.datasets[1].data.push(Math.round(expense / 12));
+    monthlyChartData.datasets[2].data.push(Math.round(profit / 12));
+
     maxValue = Math.max(maxValue, income, expense, profit);
     minValue = Math.min(minValue, income, expense, profit);
   });
@@ -46,6 +72,7 @@ function FinancialSummaryByYearChart({ buildings }) {
     scales: {
       y: {
         beginAtZero: false,
+        position: "left",
         ticks: {
           callback: function (value) {
             return value < 0
@@ -55,6 +82,22 @@ function FinancialSummaryByYearChart({ buildings }) {
         },
         suggestedMax: suggestedMax,
         suggestedMin: suggestedMin,
+      },
+      y1: {
+        beginAtZero: false,
+        position: "right",
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          callback: function (value) {
+            return value < 0
+              ? `($${Math.abs(value).toLocaleString()})`
+              : "$" + value.toLocaleString();
+          },
+        },
+        suggestedMax: suggestedMax / 12,
+        suggestedMin: suggestedMin / 12,
       },
       x: {
         title: {
@@ -76,18 +119,30 @@ function FinancialSummaryByYearChart({ buildings }) {
         intersect: false,
         callbacks: {
           label: function (context) {
-            let label = context.dataset.label || "";
-            if (label) {
-              label += ": ";
-            }
+            const datasetLabel = context.dataset.label || "";
             const value = context.parsed.y;
-            if (value !== null) {
-              const formattedValue = new Intl.NumberFormat().format(
-                Math.abs(value)
-              );
-              label +=
-                value < 0 ? `($${formattedValue})` : `$${formattedValue}`;
-            }
+            const index = context.dataIndex;
+            const monthlyValue =
+              monthlyChartData.datasets[context.datasetIndex].data[index];
+
+            const formattedTotalValue = new Intl.NumberFormat().format(
+              Math.abs(value)
+            );
+            const formattedMonthlyValue = new Intl.NumberFormat().format(
+              Math.abs(monthlyValue)
+            );
+
+            let label = `Total ${datasetLabel}: `;
+            label +=
+              value < 0
+                ? `($${formattedTotalValue}), `
+                : `$${formattedTotalValue}, `;
+            label += `Monthly Average: `;
+            label +=
+              monthlyValue < 0
+                ? `($${formattedMonthlyValue})`
+                : `$${formattedMonthlyValue}`;
+
             return label;
           },
         },
