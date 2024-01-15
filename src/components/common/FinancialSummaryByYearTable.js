@@ -29,19 +29,10 @@ function FinancialSummaryByYearTable({ buildings }) {
               Income
             </TableCell>
             <TableCell align="center" style={{ fontWeight: "bold" }}>
-              Average Income / Mo.
-            </TableCell>
-            <TableCell align="center" style={{ fontWeight: "bold" }}>
               Expenses
             </TableCell>
             <TableCell align="center" style={{ fontWeight: "bold" }}>
-              Average Expenses / Mo.
-            </TableCell>
-            <TableCell align="center" style={{ fontWeight: "bold" }}>
               Profit/Loss
-            </TableCell>
-            <TableCell align="center" style={{ fontWeight: "bold" }}>
-              Average Profit/Loss / Mo.
             </TableCell>
           </TableRow>
         </TableHead>
@@ -52,17 +43,8 @@ function FinancialSummaryByYearTable({ buildings }) {
                 {year}
               </TableCell>
               <TableCell align="center">{formatCurrency(income)}</TableCell>
-              <TableCell align="center">
-                {formatCurrency(income / 12)}
-              </TableCell>
               <TableCell align="center">{formatCurrency(expense)}</TableCell>
-              <TableCell align="center">
-                {formatCurrency(expense / 12)}
-              </TableCell>
               <TableCell align="center">{formatCurrency(profit)}</TableCell>
-              <TableCell align="center">
-                {formatCurrency(profit / 12)}
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
