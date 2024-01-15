@@ -15,6 +15,14 @@ function YearlyPercentChangeTable({ buildings }) {
     getPercentageFinancialSummaryYearlyPercentChange(buildings);
 
   const formatPercentage = (value) => {
+    if (
+      isNaN(value) ||
+      value === null ||
+      value === undefined ||
+      !isFinite(value)
+    ) {
+      return "N/A";
+    }
     const absValue = Math.abs(value.toFixed(2));
     return value < 0 ? `(${absValue}%)` : `${absValue}%`;
   };
