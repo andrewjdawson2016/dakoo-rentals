@@ -91,10 +91,6 @@ function FinancialSummaryByMonthChart({
       },
     },
     plugins: {
-      title: {
-        display: true,
-        text: "Monthly Income/Expense/Profit",
-      },
       legend: {
         display: true,
       },

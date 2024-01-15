@@ -84,10 +84,6 @@ function YearlyPercentChangeChart({
       },
     },
     plugins: {
-      title: {
-        display: true,
-        text: "Percent Change YoY",
-      },
       legend: {
         display: true,
       },

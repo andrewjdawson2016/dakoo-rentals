@@ -79,10 +79,6 @@ function FinancialSummaryByYearChart({
       },
     },
     plugins: {
-      title: {
-        display: true,
-        text: "Financial Summary By Year",
-      },
       legend: {
         display: true,
       },

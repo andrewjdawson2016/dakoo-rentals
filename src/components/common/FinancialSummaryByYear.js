@@ -9,6 +9,8 @@ import {
   Checkbox,
   IconButton,
   Popover,
+  Typography,
+  Divider,
 } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import TableChartIcon from "@mui/icons-material/TableChart";
@@ -34,9 +36,19 @@ function FinancialSummaryByYear({ buildings }) {
 
   return (
     <>
-      <IconButton aria-describedby={id} onClick={handleClick}>
-        <SettingsIcon />
-      </IconButton>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h6">Financial Summary By Year</Typography>
+        <IconButton aria-describedby={id} onClick={handleClick}>
+          <SettingsIcon />
+        </IconButton>
+      </Box>
+
+      <Divider />
       <Popover
         id={id}
         open={open}
@@ -92,7 +104,7 @@ function FinancialSummaryByYear({ buildings }) {
         </FormGroup>
       </Popover>
 
-      <Box mb={4}>
+      <Box mb={4} mt={2}>
         {showChart ? (
           <FinancialSummaryByYearChart
             buildings={buildings}
