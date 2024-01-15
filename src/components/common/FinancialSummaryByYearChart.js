@@ -85,6 +85,23 @@ function FinancialSummaryByYearChart({
       tooltip: {
         mode: "index",
         intersect: false,
+        callbacks: {
+          label: function (context) {
+            let label = context.dataset.label || "";
+            if (label) {
+              label += ": ";
+            }
+            const value = context.parsed.y;
+            if (value !== null) {
+              const formattedValue = new Intl.NumberFormat().format(
+                Math.abs(Math.round(value))
+              );
+              label +=
+                value < 0 ? `($${formattedValue})` : `$${formattedValue}`;
+            }
+            return label;
+          },
+        },
       },
     },
   };
