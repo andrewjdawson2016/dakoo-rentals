@@ -42,27 +42,18 @@ function YearlyPercentChangeChart({
     datasets: datasets,
   };
 
-  let maxValue = 0;
-  let minValue = 0;
-  percentageSummary.forEach(
-    ({ incomeChangePercent, expenseChangePercent, profitChangePercent }) => {
-      maxValue = Math.max(
-        maxValue,
-        incomeChangePercent,
-        expenseChangePercent,
-        profitChangePercent
-      );
-      minValue = Math.min(
-        minValue,
-        incomeChangePercent,
-        expenseChangePercent,
-        profitChangePercent
-      );
-    }
-  );
+  let maxValue = null;
+  let minValue = null;
 
-  const suggestedMax = maxValue + 10;
-  const suggestedMin = minValue - 10;
+  chartData.datasets.forEach((dataset) => {
+    dataset.data.forEach((value) => {
+      maxValue = maxValue === null ? value : Math.max(maxValue, value);
+      minValue = minValue === null ? value : Math.min(minValue, value);
+    });
+  });
+
+  const suggestedMax = maxValue !== null ? maxValue + 10 : 10;
+  const suggestedMin = minValue !== null ? minValue - 10 : -10;
 
   const options = {
     scales: {

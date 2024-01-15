@@ -50,15 +50,18 @@ function FinancialSummaryByMonthChart({
     datasets: datasets,
   };
 
-  let maxValue = 0;
-  let minValue = 0;
-  financialSummary.forEach(({ income, expense, profit }) => {
-    maxValue = Math.max(maxValue, income, expense, profit);
-    minValue = Math.min(minValue, income, expense, profit);
+  let maxValue = null;
+  let minValue = null;
+  chartData.datasets.forEach((dataset) => {
+    dataset.data.forEach((value) => {
+      maxValue = maxValue === null ? value : Math.max(maxValue, value);
+      minValue = minValue === null ? value : Math.min(minValue, value);
+    });
   });
 
-  const suggestedMax = maxValue + maxValue * 0.1;
-  const suggestedMin = minValue - Math.abs(minValue) * 0.1;
+  const suggestedMax = maxValue !== null ? maxValue + maxValue * 0.1 : 0;
+  const suggestedMin =
+    minValue !== null ? minValue - Math.abs(minValue) * 0.1 : 0;
 
   const options = {
     scales: {
