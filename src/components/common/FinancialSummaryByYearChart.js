@@ -5,62 +5,46 @@ import { computeFinancialSummaryByYear } from "../../util";
 
 Chart.register(...registerables);
 
-function FinancialSummaryByYearChart({ buildings }) {
+function FinancialSummaryByYearChart({
+  buildings,
+  showIncome,
+  showExpenses,
+  showProfit,
+}) {
   const financialSummary = computeFinancialSummaryByYear(buildings);
+
   const chartData = {
-    labels: [],
-    datasets: [
-      {
-        label: "Income",
-        data: [],
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-      },
-      {
-        label: "Expenses",
-        data: [],
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-      },
-      {
-        label: "Profit/Loss",
-        data: [],
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-      },
-    ],
+    labels: financialSummary.map((item) => item.year),
+    datasets: [],
   };
 
-  const monthlyChartData = {
-    labels: [],
-    datasets: [
-      {
-        label: "Average Monthly Income",
-        data: [],
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-      },
-      {
-        label: "Average Monthly Expenses",
-        data: [],
-        backgroundColor: "rgba(255, 206, 86, 0.2)",
-      },
-      {
-        label: "Average Monthly Profit/Loss",
-        data: [],
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-      },
-    ],
-  };
+  if (showIncome) {
+    chartData.datasets.push({
+      label: "Income",
+      data: financialSummary.map((item) => Math.round(item.income)),
+      backgroundColor: "rgba(75, 192, 192, 0.2)",
+    });
+  }
+
+  if (showExpenses) {
+    chartData.datasets.push({
+      label: "Expenses",
+      data: financialSummary.map((item) => Math.round(item.expense)),
+      backgroundColor: "rgba(255, 99, 132, 0.2)",
+    });
+  }
+
+  if (showProfit) {
+    chartData.datasets.push({
+      label: "Profit/Loss",
+      data: financialSummary.map((item) => Math.round(item.profit)),
+      backgroundColor: "rgba(153, 102, 255, 0.2)",
+    });
+  }
 
   let maxValue = 0;
   let minValue = 0;
-  financialSummary.forEach(({ year, income, expense, profit }) => {
-    chartData.labels.push(year);
-    chartData.datasets[0].data.push(Math.round(income));
-    chartData.datasets[1].data.push(Math.round(expense));
-    chartData.datasets[2].data.push(Math.round(profit));
-
-    monthlyChartData.datasets[0].data.push(Math.round(income / 12));
-    monthlyChartData.datasets[1].data.push(Math.round(expense / 12));
-    monthlyChartData.datasets[2].data.push(Math.round(profit / 12));
-
+  financialSummary.forEach(({ income, expense, profit }) => {
     maxValue = Math.max(maxValue, income, expense, profit);
     minValue = Math.min(minValue, income, expense, profit);
   });
@@ -87,26 +71,6 @@ function FinancialSummaryByYearChart({ buildings }) {
         suggestedMax: suggestedMax,
         suggestedMin: suggestedMin,
       },
-      y1: {
-        title: {
-          display: true,
-          text: "Monthly Average",
-        },
-        beginAtZero: false,
-        position: "right",
-        grid: {
-          drawOnChartArea: false,
-        },
-        ticks: {
-          callback: function (value) {
-            return value < 0
-              ? `($${Math.abs(value).toLocaleString()})`
-              : "$" + value.toLocaleString();
-          },
-        },
-        suggestedMax: suggestedMax / 12,
-        suggestedMin: suggestedMin / 12,
-      },
       x: {
         title: {
           display: true,
@@ -120,40 +84,11 @@ function FinancialSummaryByYearChart({ buildings }) {
         text: "Financial Summary By Year",
       },
       legend: {
-        display: false,
+        display: true,
       },
       tooltip: {
         mode: "index",
         intersect: false,
-        callbacks: {
-          label: function (context) {
-            const datasetLabel = context.dataset.label || "";
-            const value = context.parsed.y;
-            const index = context.dataIndex;
-            const monthlyValue =
-              monthlyChartData.datasets[context.datasetIndex].data[index];
-
-            const formattedTotalValue = new Intl.NumberFormat().format(
-              Math.abs(value)
-            );
-            const formattedMonthlyValue = new Intl.NumberFormat().format(
-              Math.abs(monthlyValue)
-            );
-
-            let label = `Total ${datasetLabel}: `;
-            label +=
-              value < 0
-                ? `($${formattedTotalValue}), `
-                : `$${formattedTotalValue}, `;
-            label += `Monthly Average: `;
-            label +=
-              monthlyValue < 0
-                ? `($${formattedMonthlyValue})`
-                : `$${formattedMonthlyValue}`;
-
-            return label;
-          },
-        },
       },
     },
   };

@@ -5,28 +5,41 @@ import { getPercentageFinancialSummaryYearlyPercentChange } from "../../util";
 
 Chart.register(...registerables);
 
-function YearlyPercentChangeChart({ buildings }) {
+function YearlyPercentChangeChart({
+  buildings,
+  showIncome,
+  showExpenses,
+  showProfit,
+}) {
   const percentageSummary =
     getPercentageFinancialSummaryYearlyPercentChange(buildings);
+
+  const datasets = [];
+  if (showIncome) {
+    datasets.push({
+      label: "Income Change",
+      data: percentageSummary.map((item) => item.incomeChangePercent),
+      backgroundColor: "rgba(75, 192, 192, 0.2)",
+    });
+  }
+  if (showExpenses) {
+    datasets.push({
+      label: "Expense Change",
+      data: percentageSummary.map((item) => item.expenseChangePercent),
+      backgroundColor: "rgba(255, 99, 132, 0.2)",
+    });
+  }
+  if (showProfit) {
+    datasets.push({
+      label: "Profit Change",
+      data: percentageSummary.map((item) => item.profitChangePercent),
+      backgroundColor: "rgba(153, 102, 255, 0.2)",
+    });
+  }
+
   const chartData = {
-    labels: [],
-    datasets: [
-      {
-        label: "Income Change",
-        data: [],
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-      },
-      {
-        label: "Expense Change",
-        data: [],
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-      },
-      {
-        label: "Profit Change",
-        data: [],
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-      },
-    ],
+    labels: percentageSummary.map((item) => item.year),
+    datasets: datasets,
   };
 
   let maxValue = 0;
@@ -50,20 +63,6 @@ function YearlyPercentChangeChart({ buildings }) {
 
   const suggestedMax = maxValue + 10;
   const suggestedMin = minValue - 10;
-
-  percentageSummary.forEach(
-    ({
-      year,
-      incomeChangePercent,
-      expenseChangePercent,
-      profitChangePercent,
-    }) => {
-      chartData.labels.push(year);
-      chartData.datasets[0].data.push(incomeChangePercent);
-      chartData.datasets[1].data.push(expenseChangePercent);
-      chartData.datasets[2].data.push(profitChangePercent);
-    }
-  );
 
   const options = {
     scales: {
@@ -90,7 +89,7 @@ function YearlyPercentChangeChart({ buildings }) {
         text: "Percent Change YoY",
       },
       legend: {
-        display: false,
+        display: true,
       },
       tooltip: {
         mode: "index",

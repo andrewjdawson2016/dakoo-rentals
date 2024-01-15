@@ -6,42 +6,53 @@ import { computeFinancialSummaryByMonth } from "../../util";
 
 Chart.register(...registerables);
 
-function FinancialSummaryByMonthChart({ buildings }) {
+function FinancialSummaryByMonthChart({
+  buildings,
+  showIncome,
+  showExpenses,
+  showProfit,
+}) {
   const financialSummary = computeFinancialSummaryByMonth(buildings);
+
+  const datasets = [];
+  if (showIncome) {
+    datasets.push({
+      label: "Income",
+      data: financialSummary.map((item) => item.income),
+      backgroundColor: "rgba(75, 192, 192, 0.2)",
+      borderColor: "rgba(75, 192, 192, 1)",
+      fill: false,
+    });
+  }
+
+  if (showExpenses) {
+    datasets.push({
+      label: "Expenses",
+      data: financialSummary.map((item) => item.expense),
+      backgroundColor: "rgba(255, 99, 132, 0.2)",
+      borderColor: "rgba(255, 99, 132, 1)",
+      fill: false,
+    });
+  }
+
+  if (showProfit) {
+    datasets.push({
+      label: "Profit",
+      data: financialSummary.map((item) => item.profit),
+      backgroundColor: "rgba(153, 102, 255, 0.2)",
+      borderColor: "rgba(153, 102, 255, 1)",
+      fill: false,
+    });
+  }
+
   const chartData = {
-    labels: [],
-    datasets: [
-      {
-        label: "Income",
-        data: [],
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        fill: false,
-      },
-      {
-        label: "Expenses",
-        data: [],
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        fill: false,
-      },
-      {
-        label: "Profit",
-        data: [],
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        borderColor: "rgba(153, 102, 255, 1)",
-        fill: false,
-      },
-    ],
+    labels: financialSummary.map((item) => item.monthYear),
+    datasets: datasets,
   };
 
   let maxValue = 0;
   let minValue = 0;
-  financialSummary.forEach(({ monthYear, income, expense, profit }) => {
-    chartData.labels.push(monthYear);
-    chartData.datasets[0].data.push(income);
-    chartData.datasets[1].data.push(expense);
-    chartData.datasets[2].data.push(profit);
+  financialSummary.forEach(({ income, expense, profit }) => {
     maxValue = Math.max(maxValue, income, expense, profit);
     minValue = Math.min(minValue, income, expense, profit);
   });
@@ -85,7 +96,7 @@ function FinancialSummaryByMonthChart({ buildings }) {
         text: "Monthly Income/Expense/Profit",
       },
       legend: {
-        display: false,
+        display: true,
       },
       tooltip: {
         callbacks: {
