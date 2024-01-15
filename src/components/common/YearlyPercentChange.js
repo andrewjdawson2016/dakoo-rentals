@@ -42,7 +42,7 @@ function YearlyPercentChange({ buildings }) {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h6">Percentage Change</Typography>
+        <Typography variant="h6">Percentage Change YoY</Typography>
         <IconButton aria-describedby={id} onClick={handleClick}>
           <SettingsIcon />
         </IconButton>
