@@ -8,10 +8,30 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
-import { getEventsInRange, formatDate } from "../../../../util";
+import {
+  getEventsInRange,
+  formatDate,
+  mapEventDescription,
+} from "../../../../util";
+import { updateLeaseEventExecutionDate } from "../../../../api";
+import { DateTime } from "luxon";
 
 function EventManager({ buildings, refreshBuildings }) {
+  const handleUpdateLeaseEventExecutionDate = (eventId, executionDate) => {
+    updateLeaseEventExecutionDate({
+      id: eventId,
+      execution_date: executionDate,
+    })
+      .then(() => {
+        refreshBuildings();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
@@ -26,8 +46,11 @@ function EventManager({ buildings, refreshBuildings }) {
         <Table aria-label="upcoming events table">
           <TableHead>
             <TableRow>
-              <TableCell>Property</TableCell>
-              <TableCell>Due Date</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Property</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Due Date</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Event</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Action</TableCell>{" "}
+              {/* New Table Header */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -36,8 +59,23 @@ function EventManager({ buildings, refreshBuildings }) {
                 <TableCell component="th" scope="row">
                   {event.fqPropertyName}
                 </TableCell>
-                <TableCell component="th" scope="row">
-                  {formatDate(event.event.due_date)}
+                <TableCell>{formatDate(event.event.due_date)}</TableCell>
+                <TableCell>
+                  {mapEventDescription(event.event.description)}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() =>
+                      handleUpdateLeaseEventExecutionDate(
+                        event.event.id,
+                        DateTime.now().toISODate()
+                      )
+                    }
+                  >
+                    Complete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
