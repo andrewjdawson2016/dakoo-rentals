@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  Grid,
   Typography,
-  Divider,
   Table,
   TableBody,
   TableCell,
@@ -14,23 +12,6 @@ import {
 import { getEventsInRange } from "../../../../util";
 
 function EventManager({ buildings, refreshBuildings }) {
-  const mapEventDescription = (description) => {
-    switch (description) {
-      case "START":
-        return "Lease Starts";
-      case "SIX_MONTH":
-        return "Send Renewal Option (6 Mo.)";
-      case "TWO_MONTH":
-        return "Renewal Deadline Reminder (2 Mo.)";
-      case "ONE_MONTH":
-        return "Renewal Deadline (1 Mo.)";
-      case "END":
-        return "Lease Ends";
-      default:
-        return description;
-    }
-  };
-
   const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
