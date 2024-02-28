@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid, Typography, Divider } from "@mui/material";
-import FinancialSummaryByYearChart from "../../../common/FinancialSummaryByYearChart";
-import FinancialSummaryByMonthChart from "../../../common/FinancialSummaryByMonthChart";
-import YearlyPercentChangeChart from "../../../common/YearlyPercentChangeChart";
+import FinancialSummaryByYear from "../../../common/FinancialSummaryByYear";
+import FinancialSummaryByMonth from "../../../common/FinancialSummaryByMonth";
+import YearlyPercentChange from "../../../common/YearlyPercentChange";
 
 function HomeMetricsTab({ buildings }) {
   return (
@@ -13,9 +13,9 @@ function HomeMetricsTab({ buildings }) {
         </Grid>
       </Grid>
       <Divider style={{ margin: "20px 0" }} />
-      <FinancialSummaryByYearChart buildings={buildings} />
-      <FinancialSummaryByMonthChart buildings={buildings} />
-      <YearlyPercentChangeChart buildings={buildings} />
+      <FinancialSummaryByYear buildings={buildings} />
+      <FinancialSummaryByMonth buildings={buildings} />
+      <YearlyPercentChange buildings={buildings} />
     </>
   );
 }

@@ -49,3 +49,30 @@ export function determineLeaseStatus(startDateISO, endDateISO, currentDateISO) {
     return endDate.diff(currentDate, "days").days;
   }
 }
+
+export function getEventsInRange(buildings, currentDateISO) {
+  const currentDate = DateTime.fromISO(currentDateISO);
+  const threeMonthsBefore = currentDate.minus({ months: 3 });
+  const sixMonthsAfter = currentDate.plus({ months: 6 });
+
+  const isDateInRange = (dateStr) => {
+    const date = DateTime.fromISO(dateStr);
+    return date >= threeMonthsBefore && date <= sixMonthsAfter;
+  };
+
+  const eventsInRange = [];
+
+  for (const building of buildings) {
+    for (const unit of building.units) {
+      for (const lease of unit.leases) {
+        for (const event of lease.leaseEvents) {
+          if (isDateInRange(event.due_date)) {
+            eventsInRange.push(event);
+          }
+        }
+      }
+    }
+  }
+
+  return eventsInRange;
+}

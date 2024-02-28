@@ -1,5 +1,6 @@
 import React from "react";
 import { Grid, Typography, Divider } from "@mui/material";
+import EventManager from "./EventManager";
 
 function HomeManagementTab({ buildings, refreshBuildings }) {
   return (
@@ -10,7 +11,7 @@ function HomeManagementTab({ buildings, refreshBuildings }) {
         </Grid>
       </Grid>
       <Divider style={{ margin: "20px 0" }} />
-      <Typography variant="h6">Coming Soon....</Typography>
+      <EventManager buildings={buildings} refreshBuildings={refreshBuildings} />
     </>
   );
 }

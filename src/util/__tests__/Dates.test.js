@@ -4,6 +4,7 @@ import {
   getStartDateFromPrevious,
   findLeaseOnDate,
   determineLeaseStatus,
+  getEventsInRange,
 } from "../Dates";
 
 describe("getExpenseMonths", () => {
@@ -159,5 +160,53 @@ describe("determineLeaseStatus", () => {
 
     const result = determineLeaseStatus(startDate, endDate, currentDate);
     expect(result).toBeGreaterThan(0);
+  });
+});
+
+describe("getEventsInRange", () => {
+  const buildings = [
+    {
+      units: [
+        {
+          leases: [
+            {
+              leaseEvents: [
+                { due_date: "2024-05-15" },
+                { due_date: "2024-08-20" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      units: [
+        {
+          leases: [
+            {
+              leaseEvents: [
+                { due_date: "2024-01-01" },
+                { due_date: "2024-12-31" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  it("should return events within 3 months before and 6 months after the current date", () => {
+    const currentDateISO = "2024-06-01";
+    const events = getEventsInRange(buildings, currentDateISO);
+    expect(events).toEqual([
+      { due_date: "2024-05-15" },
+      { due_date: "2024-08-20" },
+    ]);
+  });
+
+  it("should return an empty array if no events are in range", () => {
+    const currentDateISO = "2023-01-01";
+    const events = getEventsInRange(buildings, currentDateISO);
+    expect(events).toEqual([]);
   });
 });
