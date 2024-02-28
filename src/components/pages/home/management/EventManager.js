@@ -9,7 +9,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { getEventsInRange } from "../../../../util";
+import { getEventsInRange, formatDate } from "../../../../util";
 
 function EventManager({ buildings, refreshBuildings }) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -26,18 +26,18 @@ function EventManager({ buildings, refreshBuildings }) {
         <Table aria-label="upcoming events table">
           <TableHead>
             <TableRow>
+              <TableCell>Property</TableCell>
               <TableCell>Due Date</TableCell>
-              <TableCell>Execution Date</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {upcomingEvents.map((event, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row">
-                  {event.due_date}
+                  {event.fqPropertyName}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {event.execution_date}
+                  {formatDate(event.event.due_date)}
                 </TableCell>
               </TableRow>
             ))}
