@@ -55,3 +55,20 @@ export function formatMonthlyMoneyValue(numericValue) {
 
   return `${formattedValue}`;
 }
+
+export function mapEventDescription(description) {
+  switch (description) {
+    case "START":
+      return "Lease Starts";
+    case "SIX_MONTH":
+      return "Send Renewal Option (6 Mo.)";
+    case "TWO_MONTH":
+      return "Renewal Deadline Reminder (2 Mo.)";
+    case "ONE_MONTH":
+      return "Renewal Deadline (1 Mo.)";
+    case "END":
+      return "Lease Ends";
+    default:
+      return description;
+  }
+}

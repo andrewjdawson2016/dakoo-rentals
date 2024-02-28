@@ -9,28 +9,11 @@ import {
   TimelineConnector,
   TimelineOppositeContent,
 } from "@mui/lab";
-import { formatDate } from "../../../../util";
+import { formatDate, mapEventDescription } from "../../../../util";
 import { updateLeaseEventExecutionDate } from "../../../../api";
 import { DateTime } from "luxon";
 
 const EventsTab = ({ events, refreshBuilding }) => {
-  const mapEventDescription = (description) => {
-    switch (description) {
-      case "START":
-        return "Lease Starts";
-      case "SIX_MONTH":
-        return "Send Renewal Option (6 Mo.)";
-      case "TWO_MONTH":
-        return "Renewal Deadline Reminder (2 Mo.)";
-      case "ONE_MONTH":
-        return "Renewal Deadline (1 Mo.)";
-      case "END":
-        return "Lease Ends";
-      default:
-        return description;
-    }
-  };
-
   const handleUpdateLeaseEventExecutionDate = (eventId, executionDate) => {
     updateLeaseEventExecutionDate({
       id: eventId,

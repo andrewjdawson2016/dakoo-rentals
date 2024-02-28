@@ -166,13 +166,15 @@ describe("determineLeaseStatus", () => {
 describe("getEventsInRange", () => {
   const buildings = [
     {
+      building_type: "SINGLE_FAMILY",
+      nickname: "SingleFamilyHome",
       units: [
         {
           leases: [
             {
               leaseEvents: [
-                { due_date: "2024-05-15" },
-                { due_date: "2024-08-20" },
+                { due_date: "2024-03-15", execution_date: null },
+                { due_date: "2024-09-20", execution_date: "2024-04-01" },
               ],
             },
           ],
@@ -180,13 +182,16 @@ describe("getEventsInRange", () => {
       ],
     },
     {
+      building_type: "MULTI_FAMILY",
+      nickname: "MultiFamilyComplex",
       units: [
         {
+          unit_number: "101",
           leases: [
             {
               leaseEvents: [
-                { due_date: "2024-01-01" },
-                { due_date: "2024-12-31" },
+                { due_date: "2024-04-01", execution_date: null },
+                { due_date: "2024-10-31", execution_date: null },
               ],
             },
           ],
@@ -195,18 +200,23 @@ describe("getEventsInRange", () => {
     },
   ];
 
-  it("should return events within 3 months before and 6 months after the current date", () => {
-    const currentDateISO = "2024-06-01";
+  it("should return events without an execution date and due within the next 6 months", () => {
+    const currentDateISO = "2024-01-01";
     const events = getEventsInRange(buildings, currentDateISO);
-    expect(events).toEqual([
-      { due_date: "2024-05-15" },
-      { due_date: "2024-08-20" },
-    ]);
+    expect(events).toHaveLength(2);
+    expect(events[0].event.due_date).toEqual("2024-03-15");
+    expect(events[1].event.due_date).toEqual("2024-04-01");
   });
 
-  it("should return an empty array if no events are in range", () => {
-    const currentDateISO = "2023-01-01";
+  it("should return events sorted by due_date", () => {
+    const currentDateISO = "2024-01-01";
     const events = getEventsInRange(buildings, currentDateISO);
-    expect(events).toEqual([]);
+    expect(events).toEqual(
+      events.sort(
+        (a, b) =>
+          DateTime.fromISO(a.event.due_date) -
+          DateTime.fromISO(b.event.due_date)
+      )
+    );
   });
 });

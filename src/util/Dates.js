@@ -52,27 +52,49 @@ export function determineLeaseStatus(startDateISO, endDateISO, currentDateISO) {
 
 export function getEventsInRange(buildings, currentDateISO) {
   const currentDate = DateTime.fromISO(currentDateISO);
-  const threeMonthsBefore = currentDate.minus({ months: 3 });
   const sixMonthsAfter = currentDate.plus({ months: 6 });
 
-  const isDateInRange = (dateStr) => {
-    const date = DateTime.fromISO(dateStr);
-    return date >= threeMonthsBefore && date <= sixMonthsAfter;
+  const isEventIncluded = (event) => {
+    if (event.execution_date) {
+      return false;
+    }
+    const dueDate = DateTime.fromISO(event.due_date);
+    return dueDate <= sixMonthsAfter;
   };
 
-  const eventsInRange = [];
+  let eventsWithFqPropertyName = [];
 
   for (const building of buildings) {
+    const buildingType = building.building_type;
+    const buildingNickName = building.nickname;
+
     for (const unit of building.units) {
+      let fqPropertyName;
+
+      if (buildingType === "SINGLE_FAMILY") {
+        fqPropertyName = buildingNickName;
+      } else if (buildingType === "MULTI_FAMILY") {
+        fqPropertyName = `${buildingNickName} / ${unit.unit_number}`;
+      }
+
       for (const lease of unit.leases) {
         for (const event of lease.leaseEvents) {
-          if (isDateInRange(event.due_date)) {
-            eventsInRange.push(event);
+          if (isEventIncluded(event)) {
+            eventsWithFqPropertyName.push({
+              event,
+              fqPropertyName,
+            });
           }
         }
       }
     }
   }
 
-  return eventsInRange;
+  eventsWithFqPropertyName.sort((a, b) => {
+    return (
+      DateTime.fromISO(a.event.due_date) - DateTime.fromISO(b.event.due_date)
+    );
+  });
+
+  return eventsWithFqPropertyName;
 }
