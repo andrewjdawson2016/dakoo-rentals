@@ -23,12 +23,7 @@ function LeaseDetailsBox({ lease, refreshBuilding }) {
         </Tabs>
       </Box>
       {value === 0 && <OverviewTab lease={lease} />}
-      {value === 1 && (
-        <EventsTab
-          events={lease.leaseEvents}
-          refreshBuilding={refreshBuilding}
-        />
-      )}
+      {value === 1 && <EventsTab events={lease.leaseEvents} />}
     </Container>
   );
 }
