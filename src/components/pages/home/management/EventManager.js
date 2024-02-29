@@ -43,59 +43,60 @@ function EventManager({ buildings, refreshBuildings }) {
       execution_date: executionDate,
     })
       .then(() => {
-        setSnackbarOpen(true);
         refreshBuildings();
+        setSnackbarOpen(true);
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  if (upcomingEvents.length === 0) {
-    return <Typography variant="h6">No upcoming events.</Typography>;
-  }
-
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table aria-label="upcoming events table">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ fontWeight: "bold" }}>Property</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Due Date</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Event</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {upcomingEvents.map((event, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row">
-                  {event.fqPropertyName}
-                </TableCell>
-                <TableCell>{formatDate(event.event.due_date)}</TableCell>
-                <TableCell>
-                  {mapEventDescription(event.event.description)}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() =>
-                      handleUpdateLeaseEventExecutionDate(
-                        event.event.id,
-                        DateTime.now().toISODate()
-                      )
-                    }
-                  >
-                    Complete
-                  </Button>
-                </TableCell>
+      {upcomingEvents.length === 0 ? (
+        <Typography variant="h6">No upcoming events.</Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table aria-label="upcoming events table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: "bold" }}>Property</TableCell>
+                <TableCell style={{ fontWeight: "bold" }}>Due Date</TableCell>
+                <TableCell style={{ fontWeight: "bold" }}>Event</TableCell>
+                <TableCell style={{ fontWeight: "bold" }}>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {upcomingEvents.map((event, index) => (
+                <TableRow key={index}>
+                  <TableCell component="th" scope="row">
+                    {event.fqPropertyName}
+                  </TableCell>
+                  <TableCell>{formatDate(event.event.due_date)}</TableCell>
+                  <TableCell>
+                    {mapEventDescription(event.event.description)}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() =>
+                        handleUpdateLeaseEventExecutionDate(
+                          event.event.id,
+                          DateTime.now().toISODate()
+                        )
+                      }
+                    >
+                      Complete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
