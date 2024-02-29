@@ -41,6 +41,7 @@ function EventManager({ buildings, refreshBuildings }) {
     updateLeaseEventExecutionDate({
       id: eventId,
       execution_date: executionDate,
+      note: "",
     })
       .then(() => {
         refreshBuildings();

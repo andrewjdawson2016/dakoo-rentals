@@ -25,7 +25,6 @@ function AddLeaseForm({ building, unit, onSubmitSuccess }) {
     end_date: "",
     price_per_month: "",
     is_renewal: false,
-    note: "",
     tenants: [{ name: "", email: "" }],
   });
   const [previousTenants, setPreviousTenants] = useState([]);
@@ -120,7 +119,6 @@ function AddLeaseForm({ building, unit, onSubmitSuccess }) {
           end_date: "",
           price_per_month: "",
           is_renewal: false,
-          note: "",
           tenants: [{ name: "", email: "" }],
         });
         setDisplayedRent("");
@@ -243,17 +241,6 @@ function AddLeaseForm({ building, unit, onSubmitSuccess }) {
           </Grid>
         )
       )}
-
-      <TextField
-        fullWidth
-        margin="normal"
-        label="Optional Note"
-        name="note"
-        value={formData.note}
-        onChange={handleChange}
-        multiline
-        rows={4}
-      />
       <Button
         type="submit"
         fullWidth

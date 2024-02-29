@@ -1,6 +1,10 @@
 const leaseEventsURL = `${process.env.REACT_APP_SERVER_URL}/lease_events`;
 
-export async function updateLeaseEventExecutionDate({ id, execution_date }) {
+export async function updateLeaseEventExecutionDate({
+  id,
+  execution_date,
+  note,
+}) {
   try {
     const response = await fetch(leaseEventsURL, {
       method: "PATCH",
@@ -8,7 +12,7 @@ export async function updateLeaseEventExecutionDate({ id, execution_date }) {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ id, execution_date }),
+      body: JSON.stringify({ id, execution_date, note }),
     });
 
     if (!response.ok) {

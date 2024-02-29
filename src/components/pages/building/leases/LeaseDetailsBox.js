@@ -2,8 +2,6 @@ import React from "react";
 import { Box, Container, Tabs, Tab } from "@mui/material";
 import OverviewTab from "./OverviewTab";
 import EventsTab from "./EventsTab";
-import NotesTab from "./NotesTab";
-import DocumentsTab from "./DocumentsTab";
 
 function LeaseDetailsBox({ lease, refreshBuilding }) {
   const [value, setValue] = React.useState(0);
@@ -22,8 +20,6 @@ function LeaseDetailsBox({ lease, refreshBuilding }) {
         >
           <Tab label="Overview" />
           <Tab label="Events" />
-          <Tab label="Notes" />
-          <Tab label="Documents" />
         </Tabs>
       </Box>
       {value === 0 && <OverviewTab lease={lease} />}
@@ -33,8 +29,6 @@ function LeaseDetailsBox({ lease, refreshBuilding }) {
           refreshBuilding={refreshBuilding}
         />
       )}
-      {value === 2 && <NotesTab />}
-      {value === 3 && <DocumentsTab />}
     </Container>
   );
 }

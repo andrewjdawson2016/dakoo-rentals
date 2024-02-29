@@ -18,6 +18,7 @@ const EventsTab = ({ events, refreshBuilding }) => {
     updateLeaseEventExecutionDate({
       id: eventId,
       execution_date: executionDate,
+      note: "",
     })
       .then(() => {
         refreshBuilding();
