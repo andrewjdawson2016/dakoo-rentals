@@ -1,17 +1,42 @@
 import React from "react";
-import { Grid, Typography, Divider } from "@mui/material";
-import EventManager from "./EventManager";
+import { Box, Typography, Divider } from "@mui/material";
+import LeaseManagement from "./LeaseManagement";
+import ExpenseManagement from "./ExpenseManagement";
 
 function HomeManagementTab({ buildings, refreshBuildings }) {
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center">
-        <Grid item>
-          <Typography variant="h4">Management</Typography>
-        </Grid>
-      </Grid>
-      <Divider style={{ margin: "20px 0" }} />
-      <EventManager buildings={buildings} refreshBuildings={refreshBuildings} />
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h6">Lease Management</Typography>
+      </Box>
+      <Divider />
+      <Box mt={2} mb={2}>
+        <LeaseManagement
+          buildings={buildings}
+          refreshBuildings={refreshBuildings}
+        />
+      </Box>
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h6">Expense Management</Typography>
+      </Box>
+      <Divider />
+      <Box mt={2} mb={2}>
+        <ExpenseManagement
+          buildings={buildings}
+          refreshBuildings={refreshBuildings}
+        />
+      </Box>
     </>
   );
 }
