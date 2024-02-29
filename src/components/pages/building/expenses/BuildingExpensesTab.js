@@ -21,7 +21,6 @@ import {
 } from "../../../../util";
 import { deleteExpense } from "../../../../api";
 import { DateTime } from "luxon";
-import LogExpenseForm from "./LogExpenseForm";
 
 function BuildingExpensesTab({ building, refreshBuilding }) {
   const [dialogOpen, setDialogOpen] = useState(false);
