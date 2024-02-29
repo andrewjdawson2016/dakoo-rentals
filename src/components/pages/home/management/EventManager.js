@@ -8,8 +8,16 @@ import {
   TableHead,
   TableRow,
   Paper,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
   Button,
 } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import {
   getEventsInRange,
   formatDate,
@@ -20,6 +28,9 @@ import { DateTime } from "luxon";
 
 function EventManager({ buildings, refreshBuildings }) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [note, setNote] = useState("");
 
   useEffect(() => {
     const currentDateISO = new Date().toISOString();
@@ -27,11 +38,41 @@ function EventManager({ buildings, refreshBuildings }) {
     setUpcomingEvents(events);
   }, [buildings]);
 
-  const handleUpdateLeaseEventExecutionDate = (eventId, executionDate) => {
+  const handleOpenDialog = (event) => {
+    setSelectedEvent(event);
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedEvent(null);
+    setNote("");
+  };
+
+  const handleNoteChange = (e) => {
+    setNote(e.target.value);
+  };
+
+  const handleComplete = () => {
+    if (selectedEvent) {
+      handleUpdateLeaseEventExecutionDate(
+        selectedEvent.event.id,
+        DateTime.now().toISODate(),
+        note
+      );
+      handleCloseDialog();
+    }
+  };
+
+  const handleUpdateLeaseEventExecutionDate = (
+    eventId,
+    executionDate,
+    note
+  ) => {
     updateLeaseEventExecutionDate({
       id: eventId,
       execution_date: executionDate,
-      note: "",
+      note: note,
     })
       .then(() => {
         refreshBuildings();
@@ -67,18 +108,12 @@ function EventManager({ buildings, refreshBuildings }) {
                     {mapEventDescription(event.event.description)}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() =>
-                        handleUpdateLeaseEventExecutionDate(
-                          event.event.id,
-                          DateTime.now().toISODate()
-                        )
-                      }
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleOpenDialog(event)}
                     >
-                      Complete
-                    </Button>
+                      <CheckIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -86,6 +121,35 @@ function EventManager({ buildings, refreshBuildings }) {
           </Table>
         </TableContainer>
       )}
+
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        sx={{ "& .MuiDialog-paper": { width: "80%", maxWidth: "500px" } }}
+      >
+        <DialogTitle>{selectedEvent?.fqPropertyName}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {mapEventDescription(selectedEvent?.event.description)}
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="note"
+            label="Optional Note"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={note}
+            onChange={handleNoteChange}
+          />
+        </DialogContent>
+        <DialogActions style={{ justifyContent: "center" }}>
+          <Button onClick={handleComplete} variant="contained">
+            Complete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
