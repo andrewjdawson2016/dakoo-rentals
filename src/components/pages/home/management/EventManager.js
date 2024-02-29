@@ -17,6 +17,7 @@ import {
   DialogActions,
   Button,
   Snackbar,
+  Box,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,7 +27,7 @@ import {
   mapEventDescription,
 } from "../../../../util";
 import { updateLeaseEventExecutionDate } from "../../../../api";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 
 function EventManager({ buildings, refreshBuildings }) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -41,6 +42,39 @@ function EventManager({ buildings, refreshBuildings }) {
     const events = getEventsInRange(buildings, currentDateISO);
     setUpcomingEvents(events);
   }, [buildings]);
+
+  const DueStatusLabel = ({ dueDate }) => {
+    let statusText;
+    let color;
+    let backgroundColor;
+
+    const now = DateTime.now();
+    const due = DateTime.fromISO(dueDate);
+    const daysUntilDue = Interval.fromDateTimes(now, due).length("days");
+
+    if (due < now) {
+      statusText = "Overdue";
+      color = "white";
+      backgroundColor = "red";
+    } else if (daysUntilDue <= 30) {
+      statusText = "Due Soon";
+      color = "black";
+      backgroundColor = "yellow";
+    } else {
+      return null;
+    }
+
+    const boxStyles = {
+      color: color,
+      backgroundColor: backgroundColor,
+      borderRadius: "4px",
+      padding: "3px 8px",
+      display: "inline-block",
+      marginLeft: "10px",
+    };
+
+    return <Box style={boxStyles}>{statusText}</Box>;
+  };
 
   const handleOpenDialog = (event) => {
     setSelectedEvent(event);
@@ -122,7 +156,10 @@ function EventManager({ buildings, refreshBuildings }) {
                   <TableCell component="th" scope="row">
                     {event.fqPropertyName}
                   </TableCell>
-                  <TableCell>{formatDate(event.event.due_date)}</TableCell>
+                  <TableCell>
+                    {formatDate(event.event.due_date)}
+                    <DueStatusLabel dueDate={event.event.due_date} />
+                  </TableCell>
                   <TableCell>
                     {mapEventDescription(event.event.description)}
                   </TableCell>
