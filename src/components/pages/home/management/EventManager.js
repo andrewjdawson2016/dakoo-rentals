@@ -54,12 +54,12 @@ function EventManager({ buildings, refreshBuildings }) {
 
     if (due < now) {
       statusText = "Overdue";
-      color = "white";
-      backgroundColor = "red";
+      color = "black";
+      backgroundColor = "#ffebee";
     } else if (daysUntilDue <= 30) {
       statusText = "Due Soon";
       color = "black";
-      backgroundColor = "yellow";
+      backgroundColor = "#fff9c4";
     } else {
       return null;
     }
