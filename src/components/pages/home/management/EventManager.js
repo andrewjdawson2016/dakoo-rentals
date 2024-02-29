@@ -9,8 +9,6 @@ import {
   TableRow,
   Paper,
   Button,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import {
   getEventsInRange,
@@ -22,20 +20,12 @@ import { DateTime } from "luxon";
 
 function EventManager({ buildings, refreshBuildings }) {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const currentDateISO = new Date().toISOString();
     const events = getEventsInRange(buildings, currentDateISO);
     setUpcomingEvents(events);
   }, [buildings]);
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
 
   const handleUpdateLeaseEventExecutionDate = (eventId, executionDate) => {
     updateLeaseEventExecutionDate({
@@ -45,7 +35,6 @@ function EventManager({ buildings, refreshBuildings }) {
     })
       .then(() => {
         refreshBuildings();
-        setSnackbarOpen(true);
       })
       .catch((error) => {
         console.error(error);
@@ -97,21 +86,6 @@ function EventManager({ buildings, refreshBuildings }) {
           </Table>
         </TableContainer>
       )}
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          Task successfully completed!
-        </Alert>
-      </Snackbar>
     </>
   );
 }
