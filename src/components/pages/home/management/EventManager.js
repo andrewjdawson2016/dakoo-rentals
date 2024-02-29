@@ -16,8 +16,10 @@ import {
   TextField,
   DialogActions,
   Button,
+  Snackbar,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   getEventsInRange,
   formatDate,
@@ -31,6 +33,8 @@ function EventManager({ buildings, refreshBuildings }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [note, setNote] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [completedEvent, setCompletedEvent] = useState(null);
 
   useEffect(() => {
     const currentDateISO = new Date().toISOString();
@@ -49,6 +53,11 @@ function EventManager({ buildings, refreshBuildings }) {
     setNote("");
   };
 
+  const snackbarOnClose = () => {
+    setSnackbarOpen(false);
+    setCompletedEvent(null);
+  };
+
   const handleNoteChange = (e) => {
     setNote(e.target.value);
   };
@@ -60,7 +69,17 @@ function EventManager({ buildings, refreshBuildings }) {
         DateTime.now().toISODate(),
         note
       );
+      setCompletedEvent(selectedEvent);
+      setSnackbarOpen(true);
       handleCloseDialog();
+    }
+  };
+
+  const handleUndo = () => {
+    if (completedEvent) {
+      handleUpdateLeaseEventExecutionDate(completedEvent.event.id, null, "");
+      setSnackbarOpen(false);
+      setCompletedEvent(null);
     }
   };
 
@@ -150,6 +169,27 @@ function EventManager({ buildings, refreshBuildings }) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={5000}
+        onClose={snackbarOnClose}
+        message="Task Completed"
+        action={
+          <React.Fragment>
+            <Button color="secondary" size="small" onClick={handleUndo}>
+              UNDO
+            </Button>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={snackbarOnClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
     </>
   );
 }
