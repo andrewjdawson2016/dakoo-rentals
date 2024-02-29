@@ -74,7 +74,7 @@ export function getEventsInRange(buildings, currentDateISO) {
       if (buildingType === "SINGLE_FAMILY") {
         fqPropertyName = buildingNickName;
       } else if (buildingType === "MULTI_FAMILY") {
-        fqPropertyName = `${buildingNickName} / ${unit.unit_number}`;
+        fqPropertyName = `${buildingNickName} - ${unit.unit_number}`;
       }
 
       for (const lease of unit.leases) {

@@ -40,6 +40,10 @@ function EventManager({ buildings, refreshBuildings }) {
     setUpcomingEvents(events);
   }, [buildings]);
 
+  if (upcomingEvents.length === 0) {
+    return <Typography variant="h6">No upcoming events.</Typography>;
+  }
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -49,8 +53,7 @@ function EventManager({ buildings, refreshBuildings }) {
               <TableCell style={{ fontWeight: "bold" }}>Property</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Due Date</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Event</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Action</TableCell>{" "}
-              {/* New Table Header */}
+              <TableCell style={{ fontWeight: "bold" }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -82,10 +85,6 @@ function EventManager({ buildings, refreshBuildings }) {
           </TableBody>
         </Table>
       </TableContainer>
-
-      {upcomingEvents.length === 0 && (
-        <Typography variant="h6">No upcoming events.</Typography>
-      )}
     </>
   );
 }
