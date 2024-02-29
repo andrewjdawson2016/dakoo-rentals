@@ -9,6 +9,8 @@ import {
   TableRow,
   Paper,
   Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   getEventsInRange,
@@ -19,26 +21,35 @@ import { updateLeaseEventExecutionDate } from "../../../../api";
 import { DateTime } from "luxon";
 
 function EventManager({ buildings, refreshBuildings }) {
-  const handleUpdateLeaseEventExecutionDate = (eventId, executionDate) => {
-    updateLeaseEventExecutionDate({
-      id: eventId,
-      execution_date: executionDate,
-    })
-      .then(() => {
-        refreshBuildings();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const currentDateISO = new Date().toISOString();
     const events = getEventsInRange(buildings, currentDateISO);
     setUpcomingEvents(events);
   }, [buildings]);
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const handleUpdateLeaseEventExecutionDate = (eventId, executionDate) => {
+    updateLeaseEventExecutionDate({
+      id: eventId,
+      execution_date: executionDate,
+    })
+      .then(() => {
+        setSnackbarOpen(true);
+        refreshBuildings();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   if (upcomingEvents.length === 0) {
     return <Typography variant="h6">No upcoming events.</Typography>;
@@ -85,6 +96,20 @@ function EventManager({ buildings, refreshBuildings }) {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Task successfully completed!
+        </Alert>
+      </Snackbar>
     </>
   );
 }
