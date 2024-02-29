@@ -6,7 +6,6 @@ export async function createLease({
   end_date,
   price_per_month,
   is_renewal,
-  note,
   tenants,
 }) {
   try {
@@ -22,7 +21,6 @@ export async function createLease({
         end_date,
         price_per_month,
         is_renewal,
-        note,
         tenants,
       }),
     });
