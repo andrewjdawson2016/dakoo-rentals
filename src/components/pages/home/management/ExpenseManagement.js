@@ -81,7 +81,7 @@ function ExpenseManagement({ buildings, refreshBuildings }) {
 
     createExpense(dataToSend)
       .then(() => {
-        setSnackbarMessage("Expense created successfully");
+        setSnackbarMessage("Expense logged");
         setSnackbarOpen(true);
         handleCloseDialog();
         refreshBuildings();
