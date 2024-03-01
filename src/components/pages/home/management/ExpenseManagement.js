@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import {
-  Grid,
-  Typography,
-  Divider,
   Paper,
   Table,
   TableBody,
@@ -50,13 +47,6 @@ function ExpenseManagement({ buildings, refreshBuildings }) {
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center">
-        <Grid item>
-          <Typography variant="h4">Expense Management</Typography>
-        </Grid>
-      </Grid>
-      <Divider sx={{ my: 2 }} />
-
       <TableContainer component={Paper}>
         <Table aria-label="expenses table">
           <TableHead>
@@ -67,17 +57,23 @@ function ExpenseManagement({ buildings, refreshBuildings }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {expensesData.map(({ building, month }, index) => (
-              <TableRow key={index}>
-                <TableCell>{building.nickname}</TableCell>{" "}
-                <TableCell>{formatDateToMonthYear(month)}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleAddExpense(building, month)}>
-                    <Add />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {expensesData.map((data, index) => {
+              const { building } = data;
+              const month = data[0];
+              return (
+                <TableRow key={index}>
+                  <TableCell>{building.nickname}</TableCell>{" "}
+                  <TableCell>{formatDateToMonthYear(month)}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleAddExpense(building, month)}
+                    >
+                      <Add />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
