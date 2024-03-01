@@ -16,6 +16,7 @@ import {
   DialogTitle,
   Snackbar,
   DialogContentText,
+  Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import {
@@ -95,36 +96,42 @@ function ExpenseManagement({ buildings, refreshBuildings }) {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table aria-label="expenses table">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ fontWeight: "bold" }}>Building</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Date</TableCell>
-              <TableCell style={{ fontWeight: "bold" }}>Add Expense</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {expensesData.map((data, index) => {
-              const { building } = data;
-              const month = data[0];
-              return (
-                <TableRow key={index}>
-                  <TableCell>{building.nickname}</TableCell>
-                  <TableCell>{formatDateToMonthYear(month)}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      onClick={() => handleAddExpense(building, month)}
-                    >
-                      <Add />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {expensesData.length === 0 ? (
+        <Typography variant="h6">No unlogged expenses.</Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table aria-label="expenses table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: "bold" }}>Building</TableCell>
+                <TableCell style={{ fontWeight: "bold" }}>Date</TableCell>
+                <TableCell style={{ fontWeight: "bold" }}>
+                  Add Expense
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {expensesData.map((data, index) => {
+                const { building } = data;
+                const month = data[0];
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{building.nickname}</TableCell>
+                    <TableCell>{formatDateToMonthYear(month)}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={() => handleAddExpense(building, month)}
+                      >
+                        <Add />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>{selectedBuilding?.nickname}</DialogTitle>
