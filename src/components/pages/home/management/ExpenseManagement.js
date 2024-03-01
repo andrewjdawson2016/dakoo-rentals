@@ -51,9 +51,9 @@ function ExpenseManagement({ buildings, refreshBuildings }) {
         <Table aria-label="expenses table">
           <TableHead>
             <TableRow>
-              <TableCell>Building</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Add Expense</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Building</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Date</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Add Expense</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

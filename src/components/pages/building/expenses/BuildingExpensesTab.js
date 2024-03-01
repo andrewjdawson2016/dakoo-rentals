@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Grid,
   Typography,
@@ -10,49 +10,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  IconButton,
-  Dialog,
 } from "@mui/material";
-import { Add, Delete } from "@mui/icons-material";
 import {
   getExpenseMonths,
   formatDateToMonthYear,
   formatMonthlyMoneyValue,
 } from "../../../../util";
-import { deleteExpense } from "../../../../api";
 import { DateTime } from "luxon";
 
-function BuildingExpensesTab({ building, refreshBuilding }) {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedMonthYear, setSelectedMonthYear] = useState(null);
+function BuildingExpensesTab({ building }) {
   const expensesData = getExpenseMonths(
     building.expenses,
     building.first_rental_month,
     DateTime.now().toISODate()
   ).reverse();
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-  };
-
-  const onSubmitSuccess = () => {
-    handleCloseDialog();
-    refreshBuilding();
-  };
-
-  const handleAddExpense = (month) => {
-    setSelectedMonthYear(month);
-    setDialogOpen(true);
-  };
-
-  const handleDeleteExpense = async (expense) => {
-    try {
-      await deleteExpense(expense.id);
-      refreshBuilding();
-    } catch (error) {
-      console.error("Error deleting expense:", error.message);
-    }
-  };
 
   return (
     <>
@@ -67,10 +38,9 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
         <Table aria-label="expenses table">
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Note</TableCell>
-              <TableCell>Add/Edit</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Date</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Amount</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Note</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -80,32 +50,16 @@ function BuildingExpensesTab({ building, refreshBuilding }) {
                   {formatDateToMonthYear(month)}
                 </TableCell>
                 <TableCell>
-                  {expense ? formatMonthlyMoneyValue(expense.amount) : ""}
+                  {expense
+                    ? formatMonthlyMoneyValue(expense.amount)
+                    : "no expense logged"}
                 </TableCell>
                 <TableCell>{expense ? expense.note : ""}</TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() =>
-                      expense
-                        ? handleDeleteExpense(expense)
-                        : handleAddExpense(month)
-                    }
-                  >
-                    {expense ? <Delete /> : <Add />}
-                  </IconButton>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-        <LogExpenseForm
-          building={building}
-          monthYear={selectedMonthYear}
-          onSubmitSuccess={onSubmitSuccess}
-        />
-      </Dialog>
     </>
   );
 }
