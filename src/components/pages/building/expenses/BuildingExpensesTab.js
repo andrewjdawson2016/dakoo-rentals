@@ -10,20 +10,32 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  IconButton,
 } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 import {
   getExpenseMonths,
   formatDateToMonthYear,
   formatMonthlyMoneyValue,
 } from "../../../../util";
+import { deleteExpense } from "../../../../api";
 import { DateTime } from "luxon";
 
-function BuildingExpensesTab({ building }) {
+function BuildingExpensesTab({ building, refreshBuilding }) {
   const expensesData = getExpenseMonths(
     building.expenses,
     building.first_rental_month,
     DateTime.now().toISODate()
   ).reverse();
+
+  const handleDeleteExpense = async (expense) => {
+    try {
+      await deleteExpense(expense.id);
+      refreshBuilding();
+    } catch (error) {
+      console.error("Error deleting expense:", error.message);
+    }
+  };
 
   return (
     <>
@@ -41,6 +53,7 @@ function BuildingExpensesTab({ building }) {
               <TableCell style={{ fontWeight: "bold" }}>Date</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Amount</TableCell>
               <TableCell style={{ fontWeight: "bold" }}>Note</TableCell>
+              <TableCell style={{ fontWeight: "bold" }}>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -50,11 +63,16 @@ function BuildingExpensesTab({ building }) {
                   {formatDateToMonthYear(month)}
                 </TableCell>
                 <TableCell>
-                  {expense
-                    ? formatMonthlyMoneyValue(expense.amount)
-                    : "no expense logged"}
+                  {expense ? formatMonthlyMoneyValue(expense.amount) : ""}
                 </TableCell>
                 <TableCell>{expense ? expense.note : ""}</TableCell>
+                <TableCell>
+                  {expense && (
+                    <IconButton onClick={() => handleDeleteExpense(expense)}>
+                      <Delete />
+                    </IconButton>
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

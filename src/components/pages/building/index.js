@@ -68,7 +68,12 @@ export function BuildingPage() {
             refreshBuilding={refreshBuilding}
           />
         )}
-        {selectedTab === 2 && <BuildingExpensesTab building={building} />}
+        {selectedTab === 2 && (
+          <BuildingExpensesTab
+            building={building}
+            refreshBuilding={refreshBuilding}
+          />
+        )}
       </Container>
     </>
   );
