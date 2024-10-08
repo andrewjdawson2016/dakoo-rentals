@@ -48,10 +48,10 @@ const OverviewTab = ({ lease, onDeleteSuccess }) => {
     try {
       await deleteLease(lease.id);
       console.log("Lease deleted successfully");
-      onDeleteSuccess(); // Notify parent to refresh the component
+      onDeleteSuccess();
     } catch (e) {
       console.error("Error deleting lease:", e);
-      setIsDeleting(false); // Reset button state if deletion failed
+      setIsDeleting(false);
     }
   };
 
