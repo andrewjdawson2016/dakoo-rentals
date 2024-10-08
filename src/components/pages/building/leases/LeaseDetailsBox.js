@@ -10,6 +10,10 @@ function LeaseDetailsBox({ lease, refreshBuilding }) {
     setValue(newValue);
   };
 
+  const handleDeleteSuccess = () => {
+    refreshBuilding();
+  };
+
   return (
     <Container component="main" maxWidth="md">
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -22,7 +26,9 @@ function LeaseDetailsBox({ lease, refreshBuilding }) {
           <Tab label="Events" />
         </Tabs>
       </Box>
-      {value === 0 && <OverviewTab lease={lease} />}
+      {value === 0 && (
+        <OverviewTab lease={lease} onDeleteSuccess={handleDeleteSuccess} />
+      )}
       {value === 1 && <EventsTab events={lease.leaseEvents} />}
     </Container>
   );

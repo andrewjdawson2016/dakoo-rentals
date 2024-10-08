@@ -1,5 +1,5 @@
-import React from "react";
-import { Avatar, Box, Paper, Tooltip, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Avatar, Box, Button, Paper, Tooltip, Typography } from "@mui/material";
 import {
   formatMonthlyMoneyValue,
   formatDateRange,
@@ -7,8 +7,11 @@ import {
   determineLeaseStatus,
 } from "../../../../util";
 import { DateTime } from "luxon";
+import { deleteLease } from "../../../../api"; // Assuming deleteLease is imported correctly
 
-const OverviewTab = ({ lease }) => {
+const OverviewTab = ({ lease, onDeleteSuccess }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const StatusBox = ({ statusValue }) => {
     let statusText;
     let color;
@@ -38,6 +41,18 @@ const OverviewTab = ({ lease }) => {
     };
 
     return <Box style={boxStyles}>{statusText}</Box>;
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteLease(lease.id);
+      console.log("Lease deleted successfully");
+      onDeleteSuccess(); // Notify parent to refresh the component
+    } catch (e) {
+      console.error("Error deleting lease:", e);
+      setIsDeleting(false); // Reset button state if deletion failed
+    }
   };
 
   return (
@@ -75,6 +90,16 @@ const OverviewTab = ({ lease }) => {
             </Tooltip>
           ))}
         </Box>
+
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          sx={{ mt: 2 }}
+        >
+          {isDeleting ? "Deleting..." : "Delete Lease"}
+        </Button>
       </Box>
     </Paper>
   );
